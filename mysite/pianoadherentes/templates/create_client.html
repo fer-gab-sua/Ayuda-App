@@ -5,8 +5,12 @@
 
 <link rel="stylesheet" href="{% static '/css/create_client.css' %}">
 <div class="principal">
+    {% if new_client %}
+    <div class="container" style="display: none;">
+        {% else %}
     <h1>Alta de Titular</h1>
-    <div class="container">
+    <div class="container" style="display: flex;">
+    {% endif %}
         <form action="/client/create/" method="POST">
             {% csrf_token %}
             <label for="id_name">Nombre y Apellido:</label>
@@ -33,55 +37,31 @@
 
             <button>Crear</button>
         </form>
-        
     </div>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 {% if new_client %}
-<h2>TITULAR</h2>
-<table>
-    <thead>
+Titular
+</div>
+<div class="container">
+    <table class="table">
+        <thead>
         <tr>
-            <th>Nombre</th>
-            <th>Dni</th>
-            <th>CBU</th>
+            <th scope="col">#</th>
+            <th scope="col">Nombre y Apellido</th>
+            <th scope="col">DNI</th>
+            <th scope="col">CBU</th>
         </tr>
-    </thead>
-    <tbody>
+        </thead>
+        <tbody>
         <tr>
+            <th scope="row">{{new_client.titular_id}}</th>
             <td>{{new_client.name}}</td>
             <td>{{new_client.dni}}</td>
             <td>{{new_client.cbu}}</td>
         </tr>
-    </tbody>
-</table>
+        </tbody>
+    </table>
+</div>
 <h2>ADHERENTES</h2>
 <form action="/client/adherente/create/" method="POST">
 {% csrf_token %}
