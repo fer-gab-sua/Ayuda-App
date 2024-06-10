@@ -3,72 +3,122 @@
 {% block content %}
 {{error}}
 
-<link rel="stylesheet" href="{% static '/css/create_client.css' %}">
+<link rel="stylesheet" href="{% static 'css/create_client.css' %}">
+
+
 <div class="principal">
     {% if new_client %}
-    <div class="container" style="display: none;">
-        {% else %}
+    <div class="container formulario" style="display: none">
+    {% else %}
+    <!--ALTA DE TITULAR-->
     <h1>Alta de Titular</h1>
-    <div class="container" style="display: flex;">
-    {% endif %}
+    <div class="container" style="display:block">
         <form action="/client/create/" method="POST">
             {% csrf_token %}
+            <span class="helptext">Ingrese el CBU de 22 dígitos.</span>
+            <label for="id_cbu">Cbu:</label>
+            <input type="text" name="cbu" maxlength="22" required="" id="id_cbu">
+            <button>Buscar</button>
+                        
             <label for="id_name">Nombre y Apellido:</label>
             <input type="text" name="name" maxlength="100" required="" id="id_name">
-
+            
             <label for="id_phone">Telefono:</label>
             <input type="text" name="phone" maxlength="100" id="id_phone">
-
+            
             <label for="id_address">Domicilio:</label>
             <input type="text" name="address" maxlength="100" required="" id="id_address">
-
+            
             <label for="id_address_detail">Entre Calles:</label>
+            <input type="text" name="address_detail" maxlength="100" id="id_address_detail">
+            
+            <label for="id_dni">Dni:</label>
+            <input type="text" name="dni" maxlength="100" required="" id="id_dni">
+            
+            <label for="id_is_active">Estado Activo:</label>
+            <input type="checkbox" name="is_active" id="id_is_active" checked="">
+            <button>Crear</button>
+        </form>
+    </div>
+    {% endif %}
+    </div>
+    <!--TABLA CLIENTE-->
+    {% if new_client %}
+    <h1>Titular</h1>
+    <div class="container" >
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nombre y Apellido</th>
+                    <th scope="col">DNI</th>
+                    <th scope="col">CBU</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">{{new_client.titular_id}}</th>
+                    <td>{{new_client.name}}</td>
+                    <td>{{new_client.dni}}</td>
+                    <td>{{new_client.cbu}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--FORMULARIO ADHERENTES-->
+    <div class="container" style="display: inline;">
+    <h1>ADHERENTES</h1>
+        <form action="/client/adherente/create/" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="titular_id" value="{{ new_client.titular_id }}">
+            <label for="id_name">Nombre y Apellido:</label>
+            <input type="text" name="name" maxlength="100" required="" id="id_name">
+            <label for="id_address">Direccion</label>
+            <input type="text" name="address" maxlength="100" required="" id="id_address">
+
+            <label for="id_address_detail">Entre calles:</label>
             <input type="text" name="address_detail" maxlength="100" id="id_address_detail">
 
             <label for="id_dni">Dni:</label>
             <input type="text" name="dni" maxlength="100" required="" id="id_dni">
 
-            <label for="id_cbu">Cbu:</label>
-            <input type="text" name="cbu" maxlength="22" required="" id="id_cbu">
-            <span class="helptext">Ingrese el CBU de 22 dígitos.</span>
-
             <label for="id_is_active">Is active:</label>
             <input type="checkbox" name="is_active" id="id_is_active" checked="">
 
-            <button>Crear</button>
+            <button>Alta Adherente</button>
         </form>
-    </div>
 
-{% if new_client %}
-Titular
 </div>
-<div class="container">
+{% endif %}
+
+
+
+{% if tupla_adherentes %}
+<H2>Adherentes agregados</H2>
+<div class="container" >
     <table class="table">
         <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Nombre y Apellido</th>
-            <th scope="col">DNI</th>
-            <th scope="col">CBU</th>
-        </tr>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nombre y Apellido</th>
+                <th scope="col">DNI</th>
+                <th scope="col">Opciones</th>
+            </tr>
         </thead>
         <tbody>
-        <tr>
-            <th scope="row">{{new_client.titular_id}}</th>
-            <td>{{new_client.name}}</td>
-            <td>{{new_client.dni}}</td>
-            <td>{{new_client.cbu}}</td>
-        </tr>
+            {% for adherente in tupla_adherentes %}
+            <tr>
+                <td>{{adherente.adherente_id}}</td>
+                <td>{{adherente.name}}</td>
+                <td>{{adherente.dni}}</td>
+                <td><a href="">Editar</a> - <a href="">Borrar</a></td>
+            </tr>
+            {% endfor %}
         </tbody>
     </table>
-</div>
-<h2>ADHERENTES</h2>
-<form action="/client/adherente/create/" method="POST">
-{% csrf_token %}
-<input type="hidden" name="titular_id" value="{{ new_client.titular_id }}">
-{{form2.as_p}}
-<button>Alta Adherente</button>
-</form>
+    </div>
+<button>Nueva alta</button>
 {% endif %}
+
 
 {% endblock %}

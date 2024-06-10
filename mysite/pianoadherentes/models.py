@@ -48,7 +48,7 @@ class Adherente(models.Model):
     address = models.CharField(max_length=100)
     address_detail = models.CharField(max_length=100, blank=True, null=True)
     dni = models.CharField(max_length=100, validators=[dni_validator])
-    adherente_date = models.DateField("date published")
+    adherente_date = models.DateTimeField(auto_now_add=True)
     adherente_date_down = models.DateField("date down", blank=True, null=True)
     user_upload = models.ForeignKey(User, on_delete=models.PROTECT)
     is_active = models.BooleanField(default=True)

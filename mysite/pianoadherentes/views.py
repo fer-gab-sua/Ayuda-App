@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.db import IntegrityError
 from .forms import ClientForm , AdherenteForm
 from django.contrib import messages
-from .models import Titular
+from .models import Titular , Adherente
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 
@@ -109,16 +109,19 @@ def create_adherente(request):
                 new_adherente.titular = titular
                 new_adherente.save()
                 titular_id = request.POST.get('titular_id')
-                new_client = Titular.objects.get(id=titular_id)
+                new_client = Titular.objects.get(titular_id=titular_id)
+                adherentes = Adherente.objects.filter(titular=titular_id)
+                print(adherentes)
                 return render(request, 'create_client.html', {
                 'new_client': new_client,
                 'form2': form, # Redirigir a una vista de listado de clientes o a donde sea apropiado
+                'tupla_adherentes': adherentes
                 })
             else:
                 raise ValueError
         except ValueError:
             titular_id = request.POST.get('titular_id')
-            new_client = Titular.objects.get(id=titular_id)
+            new_client = Titular.objects.get(titular_id=titular_id)
             return render(request, 'create_client.html', {
                 'new_client': new_client,
                 'form2': form,
