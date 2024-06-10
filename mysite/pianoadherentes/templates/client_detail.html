@@ -21,5 +21,16 @@
         </tr>
     </tbody>
 </table>
-            
+<form method="POST">
+    <h2>{{error}}</h2>
+    {% csrf_token %}
+    {{form.as_p}}
+    <button>Update</button>
+</form>
+<form action="{% url 'client_baja' titular.titular_id %}" method="POST">
+    {% csrf_token %}
+    <button>
+        BAJA
+    </button>
+</form>
 {% endblock %}

@@ -8,10 +8,12 @@ from django.db import IntegrityError
 from .forms import ClientForm , AdherenteForm
 from django.contrib import messages
 from .models import Titular
+from django.utils import timezone
+from django.contrib.auth.decorators import login_required
 
 
 def home(request):
-    return render(request, 'home.html')
+    return render(request, 'signin.html')
 
 
 def signup(request):
@@ -38,7 +40,7 @@ def signup(request):
             "error": 'Password do not match'
         })
 
-
+@login_required
 def client(request):
     titulares = Titular.objects.filter(user_upload=request.user)
     return render(request, 'clients.html',{'titulares': titulares})
@@ -61,7 +63,7 @@ def login_user(request):
             login(request, user)
             return redirect('create_client')
 
-
+@login_required
 def create_client(request):
     if request.method == 'GET':
         return render(request, 'create_client.html', {
@@ -93,6 +95,8 @@ def create_client(request):
                 'error': 'An unexpected error occurred'
             })
 
+
+@login_required
 def create_adherente(request):
     if request.method == 'POST':
         try:
@@ -121,10 +125,30 @@ def create_adherente(request):
                 'error': 'Please provide valid data for adherente'
             })
 
-
+@login_required
 def client_detail(request, titular_id):
-    #cliente = Titular.objects.filter(titular_id=titular_id)
-    #titular = Titular.objects.get(pk=titular_id) esto puede tumbar el servidor 
-    titular = get_object_or_404(Titular,pk=titular_id)
-    print(titular.name)
-    return render(request, 'client_detail.html',{'titular': titular})
+    if request.method == 'GET':
+        #cliente = Titular.objects.filter(titular_id=titular_id)
+        #titular = Titular.objects.get(pk=titular_id) esto puede tumbar el servidor 
+        titular = get_object_or_404(Titular,pk=titular_id)
+        form = ClientForm(instance=titular)
+        return render(request, 'client_detail.html',{'titular': titular, 'form': form})
+    elif request.method == 'POST':
+        try:
+            titular = get_object_or_404(Titular,pk=titular_id)
+            #titular = get_object_or_404(Titular,pk=titular_id,user_upload=request.user )
+            form = ClientForm(request.POST, instance=titular)
+            form.save()  
+            return redirect('clients')
+        except ValueError:
+            return render(request, 'client_detail.html',{'titular': titular, 'form': form, 'error': 'error actualizando cliente'})
+
+
+@login_required
+def client_baja(request,titular_id):
+    titular = get_object_or_404(Titular, pk=titular_id)
+    if request.method == 'POST':
+        titular.is_active = False
+        titular.deleted = timezone.now()
+        titular.save()
+        return redirect('clients')

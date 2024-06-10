@@ -1,14 +1,58 @@
 {% extends 'base.html' %}
-
+{% load static %}
 
 {% block content %}
+<style>
+    body {
+        background-color: rgb(240, 238, 238);
+    }
 
-<h1>signin</h1>
+    .bg {
+        background-image: url({% static '/img/gestion.avif' %});
+        background-position: center center;
+        background-size: cover;
+    }
 
-{{error}}
-<form action="/signin/" method="POST">
-    {% csrf_token %}
-    {{form.as_p}}
-<button >ingresar</button>
-</form>
-{% endblock %}
+    .error-message {
+        color: red;
+    }
+</style>
+<body>
+    <div class="container w-75 bg-primary mt-5 rounded shadow">
+        <div class="row align-items-stretch">
+            <div class="col bg d-none d-lg-block col-md-5 col-lg-5 col-xl-6 rounded"></div>
+            <div class="col bg-white">
+                <div class="d-flex justify-content-center">
+                    <img src="{% static '/img/logo.png' %}" width="120" alt="" class="mt-5" />
+                </div>
+                <h2 class="fw-bold text-center pt-5 mb-5">Bienvenido</h2>
+
+
+
+                <form id="loginForm" action="/signin/" method="POST">
+                    {% csrf_token %}
+                    <span style="margin-bottom: 10px ;">{{error}}</span>
+                    <div id="message-container" class="error-message"></div>
+                    <div id="error-container" style="color: red"></div>
+                    <div class="mb-4">
+                        <label for="id_username">Usuario:</label>
+                        <input type="text" class="form-control" name="username" autofocus="" autocapitalize="none" autocomplete="Usuario" maxlength="150"
+                        required="" id="id_username">
+                    <br />
+                    </div>
+                    <div class="mb-4">
+                        <label for="password" class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" name="password" autocomplete="current-password" required="" id="id_password">
+                        <br />
+                    </div>
+                    <div class="d-grid">
+                        <button class="btn btn-primary" style="background-color: rgb(34, 33, 48)">
+                            Iniciar Sesion</button><br />
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</body>
+    {% endblock %}
