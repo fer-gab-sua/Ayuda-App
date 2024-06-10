@@ -19,7 +19,13 @@ from django.urls import path, include
 from pianoadherentes import views
 
 urlpatterns = [
-    path('pianoadherentes/',include("pianoadherentes.urls")),
     path('admin/', admin.site.urls),
-    path('signup/', views.index)
+    path('',views.home, name='home'),
+    path('signup/',views.signup, name='signup'),
+    path('client/',views.client, name='clients'),
+    path('client/create/',views.create_client, name='create_client'),
+    path('client/<int:titular_id>/',views.client_detail, name='client_detail'),
+    path('client/adherente/create/',views.create_adherente, name='create_adherente'),
+    path('logout/',views.signout, name='logout'),
+    path('signin/',views.login_user, name='signin'),
 ]

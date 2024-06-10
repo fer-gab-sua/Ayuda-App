@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<h1>Altas</h1>
+{{error}}
+<form action="/client/create/" method="POST">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button>Crear</button>
+
+</form>
+
+{% if new_client %}
+<h2>TITULAR</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Dni</th>
+            <th>CBU</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{new_client.name}}</td>
+            <td>{{new_client.dni}}</td>
+            <td>{{new_client.cbu}}</td>
+        </tr>
+    </tbody>
+</table>
+<h2>ADHERENTES</h2>
+<form action="/client/adherente/create/" method="POST">
+{% csrf_token %}
+<input type="hidden" name="titular_id" value="{{ new_client.titular_id }}">
+{{form2.as_p}}
+<button>Alta Adherente</button>
+</form>
+{% endif %}
+
+{% endblock %}

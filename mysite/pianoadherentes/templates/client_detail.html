@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<h1>Altas</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>DNI</th>
+            <th>CBU</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        <tr>
+            <td>{{titular.name}}</td>
+            <td>{{titular.dni}}</td>
+            <th>{{titular.cbu}}</th>
+
+        </tr>
+    </tbody>
+</table>
+            
+{% endblock %}
