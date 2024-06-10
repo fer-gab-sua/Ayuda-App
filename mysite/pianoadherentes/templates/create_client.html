@@ -1,15 +1,68 @@
 {% extends 'base.html' %}
-
-
+{% load static %}
 {% block content %}
-<h1>Altas</h1>
 {{error}}
-<form action="/client/create/" method="POST">
-    {% csrf_token %}
-    {{form.as_p}}
-    <button>Crear</button>
 
-</form>
+<link rel="stylesheet" href="{% static '/css/create_client.css' %}">
+<div class="principal">
+    <h1>Alta de Titular</h1>
+    <div class="container">
+        <form action="/client/create/" method="POST">
+            {% csrf_token %}
+            <label for="id_name">Nombre y Apellido:</label>
+            <input type="text" name="name" maxlength="100" required="" id="id_name">
+
+            <label for="id_phone">Telefono:</label>
+            <input type="text" name="phone" maxlength="100" id="id_phone">
+
+            <label for="id_address">Domicilio:</label>
+            <input type="text" name="address" maxlength="100" required="" id="id_address">
+
+            <label for="id_address_detail">Entre Calles:</label>
+            <input type="text" name="address_detail" maxlength="100" id="id_address_detail">
+
+            <label for="id_dni">Dni:</label>
+            <input type="text" name="dni" maxlength="100" required="" id="id_dni">
+
+            <label for="id_cbu">Cbu:</label>
+            <input type="text" name="cbu" maxlength="22" required="" id="id_cbu">
+            <span class="helptext">Ingrese el CBU de 22 dígitos.</span>
+
+            <label for="id_is_active">Is active:</label>
+            <input type="checkbox" name="is_active" id="id_is_active" checked="">
+
+            <button>Crear</button>
+        </form>
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 {% if new_client %}
 <h2>TITULAR</h2>
