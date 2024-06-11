@@ -156,22 +156,48 @@ def client_baja(request,titular_id):
         titular.save()
         return redirect('clients')
 
-
+@login_required
 def consultar_cbu(request):
     if request.method == 'GET':
         return render(request, 'create_client_selCB.html', {
         })
     elif request.method == 'POST':
+        cbu_r = request.POST.get("cbu")
         try:
-            cbu_r = request.POST.get("cbu")
             new_client = Titular.objects.get(cbu=cbu_r)
-            print(new_client)
-            return render(request, 'create_client.html', {
-                'new_client': new_client
+            try:
+                titular_id = new_client.titular_id
+                adherentes = Adherente.objects.filter(titular=titular_id)
+                return render(request, 'create_client.html', {
+                'new_client': new_client,
+                'tupla_adherentes': adherentes,
                 })
-        except:
+            except:
+                return render(request, 'create_client.html', {
+                'new_client': new_client,
+                'cbu': cbu_r,
+                })
+        except Titular.DoesNotExist:
             return render(request, 'create_client.html', {
-            'form': ClientForm()
+                'form': ClientForm(),
+                'cbu': cbu_r,
+            })
+
+@login_required
+def bajaAdherente(request, adherente_id):
+    adherente = get_object_or_404(Adherente, pk=adherente_id)
+    print(adherente.adherente_date)
+    if request.method == 'POST':
+        adherente.is_active = False
+        adherente.save()
+
+        titular_id = adherente.titular.pk  # Obtener el ID del titular correctamente
+        new_client = get_object_or_404(Titular, pk=titular_id)
+        adherentes = Adherente.objects.filter(titular=titular_id)
+
+        return render(request, 'create_client.html', {
+            'new_client': new_client,
+            'tupla_adherentes': adherentes
         })
-
-
+    else:
+        return None

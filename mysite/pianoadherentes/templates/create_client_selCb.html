@@ -16,8 +16,8 @@
         <form action="/client/create/select_cbu/" method="POST" style="margin-bottom: 40px;">
             {% csrf_token %}
             <label for="id_cbu">Cbu:</label>
-            <input type="text" name="cbu" maxlength="22" required="" id="id_cbu">
             <span class="helptext">Ingrese el CBU de 22 dígitos.</span>
+            <input type="text" name="cbu" maxlength="22" required="" id="id_cbu">
             <button>Consultar</button>
         </form>
     </div>
