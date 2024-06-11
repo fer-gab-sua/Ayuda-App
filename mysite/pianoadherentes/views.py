@@ -155,3 +155,23 @@ def client_baja(request,titular_id):
         titular.deleted = timezone.now()
         titular.save()
         return redirect('clients')
+
+
+def consultar_cbu(request):
+    if request.method == 'GET':
+        return render(request, 'create_client_selCB.html', {
+        })
+    elif request.method == 'POST':
+        try:
+            cbu_r = request.POST.get("cbu")
+            new_client = Titular.objects.get(cbu=cbu_r)
+            print(new_client)
+            return render(request, 'create_client.html', {
+                'new_client': new_client
+                })
+        except:
+            return render(request, 'create_client.html', {
+            'form': ClientForm()
+        })
+
+

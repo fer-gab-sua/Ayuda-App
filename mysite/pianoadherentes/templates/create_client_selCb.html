@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{{error}}
+
+<link rel="stylesheet" href="{% static 'css/create_client.css' %}">
+
+
+<div class="principal">
+    {% if new_client %}
+    <div class="container formulario" style="display: none">
+    {% else %}
+    <!--CONSULTA CBU-->
+    <h1>Alta de Titular</h1>
+    <div class="container" style="display:block">
+        <form action="/client/create/select_cbu/" method="POST" style="margin-bottom: 40px;">
+            {% csrf_token %}
+            <label for="id_cbu">Cbu:</label>
+            <input type="text" name="cbu" maxlength="22" required="" id="id_cbu">
+            <span class="helptext">Ingrese el CBU de 22 dígitos.</span>
+            <button>Consultar</button>
+        </form>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}
