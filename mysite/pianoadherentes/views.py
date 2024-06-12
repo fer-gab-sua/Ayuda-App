@@ -185,7 +185,7 @@ def consultar_cbu(request):
 
 @login_required
 def bajaAdherente(request, adherente_id):
-    adherente = get_object_or_404(Adherente, pk=adherente_id)
+    adherente = Adherente.objects.get(pk=adherente_id)
     print(adherente.adherente_date)
     if request.method == 'POST':
         adherente.is_active = False
@@ -200,4 +200,12 @@ def bajaAdherente(request, adherente_id):
             'tupla_adherentes': adherentes
         })
     else:
-        return None
+        return HttpResponse("none")
+    
+
+def updateAdherente(request, adherente_id):
+    adherente = get_object_or_404(Adherente, pk=adherente_id)
+    form = AdherenteForm(instance=adherente)
+    return render(request, 'update_adherente.html',{'adherente':adherente, 'form':form
+
+    })

@@ -12,24 +12,23 @@
                 {% csrf_token %}
                 <input type="hidden" name="titular_id" value="{{ new_client.titular_id }}">
                 <label for="id_name">Nombre y Apellido:</label>
-                <input type="text" name="name" maxlength="100" required="" id="id_name">
+                <input type="text" name="name" maxlength="100" required="" id="id_name" value="{{adherente.name}}">
                 <label for="id_address">Direccion</label>
-                <input type="text" name="address" maxlength="100" required="" id="id_address">
+                <input type="text" name="address" maxlength="100" required="" id="id_address" value="{{adherente.address}}">
     
                 <label for="id_address_detail">Entre calles:</label>
-                <input type="text" name="address_detail" maxlength="100" id="id_address_detail">
+                <input type="text" name="address_detail" maxlength="100" id="id_address_detail" , value="{{adherente.address_detail}}">
     
                 <label for="id_dni">Dni:</label>
-                <input type="text" name="dni" maxlength="100" required="" id="id_dni">
+                <input type="text" name="dni" maxlength="100" required="" id="id_dni" value="{{adherente.dni}}">
     
                 <label for="id_is_active">Is active:</label>
-                <input type="checkbox" name="is_active" id="id_is_active" checked="">
+                <input type="checkbox" name="is_active" id="id_is_active" checked="" value="{{adherente.is_active}}">
     
-                <button>Alta Adherente</button>
+                <button>Grabar</button>
             </form>
     
     </div>
-{% endif %}
 
 
 {% endblock %}

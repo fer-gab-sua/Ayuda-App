@@ -95,15 +95,31 @@
                     Baja
                     {% endif %}
                 </td>
-                <td><a href="">Editar</a>
-                    <a href="#">Editar</a>
-                    <form action="{% url 'baja_adherente' adherente.adherente_id %}" method="POST" style="display:inline;">
-                        {% csrf_token %}
-                        <button type="submit" style="background:none;border:none;color:blue;text-decoration:underline;cursor:pointer;">
-                            Dar baja
-                        </button>
-                    </form>
-            </tr>
+                <td style="display: flex;"><form action="{% url 'update_adherente' adherente.adherente_id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" style="
+                    background:firebrick;
+                    border:none;
+                    color:blue;
+                    text-decoration:underline;
+                    cursor:pointer;
+                    width: 100px;">
+                        Editar
+                    </button>
+                </form>
+                <form action="{% url 'baja_adherente' adherente.adherente_id %}" method="POST" style="background-color: aquamarine;width: 100px;;">
+                    {% csrf_token %}
+                    <button type="submit" style="
+                    background:firebrick;
+                    border:none;
+                    color:blue;
+                    text-decoration:underline;
+                    cursor:pointer;
+                    width: 100px;">
+                        Borrar
+                    </button>
+                </form>
+                    
             {% endfor %}
         </tbody>
     </table>
