@@ -51,6 +51,8 @@
                     <th scope="col">Nombre y Apellido</th>
                     <th scope="col">DNI</th>
                     <th scope="col">CBU</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
@@ -59,6 +61,39 @@
                     <td>{{new_client.name}}</td>
                     <td>{{new_client.dni}}</td>
                     <td>{{new_client.cbu}}</td>
+                    <td>
+                        {% if new_client.is_active == True %}
+                        Activo
+                        {% else %}
+                        Baja
+                        {% endif %}
+                    </td>
+                    <td style="display: flex;"><form action="{% url 'update_titular' new_client.pk %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" style="
+                        background:rgb(34, 178, 176);
+                        border:none;
+                        color:blue;
+                        text-decoration:underline;
+                        cursor:pointer;
+                        width: 100px;">
+                            Editar
+                        </button>
+                    </form>
+                    <form action="{% url 'client_baja' new_client.pk %}" method="POST" style="background-color: aquamarine;width: 100px;;">
+                        {% csrf_token %}
+                        <button type="submit" style="
+                        background:firebrick;
+                        border:none;
+                        color:blue;
+                        text-decoration:underline;
+                        cursor:pointer;
+                        width: 100px;" onclick="return confirmDelete()">
+                            Baja
+                        </button>
+                    </form>
+                    </td>
+                    
                 </tr>
             </tbody>
         </table>
@@ -79,7 +114,7 @@
                 <th scope="col">Nombre y Apellido</th>
                 <th scope="col">DNI</th>
                 <th scope="col">Estado</th>
-                <th scope="col">Opciones</th>
+                <th scope="col"></th>
             </tr>
         </thead>
         <tbody>
@@ -98,7 +133,7 @@
                 <td style="display: flex;"><form action="{% url 'update_adherente' adherente.adherente_id %}" method="POST">
                     {% csrf_token %}
                     <button type="submit" style="
-                    background:firebrick;
+                    background:rgb(34, 178, 176);
                     border:none;
                     color:blue;
                     text-decoration:underline;
@@ -115,8 +150,8 @@
                     color:blue;
                     text-decoration:underline;
                     cursor:pointer;
-                    width: 100px;">
-                        Borrar
+                    width: 100px;" onclick="return confirmDeleteAd()">
+                        Baja
                     </button>
                 </form>
                     
@@ -128,9 +163,13 @@
 <div class="container" id="adherente-form" style="display: none;">
 
 {% else %}
+    {% if new_client %}
+        <!--FORMULARIO ADHERENTES-->
+        <div class="container" id="adherente-form" style="display: inline;">
+    {% else %}
+        <div class="container" id="adherente-form" style="display: none">
 
-    <!--FORMULARIO ADHERENTES-->
-    <div class="container" id="adherente-form" style="display: inline;">
+    {% endif %}
 {% endif %}
         <h1>ADHERENTES</h1>
         <form action="/client/adherente/create/" method="POST">
@@ -157,8 +196,21 @@
 
 <script>
         document.getElementById('new-adherente-btn').addEventListener('click', function() {
-            document.getElementById('adherente-form').style.display = 'block';
-        });
+        var form = document.getElementById('adherente-form');
+        form.style.display = 'block';
+        form.scrollIntoView({ behavior: 'smooth' });
+    });
+
+
+
+        function confirmDelete() {
+            return confirm('¿Está seguro que desea eliminar a este titular, con esto dara de baja a todos sus adherentes?');
+        }
+
+        function confirmDeleteAd() {
+            return confirm('¿Está seguro que desea eliminar a este Adherente?');
+        }
+
 </script>
 
 

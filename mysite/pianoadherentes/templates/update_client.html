@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{{error}}
+
+<link rel="stylesheet" href="{% static 'css/create_client.css' %}">
+
+    <!--FORMULARIO ADHERENTES-->
+    <div class="container" style="display: inline;">
+        <h1>Actualizar Titular</h1>
+        <form action="" method="POST">
+                {% csrf_token %}
+                <label for="id_cbu">Cbu:</label>
+                <span class="helptext">Ingrese el CBU de 22 dígitos.</span>
+                <input type="text" name="cbu" maxlength="22" required="" id="id_cbu", value="{{ client.cbu }}">
+                <input type="hidden" name="titular_id" value="{{ client.titular_id }}">
+                <label for="id_name">Nombre y Apellido:</label>
+                <input type="text" name="name" maxlength="100" required="" id="id_name" value="{{client.name}}">
+                <label for="id_address">Direccion</label>
+                <input type="text" name="address" maxlength="100" required="" id="id_address" value="{{client.address}}">
+    
+                <label for="id_address_detail">Entre calles:</label>
+                <input type="text" name="address_detail" maxlength="100" id="id_address_detail" , value="{{client.address_detail}}">
+    
+                <label for="id_dni">Dni:</label>
+                <input type="text" name="dni" maxlength="100" required="" id="id_dni" value="{{client.dni}}">
+    
+                <label for="id_is_active">Is active:{{ is_active }}</label>
+                <input type="checkbox" name="is_active" id="id_is_active" 
+                {% if is_active == True %}
+                checked=True
+                {% else %}
+
+                {% endif %}>
+   
+                <button>Actualizar</button>
+            </form>
+    
+    </div>
+{% endblock %}

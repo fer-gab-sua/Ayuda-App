@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{{error}}
+
+<div class="container" >
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">CBU</th>
+                <th scope="col">Nombre y Apellido</th>
+                <th scope="col">DNI</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Opciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for titular in new_client %}
+            <tr>
+                <td>{{titular.pk}}</td>
+                <td>{{titular.cbu}}</td>
+                <td>{{titular.name}}</td>
+                <td>{{titular.dni}}</td>
+                <td>
+                    {% if titular.is_active == True %}
+                    Activo
+                    {% else %}
+                    Baja
+                    {% endif %}
+                </td>
+                <td style="display: flex;">
+                    <form action="/client/create/select_cbu/" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="cbu" value="{{titular.cbu}}">
+                    <button type="submit" style="
+                    background:rgb(34, 178, 176);
+                    border:none;
+                    color:blue;
+                    text-decoration:underline;
+                    cursor:pointer;
+                    width: 100px;">
+                        Detalle
+                    </button>
+                </form>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="container" id="adherente-form" style="display: none;">
+
+{% endblock %}

@@ -15,7 +15,6 @@ from django.contrib.auth.decorators import login_required
 def home(request):
     return render(request, 'signin.html')
 
-
 def signup(request):
     if request.method == 'GET':
         return render(request, 'signup.html', {
@@ -61,10 +60,11 @@ def login_user(request):
             return render(request, 'signin.html', {'form': AuthenticationForm, 'error': 'Usuario o pasword incorrecto'})
         else:
             login(request, user)
-            return redirect('create_client')
+            return redirect('select_cbu')
 
 @login_required
 def create_client(request):
+    print(request.method)
     if request.method == 'GET':
         return render(request, 'create_client.html', {
             'form': ClientForm()
@@ -154,7 +154,11 @@ def client_baja(request,titular_id):
         titular.is_active = False
         titular.deleted = timezone.now()
         titular.save()
-        return redirect('clients')
+        adherentes = Adherente.objects.filter(titular=titular_id)
+        return render(request, 'create_client.html', {
+            'new_client': titular,
+            'tupla_adherentes': adherentes
+        })
 
 @login_required
 def consultar_cbu(request):
@@ -178,7 +182,7 @@ def consultar_cbu(request):
                 'cbu': cbu_r,
                 })
         except Titular.DoesNotExist:
-            return render(request, 'create_client.html', {
+                return render(request, 'create_client.html', {
                 'form': ClientForm(),
                 'cbu': cbu_r,
             })
@@ -202,10 +206,97 @@ def bajaAdherente(request, adherente_id):
     else:
         return HttpResponse("none")
     
-
 def updateAdherente(request, adherente_id):
-    adherente = get_object_or_404(Adherente, pk=adherente_id)
-    form = AdherenteForm(instance=adherente)
-    return render(request, 'update_adherente.html',{'adherente':adherente, 'form':form
+    adherente = Adherente.objects.get(pk=adherente_id)
+    checklist = adherente.is_active
+    if request.method == 'POST':
+        form = AdherenteForm(request.POST, instance=adherente)
+        if form.is_valid():
+            form.save()
+            print(adherente.is_active)
+            titular_id = adherente.titular.titular_id
+            adherentes = Adherente.objects.filter(titular=titular_id)
+            print(titular_id)
+            new_client = Titular.objects.get(pk=titular_id)
+            return render(request, 'create_client.html', {
+            'new_client': new_client,
+            'tupla_adherentes': adherentes
+            })
+    else:
+        form = AdherenteForm(instance=adherente)
+    
+    return render(request, 'update_adherente.html', {'adherente': adherente, 'form': form, 'is_active': checklist})
 
-    })
+
+def update_titular(request, titular_id):
+    titular = get_object_or_404(Titular, pk=titular_id)
+    checklist = titular.is_active
+    print(titular.is_active)
+    if request.method == 'POST':
+        print("aca metodo post") 
+        form = ClientForm(request.POST, instance=titular)
+        if form.is_valid():
+            print("aca metodo post y formulario valido") 
+            
+            
+            form.save()
+            adherentes = Adherente.objects.filter(titular=titular)
+            return render(request, 'create_client.html', {
+            'new_client': titular,
+            'tupla_adherentes': adherentes
+            }) # Redirigir después de guardar
+        else:
+            print("aca es donde paso el valor") 
+            form = ClientForm(instance=titular)
+        
+    return render(request, 'update_client.html', {'client': titular, 'form': form, 'is_active' : checklist})
+
+def buscar(request):
+    if request.method == 'GET':
+        return render(request, 'buscar.html')
+    elif request.method == 'POST':
+        nombre = request.POST.get('name')
+        telefono = request.POST.get('phone')
+        direccion = request.POST.get('address')
+        dni = request.POST.get('dni')
+        activo = request.POST.get('is_active')
+        cbu = request.POST.get('cbu')
+
+
+        if not any([cbu, nombre, telefono, direccion, dni]):
+                    return render(request, 'buscar.html', {
+                        'error': 'Debe proporcionar al menos un criterio de búsqueda.'
+                    })
+        
+        filtro = {}
+        print("este es el cbu: " ,cbu)
+        if cbu:
+            filtro['cbu'] = cbu
+        if nombre:
+            filtro['name__icontains'] = nombre
+        if telefono:
+            filtro['phone'] = telefono
+        if direccion:
+            filtro['address__icontains'] = direccion
+        if dni:
+            filtro['dni'] = dni
+        if activo:
+            filtro['is_active'] = True
+        
+        print(filtro)
+
+        titulares = Titular.objects.filter(**filtro)
+        if titulares.exists():
+            print(titulares)
+            return render(request, 'list_client.html', {
+                'new_client': titulares
+            })
+        else:
+            # Manejar el caso en que no se encuentren titulares
+            return render(request, 'list_client.html', {
+                'new_client': None,
+                'error': 'No se encontraron titulares con los datos proporcionados.'
+            })
+
+
+

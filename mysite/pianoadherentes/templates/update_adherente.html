@@ -8,7 +8,7 @@
     <!--FORMULARIO ADHERENTES-->
     <div class="container" style="display: inline;">
         <h1>ADHERENTES</h1>
-        <form action="/client/adherente/create/" method="POST">
+        <form action="" method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="titular_id" value="{{ new_client.titular_id }}">
                 <label for="id_name">Nombre y Apellido:</label>
@@ -23,7 +23,7 @@
                 <input type="text" name="dni" maxlength="100" required="" id="id_dni" value="{{adherente.dni}}">
     
                 <label for="id_is_active">Is active:</label>
-                <input type="checkbox" name="is_active" id="id_is_active" checked="" value="{{adherente.is_active}}">
+                <input type="checkbox" name="is_active" id="id_is_active" {% if is_active %}checked{% endif %}>
     
                 <button>Grabar</button>
             </form>

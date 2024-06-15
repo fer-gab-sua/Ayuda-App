@@ -24,9 +24,8 @@
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav ms-auto">
                     {% if user.is_authenticated %}
-                    <a class="nav-link active" aria-current="page" href="{% url 'select_cbu' %}">Altas</a>
-                    <a class="nav-link active" aria-current="page" href="#">Bajas</a>
-                    <a class="nav-link active" aria-current="page" href="#">Modificaciones</a>
+                    <a class="nav-link active" aria-current="page" href="{% url 'select_cbu' %}">Altas/Baja/Modificacion</a>
+                    <a class="nav-link active" aria-current="page" href="{% url 'buscar' %}">Busqueda</a>
                     <a class="nav-link active" aria-current="page" href="#">Informes</a>
                     <a class="nav-link active" aria-current="page" href="{% url 'logout' %}">Log Out</a>
                     <a class="nav-link disabled" aria-disabled="true">{{user}}</a>
