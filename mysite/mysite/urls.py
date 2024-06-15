@@ -32,6 +32,7 @@ urlpatterns = [
     path('client/adherente/create/',views.create_adherente, name='create_adherente'),
     path('adherente/baja/<int:adherente_id>/', views.bajaAdherente, name='baja_adherente'),
     path('adherente/update/<int:adherente_id>/', views.updateAdherente, name='update_adherente'),
+    path('stats/',views.generate_excel, name='stats'),
     path('logout/',views.signout, name='logout'),
     path('signin/',views.login_user, name='signin'),
 ]

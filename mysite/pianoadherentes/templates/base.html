@@ -26,7 +26,9 @@
                     {% if user.is_authenticated %}
                     <a class="nav-link active" aria-current="page" href="{% url 'select_cbu' %}">Altas/Baja/Modificacion</a>
                     <a class="nav-link active" aria-current="page" href="{% url 'buscar' %}">Busqueda</a>
-                    <a class="nav-link active" aria-current="page" href="#">Informes</a>
+                    {% if perms.pianoadherentes.can_view_stats %}
+                        <a class="nav-link active" aria-current="page" href="{% url 'stats' %}">Informes</a>
+                        {% endif %}
                     <a class="nav-link active" aria-current="page" href="{% url 'logout' %}">Log Out</a>
                     <a class="nav-link disabled" aria-disabled="true">{{user}}</a>
                     

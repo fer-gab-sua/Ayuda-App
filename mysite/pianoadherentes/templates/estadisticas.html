@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{{error}}
+<link rel="stylesheet" href="{% static 'css/create_client.css' %}">
+<h1 style="text-align: center; margin-bottom: 50px;">Generar Informe</h1>
+<div class="container" >
+    <form method="post" action="{% url 'stats' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Generar Excel</button>
+    </form>
+<div>
+
+{% endblock %}

@@ -33,6 +33,12 @@ class Titular(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+    class Meta:
+        permissions = [
+            ("can_view_stats", "Can view statistics"),
+        ]
 
 
 class Adherente(models.Model):
@@ -55,4 +61,9 @@ class Adherente(models.Model):
 
     def __str__(self):
         return self.name
+    
+    class Meta:
+        permissions = [
+            ("can_view_stats", "Can view statistics"),
+        ]
 

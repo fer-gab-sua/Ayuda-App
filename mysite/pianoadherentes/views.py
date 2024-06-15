@@ -3,14 +3,17 @@ from django.shortcuts import render, redirect , get_object_or_404
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import permission_required
 from django.http import HttpResponse
 from django.db import IntegrityError
-from .forms import ClientForm , AdherenteForm
+from .forms import ClientForm , AdherenteForm, DateRangeForm
 from django.contrib import messages
 from .models import Titular , Adherente
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
-
+import csv
+from datetime import datetime, timedelta
+import pandas as pd
 
 def home(request):
     return render(request, 'signin.html')
@@ -64,7 +67,6 @@ def login_user(request):
 
 @login_required
 def create_client(request):
-    print(request.method)
     if request.method == 'GET':
         return render(request, 'create_client.html', {
             'form': ClientForm()
@@ -111,7 +113,6 @@ def create_adherente(request):
                 titular_id = request.POST.get('titular_id')
                 new_client = Titular.objects.get(titular_id=titular_id)
                 adherentes = Adherente.objects.filter(titular=titular_id)
-                print(adherentes)
                 return render(request, 'create_client.html', {
                 'new_client': new_client,
                 'form2': form, # Redirigir a una vista de listado de clientes o a donde sea apropiado
@@ -190,7 +191,6 @@ def consultar_cbu(request):
 @login_required
 def bajaAdherente(request, adherente_id):
     adherente = Adherente.objects.get(pk=adherente_id)
-    print(adherente.adherente_date)
     if request.method == 'POST':
         adherente.is_active = False
         adherente.save()
@@ -213,10 +213,10 @@ def updateAdherente(request, adherente_id):
         form = AdherenteForm(request.POST, instance=adherente)
         if form.is_valid():
             form.save()
-            print(adherente.is_active)
+
             titular_id = adherente.titular.titular_id
             adherentes = Adherente.objects.filter(titular=titular_id)
-            print(titular_id)
+
             new_client = Titular.objects.get(pk=titular_id)
             return render(request, 'create_client.html', {
             'new_client': new_client,
@@ -231,14 +231,12 @@ def updateAdherente(request, adherente_id):
 def update_titular(request, titular_id):
     titular = get_object_or_404(Titular, pk=titular_id)
     checklist = titular.is_active
-    print(titular.is_active)
+
     if request.method == 'POST':
-        print("aca metodo post") 
+
         form = ClientForm(request.POST, instance=titular)
         if form.is_valid():
-            print("aca metodo post y formulario valido") 
-            
-            
+
             form.save()
             adherentes = Adherente.objects.filter(titular=titular)
             return render(request, 'create_client.html', {
@@ -246,7 +244,6 @@ def update_titular(request, titular_id):
             'tupla_adherentes': adherentes
             }) # Redirigir después de guardar
         else:
-            print("aca es donde paso el valor") 
             form = ClientForm(instance=titular)
         
     return render(request, 'update_client.html', {'client': titular, 'form': form, 'is_active' : checklist})
@@ -269,7 +266,7 @@ def buscar(request):
                     })
         
         filtro = {}
-        print("este es el cbu: " ,cbu)
+
         if cbu:
             filtro['cbu'] = cbu
         if nombre:
@@ -283,11 +280,10 @@ def buscar(request):
         if activo:
             filtro['is_active'] = True
         
-        print(filtro)
 
         titulares = Titular.objects.filter(**filtro)
         if titulares.exists():
-            print(titulares)
+
             return render(request, 'list_client.html', {
                 'new_client': titulares
             })
@@ -300,3 +296,55 @@ def buscar(request):
 
 
 
+@permission_required('pianoadherentes.can_view_stats', raise_exception=True)
+def stadisticas(request):
+
+    
+    return render(request, 'estadisticas.html')
+
+
+@permission_required('pianoadherentes.can_view_stats', raise_exception=True)
+def generate_excel(request):
+    if request.method == 'POST':
+        form = DateRangeForm(request.POST)
+        if form.is_valid():
+            start_date_str = request.POST.get('start_date')
+            end_date_str = request.POST.get('end_date')
+
+            # Convertir las fechas de cadena a objetos datetime
+            start_date_parts = start_date_str.split('/')
+            start_date = '-'.join(reversed(start_date_parts))
+
+            end_date_parts = end_date_str.split('/')
+            end_date = '-'.join(reversed(end_date_parts))
+
+            # Filtrar adherentes dentro del rango de fechas
+            adherentes = Adherente.objects.filter(adherente_date__range=(start_date, end_date))
+
+            # Crear un DataFrame de Pandas
+            data = {
+                'Adherente ID': [adherente.adherente_id for adherente in adherentes],
+                'Titular': [adherente.titular.name for adherente in adherentes],
+                'DNI Titular': [adherente.titular.dni for adherente in adherentes],
+                'CBU Titular': [adherente.titular.cbu for adherente in adherentes],
+                'Nombre': [adherente.name for adherente in adherentes],
+                'Teléfono': [adherente.phone for adherente in adherentes],
+                'Dirección': [adherente.address for adherente in adherentes],
+                'DNI': [adherente.dni for adherente in adherentes],
+                'Fecha de Creación': [adherente.adherente_date.strftime('%Y-%m-%d %H:%M:%S') for adherente in adherentes],
+                'Usuario': [adherente.user_upload.username for adherente in adherentes],
+            }
+            df = pd.DataFrame(data)
+
+            # Crear el archivo Excel
+            response = HttpResponse(content_type='application/vnd.ms-excel')
+            response['Content-Disposition'] = 'attachment; filename="informe.xlsx"'
+
+            # Guardar el DataFrame en el archivo Excel
+            df.to_excel(response, index=False)
+
+            return response
+    else:
+        form = DateRangeForm()
+
+    return render(request, 'estadisticas.html', {'form': form})
