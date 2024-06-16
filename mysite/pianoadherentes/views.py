@@ -164,7 +164,7 @@ def client_baja(request,titular_id):
 @login_required
 def consultar_cbu(request):
     if request.method == 'GET':
-        return render(request, 'create_client_selCB.html', {
+        return render(request, 'create_client_selcb.html', {
         })
     elif request.method == 'POST':
         cbu_r = request.POST.get("cbu")
