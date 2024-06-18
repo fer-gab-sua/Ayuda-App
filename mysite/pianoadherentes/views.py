@@ -11,9 +11,7 @@ from django.contrib import messages
 from .models import Titular , Adherente
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
-import csv
-from datetime import datetime, timedelta
-import pandas as pd
+from openpyxl import Workbook
 
 def home(request):
     return render(request, 'signin.html')
@@ -133,7 +131,7 @@ def create_adherente(request):
 def client_detail(request, titular_id):
     if request.method == 'GET':
         #cliente = Titular.objects.filter(titular_id=titular_id)
-        #titular = Titular.objects.get(pk=titular_id) esto puede tumbar el servidor 
+        #titular = Titular.objects.get(pk=titular_id) esto puede tumbar el servidor
         titular = get_object_or_404(Titular,pk=titular_id)
         form = ClientForm(instance=titular)
         return render(request, 'client_detail.html',{'titular': titular, 'form': form})
@@ -142,7 +140,7 @@ def client_detail(request, titular_id):
             titular = get_object_or_404(Titular,pk=titular_id)
             #titular = get_object_or_404(Titular,pk=titular_id,user_upload=request.user )
             form = ClientForm(request.POST, instance=titular)
-            form.save()  
+            form.save()
             return redirect('clients')
         except ValueError:
             return render(request, 'client_detail.html',{'titular': titular, 'form': form, 'error': 'error actualizando cliente'})
@@ -205,7 +203,9 @@ def bajaAdherente(request, adherente_id):
         })
     else:
         return HttpResponse("none")
-    
+
+
+@login_required
 def updateAdherente(request, adherente_id):
     adherente = Adherente.objects.get(pk=adherente_id)
     checklist = adherente.is_active
@@ -224,10 +224,10 @@ def updateAdherente(request, adherente_id):
             })
     else:
         form = AdherenteForm(instance=adherente)
-    
+
     return render(request, 'update_adherente.html', {'adherente': adherente, 'form': form, 'is_active': checklist})
 
-
+@login_required
 def update_titular(request, titular_id):
     titular = get_object_or_404(Titular, pk=titular_id)
     checklist = titular.is_active
@@ -245,9 +245,10 @@ def update_titular(request, titular_id):
             }) # Redirigir después de guardar
         else:
             form = ClientForm(instance=titular)
-        
+
     return render(request, 'update_client.html', {'client': titular, 'form': form, 'is_active' : checklist})
 
+@login_required
 def buscar(request):
     if request.method == 'GET':
         return render(request, 'buscar.html')
@@ -264,7 +265,7 @@ def buscar(request):
                     return render(request, 'buscar.html', {
                         'error': 'Debe proporcionar al menos un criterio de búsqueda.'
                     })
-        
+
         filtro = {}
 
         if cbu:
@@ -279,7 +280,7 @@ def buscar(request):
             filtro['dni'] = dni
         if activo:
             filtro['is_active'] = True
-        
+
 
         titulares = Titular.objects.filter(**filtro)
         if titulares.exists():
@@ -299,7 +300,7 @@ def buscar(request):
 @permission_required('pianoadherentes.can_view_stats', raise_exception=True)
 def stadisticas(request):
 
-    
+
     return render(request, 'estadisticas.html')
 
 
@@ -321,27 +322,48 @@ def generate_excel(request):
             # Filtrar adherentes dentro del rango de fechas
             adherentes = Adherente.objects.filter(adherente_date__range=(start_date, end_date))
 
-            # Crear un DataFrame de Pandas
-            data = {
-                'Adherente ID': [adherente.adherente_id for adherente in adherentes],
-                'Titular': [adherente.titular.name for adherente in adherentes],
-                'DNI Titular': [adherente.titular.dni for adherente in adherentes],
-                'CBU Titular': [adherente.titular.cbu for adherente in adherentes],
-                'Nombre': [adherente.name for adherente in adherentes],
-                'Teléfono': [adherente.phone for adherente in adherentes],
-                'Dirección': [adherente.address for adherente in adherentes],
-                'DNI': [adherente.dni for adherente in adherentes],
-                'Fecha de Creación': [adherente.adherente_date.strftime('%Y-%m-%d %H:%M:%S') for adherente in adherentes],
-                'Usuario': [adherente.user_upload.username for adherente in adherentes],
-            }
-            df = pd.DataFrame(data)
+            # Crear un archivo Excel utilizando openpyxl
+            wb = Workbook()
+            ws = wb.active
+            ws.title = 'Adherentes'
 
-            # Crear el archivo Excel
-            response = HttpResponse(content_type='application/vnd.ms-excel')
+            # Definir encabezados de columnas
+            headers = [
+                'Adherente ID',
+                'Titular',
+                'DNI Titular',
+                'CBU Titular',
+                'Nombre',
+                'Teléfono',
+                'Dirección',
+                'DNI',
+                'Fecha de Creación',
+                'Usuario',
+            ]
+
+            # Escribir encabezados en la primera fila
+            for col_num, header in enumerate(headers, start=1):
+                ws.cell(row=1, column=col_num, value=header)
+
+            # Escribir datos de adherentes en filas
+            for row_num, adherente in enumerate(adherentes, start=2):
+                ws.cell(row=row_num, column=1, value=adherente.adherente_id)
+                ws.cell(row=row_num, column=2, value=adherente.titular.name)
+                ws.cell(row=row_num, column=3, value=adherente.titular.dni)
+                ws.cell(row=row_num, column=4, value=adherente.titular.cbu)
+                ws.cell(row=row_num, column=5, value=adherente.name)
+                ws.cell(row=row_num, column=6, value=adherente.phone)
+                ws.cell(row=row_num, column=7, value=adherente.address)
+                ws.cell(row=row_num, column=8, value=adherente.dni)
+                ws.cell(row=row_num, column=9, value=adherente.adherente_date.strftime('%Y-%m-%d %H:%M:%S'))
+                ws.cell(row=row_num, column=10, value=adherente.user_upload.username)
+
+            # Crear el archivo Excel en memoria
+            response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
             response['Content-Disposition'] = 'attachment; filename="informe.xlsx"'
 
-            # Guardar el DataFrame en el archivo Excel
-            df.to_excel(response, index=False)
+            # Guardar el libro de trabajo en la respuesta HTTP
+            wb.save(response)
 
             return response
     else:

@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', default='your secret key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['fsuarez.pythonanywhere.com', 'localhost', '127.0.0.1']
 
@@ -119,12 +119,22 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    BASE_DIR / "pianoadherentes/static",
-]
+
+if DEBUG == True:
+    STATICFILES_DIRS = [
+        BASE_DIR / "pianoadherentes/static",
+    ]
+else:
+    STATICFILES_DIRS = [
+        '/home/fsuarez/Ayuda-App/mysite/pianoadherentes/static/',
+        '/home/fsuarez/Ayuda-App/mysite/static/'
+    ]
 
 # Ruta donde se recopilarán los archivos estáticos al ejecutar collectstatic
-STATIC_ROOT = BASE_DIR / "staticfiles"
+if DEBUG == True:
+    STATIC_ROOT = BASE_DIR / "staticfiles"
+else:
+    STATIC_ROOT = '/home/fsuarez/Ayuda-App/mysite/static/'
 
 
 
@@ -147,3 +157,11 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 
 #CSRF_COOKIE_SECURE = True
+
+if DEBUG == False:
+    SESSION_SAVE_EVERY_REQUEST = True
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+    APP_DIRS=True
+
+
