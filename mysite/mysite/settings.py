@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['fsuarez.pythonanywhere.com', 'localhost', '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    'admin_interface',
     'pianoadherentes',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -40,7 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'colorfield',
 ]
+
+X_FRAME_OPTIONS='SAMEORIGIN'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -149,7 +153,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #configuraciones del token
 
-SESSION_COOKIE_AGE = 60 
+SESSION_COOKIE_AGE = 1000 
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
@@ -165,3 +169,5 @@ if DEBUG == False:
     APP_DIRS=True
 
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
