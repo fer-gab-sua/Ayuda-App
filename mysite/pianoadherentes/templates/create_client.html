@@ -14,27 +14,83 @@
     <div class="container" style="display:block">
         <form action="/client/create/" method="POST">
             {% csrf_token %}
-            <label for="id_cbu">Cbu:</label>
-            <span class="helptext">Ingrese el CBU de 22 dígitos.</span>
-            <input type="text" name="cbu" maxlength="22" required="" id="id_cbu", value="{{ cbu }}">
-                        
-            <label for="id_name">Nombre y Apellido:</label>
-            <input type="text" name="name" maxlength="100" required="" id="id_name">
-            
-            <label for="id_phone">Telefono:</label>
-            <input type="text" name="phone" maxlength="100" id="id_phone">
-            
-            <label for="id_address">Domicilio:</label>
-            <input type="text" name="address" maxlength="100" required="" id="id_address">
-            
-            <label for="id_address_detail">Entre Calles:</label>
-            <input type="text" name="address_detail" maxlength="100" id="id_address_detail">
-            
-            <label for="id_dni">Dni:</label>
-            <input type="text" name="dni" maxlength="100" required="" id="id_dni">
-            
-            <label for="id_is_active">Estado Activo:</label>
-            <input type="checkbox" name="is_active" id="id_is_active" checked="">
+            <label for="id_cbu">CBU:</label>
+    <span class="helptext">Ingrese el CBU de 22 dígitos.</span>
+    <input type="text" name="cbu" maxlength="22" required id="id_cbu" value="{{ cbu }}">
+
+    <label for="id_name">Nombre:</label>
+    <input type="text" name="name" maxlength="100" required id="id_name">
+
+    <label for="id_last_name">Apellido:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+
+    <label for="id_document_type">Tipo de documento:</label>
+    <input type="text" name="document_type" maxlength="10" required id="id_document_type">
+
+    <label for="id_document">DNI:</label>
+    <input type="text" name="document" maxlength="100" required id="id_document">
+
+    <label for="id_birthdate">Fecha de Nacimiento:</label>
+    <input type="date" name="birthdate" required id="id_birthdate">
+
+    <label for="id_sex">Sexo:</label>
+    <select name="sex" id="id_sex" required>
+        <option value="Masculino">Masculino</option>
+        <option value="Femenino">Femenino</option>
+        <option value="Desconocido">Desconocido</option>
+    </select>
+
+    <label for="id_street_address">Domicilio:</label>
+    <input type="text" name="street_address" maxlength="100" required id="id_street_address">
+
+    <label for="id_number">Número:</label>
+    <input type="text" name="number" maxlength="10" required id="id_number">
+
+    <label for="id_floor">Piso/Depto:</label>
+    <input type="text" name="floor" maxlength="10" id="id_floor">
+
+    <label for="id_between_street">Entre Calles:</label>
+    <input type="text" name="between_street" maxlength="100" id="id_between_street">
+
+    <label for="id_province">Provincia:</label>
+    <select name="province" id="id_province" required>
+        <option value="Buenos Aires">Buenos Aires</option>
+        <option value="Catamarca">Catamarca</option>
+        <option value="Chaco">Chaco</option>
+        <option value="Chubut">Chubut</option>
+        <option value="CABA">CABA</option>
+        <option value="Córdoba">Córdoba</option>
+        <option value="Corrientes">Corrientes</option>
+        <option value="Entre Ríos">Entre Ríos</option>
+        <option value="Formosa">Formosa</option>
+        <option value="Jujuy">Jujuy</option>
+        <option value="La Pampa">La Pampa</option>
+        <option value="La Rioja">La Rioja</option>
+        <option value="Mendoza">Mendoza</option>
+        <option value="Misiones">Misiones</option>
+        <option value="Neuquén">Neuquén</option>
+        <option value="Río Negro">Río Negro</option>
+        <option value="Salta">Salta</option>
+        <option value="San Juan">San Juan</option>
+        <option value="San Luis">San Luis</option>
+        <option value="Santa Cruz">Santa Cruz</option>
+        <option value="Santa Fe">Santa Fe</option>
+        <option value="Santiago del Estero">Santiago del Estero</option>
+        <option value="Tierra del Fuego">Tierra del Fuego</option>
+        <option value="Tucumán">Tucumán</option>
+    </select>
+
+    <label for="id_city">Ciudad/Barrio:</label>
+    <input type="text" name="city" maxlength="30" required id="id_city">
+
+    <label for="id_postal_code">Código Postal:</label>
+    <input type="text" name="postal_code" maxlength="20" required id="id_postal_code">
+
+    <label for="id_phone">Teléfono:</label>
+    <input type="text" name="phone" maxlength="20" id="id_phone">
+
+    <label for="id_is_active">Estado Activo:</label>
+    <input type="checkbox" name="is_active" id="id_is_active" checked>
             <button>Crear</button>
         </form>
     </div>
