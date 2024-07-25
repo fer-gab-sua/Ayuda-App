@@ -28,25 +28,22 @@ label {
 }
 
 input[type="text"], input[type="password"], input[type="checkbox"], [type="date"] {
-    width: 50%;
-    padding: 10px;
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-}
-
-.id_document_type{
     width: 100%;
-    background-color: #007bff;
     padding: 10px;
     margin-bottom: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
     box-sizing: border-box;
-
 }
 
+select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
 
 .helptext {
     font-size: 12px;

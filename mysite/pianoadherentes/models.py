@@ -14,11 +14,11 @@ class Titular(models.Model):
         message="El DNI debe contener solo números."
     )
 
-    titular_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    document_type = models.CharField(max_length=10)
-    document = models.CharField(max_length=100, validators=[dni_validator])
+    titular_id = models.AutoField(primary_key=True) #
+    name = models.CharField(max_length=100) #
+    last_name = models.CharField(max_length=100) #
+    document_type = models.CharField(max_length=10) #
+    document = models.CharField(max_length=100, validators=[dni_validator]) 
     birthdate = models.DateField(blank=True, null=True) 
     sex = models.CharField(max_length=10)
     street_address = models.CharField(max_length=100)

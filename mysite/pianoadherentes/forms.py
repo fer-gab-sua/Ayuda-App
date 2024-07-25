@@ -8,10 +8,17 @@ class ClientForm(ModelForm):
         model = Titular
         fields = ['name', 
                   'last_name',
-                  'phone',
+                  'document_type',
+                  'document',
+                  'birthdate',
+                  'sex',
                   'street_address',
                   'number',
-                  'document',
+                  'floor',
+                  'between_street',
+                  'province',
+                  'city',
+                  'postal_code',
                   'cbu',
                   'is_active'
                   ]
