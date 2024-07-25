@@ -16,10 +16,19 @@ class Titular(models.Model):
 
     titular_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
-    phone = models.CharField(max_length=100, blank=True, null=True)
-    address = models.CharField(max_length=100)
-    address_detail = models.CharField(max_length=100, blank=True, null=True)
-    dni = models.CharField(max_length=100, validators=[dni_validator])
+    last_name = models.CharField(max_length=100)
+    document_type = models.CharField(max_length=10)
+    document = models.CharField(max_length=100, validators=[dni_validator])
+    birthdate = models.DateTimeField(blank=True, null=True)
+    sex = models.CharField(max_length=10)
+    street_address = models.CharField(max_length=100)
+    number = models.CharField(max_length=100)
+    floor =  models.CharField(max_length=10)
+    between_street =  models.CharField(max_length=100)
+    province =  models.CharField(max_length=100)
+    city =  models.CharField(max_length=30)
+    postal_code =  models.CharField(max_length=20)
+    phone = models.CharField(max_length=20, blank=True, null=True)
     cbu = models.CharField(
         max_length=22,
         validators=[cbu_validator],
@@ -30,6 +39,7 @@ class Titular(models.Model):
     deleted = models.DateTimeField(blank=True, null=True)
     user_upload = models.ForeignKey(User, on_delete=models.PROTECT)
     is_active = models.BooleanField(default=True)
+    migrate =  models.BooleanField()
 
     def __str__(self):
         return self.name
