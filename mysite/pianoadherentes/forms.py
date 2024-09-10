@@ -19,6 +19,7 @@ class ClientForm(ModelForm):
                   'province',
                   'city',
                   'postal_code',
+                  'phone',
                   'cbu',
                   'is_active'
                   ]
