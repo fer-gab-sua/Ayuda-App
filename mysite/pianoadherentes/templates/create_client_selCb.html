@@ -3,7 +3,7 @@
 {% block content %}
 {{error}}
 
-<link rel="stylesheet" href="{% static 'css/create_client.css' %}">
+<link rel="stylesheet" href="{% static '/css/create_client.css' %}">
 
 
 <div class="principal">
@@ -17,7 +17,7 @@
             {% csrf_token %}
             <label for="id_cbu">Cbu:</label>
             <span class="helptext">Ingrese el CBU de 22 dígitos.</span>
-            <input type="text" name="cbu" maxlength="22" required="" id="id_cbu">
+            <input type="text" class="cbu" name="cbu" maxlength="22" required="" id="id_cbu">
             <button>Consultar</button>
         </form>
     </div>
