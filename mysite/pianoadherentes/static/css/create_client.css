@@ -1,12 +1,9 @@
-.principal {
-    height: 100%;
-    width: 100%;
-    padding: 10px;
-}
 
-.container{
+
+.containerform{
     display: flex;
     margin-top: 20px;
+    background-color: #007bff;
 
 }
 
@@ -17,18 +14,57 @@ h1 {
 
 
 form {
-    max-width: 500px;
+    max-width: 700px;
     margin: auto;
 }
 
 label {
-    display: block;
-    margin-bottom: 8px;
+    display: flex;
+    margin-bottom: 2px;
     font-weight: bold;
-    color: #555;
+    font-size: small;
 }
 
-input[type="text"], input[type="password"], input[type="checkbox"] {
+input[type="text"], input[type="password"], input[type="checkbox"], [type="date"] {
+    /*width: 100%;*/
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.cbu {
+    width: 80%;
+}
+
+.nombreyapellido {
+    background-color: #888;
+    display: block;
+}
+
+.tipodocumento {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+.numerodocumento {
+    width: 100%;
+}
+
+.address {
+    width: 100%;
+}
+
+.number_adress {
+    width: 100%;
+}
+
+
+select {
     width: 100%;
     padding: 10px;
     margin-bottom: 20px;
@@ -57,3 +93,5 @@ button {
 button:hover {
     background-color: #0056b3;
 }
+
+

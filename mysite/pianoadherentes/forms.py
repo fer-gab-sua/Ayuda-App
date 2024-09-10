@@ -6,13 +6,34 @@ from .models import Titular, Adherente
 class ClientForm(ModelForm):
     class Meta:
         model = Titular
-        fields = ['name','phone','address','address_detail','dni','cbu','is_active']
+        fields = ['name', 
+                  'last_name',
+                  'document_type',
+                  'document',
+                  'birthdate',
+                  'sex',
+                  'street_address',
+                  'number',
+                  'floor',
+                  'between_street',
+                  'province',
+                  'city',
+                  'postal_code',
+                  'cbu',
+                  'is_active'
+                  ]
 
 
 class AdherenteForm(ModelForm):
     class Meta:
         model = Adherente
-        fields = ['name','phone','address','address_detail','dni','is_active']
+        fields = ['name',
+                  'phone',
+                  'street_address',
+                  'number',
+                  'document',
+                  'is_active'
+                  ]
 
 class DateRangeForm(forms.Form):
     start_date = forms.DateField(label='Fecha de inicio')
