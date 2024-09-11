@@ -10,20 +10,108 @@
         <h1>Actualizar Titular</h1>
         <form action="" method="POST">
                 {% csrf_token %}
-                <label for="id_cbu">Cbu:</label>
+                <label for="id_cbu">CBU:</label>
                 <span class="helptext">Ingrese el CBU de 22 dígitos.</span>
-                <input type="text" name="cbu" maxlength="22" required="" id="id_cbu", value="{{ client.cbu }}">
-                <input type="hidden" name="titular_id" value="{{ client.titular_id }}">
-                <label for="id_name">Nombre y Apellido:</label>
-                <input type="text" name="name" maxlength="100" required="" id="id_name" value="{{client.name}}">
-                <label for="id_address">Direccion</label>
-                <input type="text" name="address" maxlength="100" required="" id="id_address" value="{{client.address}}">
-    
-                <label for="id_address_detail">Entre calles:</label>
-                <input type="text" name="address_detail" maxlength="100" id="id_address_detail" , value="{{client.address_detail}}">
-    
-                <label for="id_dni">Dni:</label>
-                <input type="text" name="dni" maxlength="100" required="" id="id_dni" value="{{client.dni}}">
+                <input type="text" class="cbu" name="cbu" maxlength="22" required id="id_cbu" value="{{ client.cbu }}">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="id_name">Nombre:</label>
+                        <input type="text" name="name" maxlength="100" required id="id_name" class="form-control" value="{{ client.name }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="id_last_name">Apellido:</label>
+                        <input type="text" name="last_name" maxlength="100" required id="id_last_name" class="form-control" value="{{ client.last_name}}">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="id_document_type">Tipo:</label>
+                        <select name="document_type" id="document_type" required class="tipodocumento">
+                            <option value="dni" {% if client.document_type == "dni" %}selected{% endif %}>Dni</option>
+                            <option value="cuil" {% if client.document_type == "cuil" %}selected{% endif %}>Cuil</option>
+                            <option value="cuit" {% if client.document_type == "cuit" %}selected{% endif %}>Cuit</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="id_document">Numero de documento:</label>
+                        <input type="text" name="document" maxlength="100" required id="id_document" class="numerodocumento" value="{{ client.document }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="id_birthdate">Fecha de Nacimiento:</label>
+                        <input type="date" name="birthdate" required id="id_birthdate"  value="{{ client.birthdate|date:"Y-m-d" }}">
+                    </div>
+                    <div class="col-md-3">
+                    <label for="id_sex">Sexo:</label>
+                    <select name="sex" id="id_sex" required>
+                        <option value="Masculino" {% if client.sex == "Masculino" %}selected{% endif %}>Masculino</option>
+                        <option value="Femenino" {% if client.sex == "Femenino" %}selected{% endif %}>Femenino</option>
+                        <option value="Desconocido" {% if client.sex == "Desconocido" %}selected{% endif %}>Desconocido</option>
+                    </select>
+                    </div>
+                </div>
+
+                <label for="id_street_address">Domicilio:</label>
+
+                <div class="row">
+                    <div class="col-md-7">
+                        <label for="id_street_address">Calle:</label>
+                        <input type="text" name="street_address" maxlength="100" required id="id_street_address" class="address" value="{{ client.street_address }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="id_number">Número:</label>
+                        <input type="text" name="number" maxlength="10" required id="id_number" class="number_adress" value="{{ client.number }}">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="id_floor">Piso/Depto:</label>
+                        <input type="text" name="floor" maxlength="10" id="id_floor" class="number_adress"  value="{{ client.floor }}">
+                    </div>
+                </div>
+                <label for="id_between_street">Entre Calles:</label>
+                <input type="text" name="between_street" maxlength="100" id="id_between_street" class="number_adress" value="{{ client.between_street }}">
+
+                <div class="row">
+                    <div class="col-md-7">
+                        <label for="id_province">Provincia:</label>
+                        <select name="province" id="id_province" required class="combo">
+                            <option value="Buenos Aires" {% if client.province == "Buenos Aires" %}selected{% endif %}>Buenos Aires</option>
+                            <option value="Catamarca" {% if client.province == "Catamarca" %}selected{% endif %}>Catamarca</option>
+                            <option value="Chaco" {% if client.province == "Chaco" %}selected{% endif %}>Chaco</option>
+                            <option value="Chubut" {% if client.province == "Chubut" %}selected{% endif %}>Chubut</option>
+                            <option value="CABA" {% if client.province == "CABA" %}selected{% endif %}>CABA</option>
+                            <option value="Córdoba" {% if client.province == "Córdoba" %}selected{% endif %}>Córdoba</option>
+                            <option value="Corrientes" {% if client.province == "Corrientes" %}selected{% endif %}>Corrientes</option>
+                            <option value="Entre Ríos" {% if client.province == "Entre Ríos" %}selected{% endif %}>Entre Ríos</option>
+                            <option value="Formosa" {% if client.province == "Formosa" %}selected{% endif %}>Formosa</option>
+                            <option value="Jujuy" {% if client.province == "Jujuy" %}selected{% endif %}>Jujuy</option>
+                            <option value="La Pampa" {% if client.province == "La Pampa" %}selected{% endif %}>La Pampa</option>
+                            <option value="La Rioja" {% if client.province == "La Rioja" %}selected{% endif %}>La Rioja</option>
+                            <option value="Mendoza" {% if client.province == "Mendoza" %}selected{% endif %}>Mendoza</option>
+                            <option value="Misiones" {% if client.province == "Misiones" %}selected{% endif %}>Misiones</option>
+                            <option value="Neuquén" {% if client.province == "Neuquén" %}selected{% endif %}>Neuquén</option>
+                            <option value="Río Negro" {% if client.province == "Río Negro" %}selected{% endif %}>Río Negro</option>
+                            <option value="Salta" {% if client.province == "Salta" %}selected{% endif %}>Salta</option>
+                            <option value="San Juan" {% if client.province == "San Juan" %}selected{% endif %}>San Juan</option>
+                            <option value="San Luis" {% if client.province == "San Luis" %}selected{% endif %}>San Luis</option>
+                            <option value="Santa Cruz" {% if client.province == "Santa Cruz" %}selected{% endif %}>Santa Cruz</option>
+                            <option value="Santa Fe" {% if client.province == "Santa Fe" %}selected{% endif %}>Santa Fe</option>
+                            <option value="Santiago del Estero" {% if client.province == "Santiago del Estero" %}selected{% endif %}>Santiago del Estero</option>
+                            <option value="Tierra del Fuego" {% if client.province == "Tierra del Fuego" %}selected{% endif %}>Tierra del Fuego</option>
+                            <option value="Tucumán" {% if client.province == "Tucumán" %}selected{% endif %}>Tucumán</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="id_city">Ciudad/Barrio:</label>
+                        <input type="text" name="city" maxlength="30" required id="id_city" class="number_adress"  value="{{ client.city }}">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="id_postal_code">Código Postal:</label>
+                        <input type="text" name="postal_code" maxlength="20" required id="id_postal_code" class="number_adress" value="{{ client.postal_code}}">
+                    </div>
+                </div>
+                <label for="phone">Telefono:</label>
+                <input type="text" name="phone" maxlength="25" required id="phone" class="number_adress" value="{{ client.phone}}">
     
                 <label for="id_is_active">Is active:{{ is_active }}</label>
                 <input type="checkbox" name="is_active" id="id_is_active" 

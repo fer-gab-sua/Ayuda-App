@@ -231,12 +231,13 @@ def updateAdherente(request, adherente_id):
 def update_titular(request, titular_id):
     titular = get_object_or_404(Titular, pk=titular_id)
     checklist = titular.is_active
+    print(titular.__dict__) 
+    form = ClientForm(request.POST, instance=titular)
 
     if request.method == 'POST':
 
-        form = ClientForm(request.POST, instance=titular)
         if form.is_valid():
-
+            
             form.save()
             adherentes = Adherente.objects.filter(titular=titular)
             return render(request, 'create_client.html', {
@@ -245,7 +246,11 @@ def update_titular(request, titular_id):
             }) # Redirigir después de guardar
         else:
             form = ClientForm(instance=titular)
+            print(titular.between_street)
+            print("Formulario inválido", form.errors)
 
+    elif request.method == 'GET':
+        pass
     return render(request, 'update_client.html', {'client': titular, 'form': form, 'is_active' : checklist})
 
 @login_required

@@ -156,7 +156,7 @@ integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEw
                         Baja
                         {% endif %}
                     </td>
-                    <td style="display: flex;"><form action="{% url 'update_titular' new_client.pk %}" method="POST">
+                    <td style="display: flex;"><form action="{% url 'update_titular' new_client.pk %}" method="GET">
                         {% csrf_token %}
                         <button type="submit" style="
                         background:#007bff;
