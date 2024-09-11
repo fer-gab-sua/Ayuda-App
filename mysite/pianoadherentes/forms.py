@@ -29,12 +29,21 @@ class AdherenteForm(ModelForm):
     class Meta:
         model = Adherente
         fields = ['name',
-                  'phone',
-                  'street_address',
-                  'number',
-                  'document',
-                  'is_active'
-                  ]
+                    'last_name',
+                    'document_type',
+                    'document',
+                    'birthdate',
+                    'sex',
+                    'street_address',
+                    'number',
+                    'floor',
+                    'between_street',
+                    'province',
+                    'city',
+                    'postal_code',
+                    'phone',
+                    'is_active'
+                    ]
 
 class DateRangeForm(forms.Form):
     start_date = forms.DateField(label='Fecha de inicio')

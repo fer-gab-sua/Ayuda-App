@@ -8,167 +8,69 @@ integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEw
 <link rel="stylesheet" href="{% static 'css/create_client.css' %}">
 
 <div class="principal">
+    <!--TABLA CLIENTE-->
     {% if new_client %}
-    <div class="container formulario" style="display: none">
+        {% include 'table_client.html' %}
     {% else %}
     <!--ALTA DE TITULAR-->
-    <h1>Alta de Titular</h1>
-    <div class="container" style="display:block">
-        <form action="/client/create/" method="POST">
-            {% csrf_token %}
-            <label for="id_cbu">CBU:</label>
-            <span class="helptext">Ingrese el CBU de 22 dígitos.</span>
-            <input type="text" class="cbu" name="cbu" maxlength="22" required id="id_cbu" value="{{ cbu }}">
-
-            <div class="row">
-                <div class="col-md-6">
-                    <label for="id_name">Nombre:</label>
-                    <input type="text" name="name" maxlength="100" required id="id_name" class="form-control">
-                </div>
-                <div class="col-md-6">
-                    <label for="id_last_name">Apellido:</label>
-                    <input type="text" name="last_name" maxlength="100" required id="id_last_name" class="form-control">
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-2">
-                    <label for="id_document_type">Tipo:</label>
-                    <select name="document_type" id="document_type" required required id="id_document_type" class="tipodocumento">
-                        <option value="dni">Dni</option>
-                        <option value="cuil">Cuil</option>
-                        <option value="cuit">Cuit</option>
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <label for="id_document">Numero de documento:</label>
-                    <input type="text" name="document" maxlength="100" required id="id_document" class="numerodocumento">
-                </div>
-                <div class="col-md-3">
-                    <label for="id_birthdate">Fecha de Nacimiento:</label>
-                    <input type="date" name="birthdate" required id="id_birthdate">
-                </div>
-                <div class="col-md-3">
-                <label for="id_sex">Sexo:</label>
-                    <select name="sex" id="id_sex" required>
-                        <option value="Masculino">Masculino</option>
-                        <option value="Femenino">Femenino</option>
-                        <option value="Desconocido">Desconocido</option>
-                    </select>
-                </div>
-            </div>
-
-            <label for="id_street_address">Domicilio:</label>
-
-            <div class="row">
-                <div class="col-md-7">
-                    <label for="id_street_address">Calle:</label>
-                    <input type="text" name="street_address" maxlength="100" required id="id_street_address" class="address">
-                </div>
-                <div class="col-md-3">
-                    <label for="id_number">Número:</label>
-                    <input type="text" name="number" maxlength="10" required id="id_number" class="number_adress">
-                </div>
-                <div class="col-md-2">
-                    <label for="id_floor">Piso/Depto:</label>
-                    <input type="text" name="floor" maxlength="10" id="id_floor" class="number_adress">
-                </div>
-            </div>
-            <label for="id_between_street">Entre Calles:</label>
-            <input type="text" name="between_street" maxlength="100" id="id_between_street" class="number_adress">
-
-            <div class="row">
-                <div class="col-md-7">
-                    <label for="id_province">Provincia:</label>
-                    <select name="province" id="id_province" required class="combo">
-                        <option value="Buenos Aires">Buenos Aires</option>
-                        <option value="Catamarca">Catamarca</option>
-                        <option value="Chaco">Chaco</option>
-                        <option value="Chubut">Chubut</option>
-                        <option value="CABA">CABA</option>
-                        <option value="Córdoba">Córdoba</option>
-                        <option value="Corrientes">Corrientes</option>
-                        <option value="Entre Ríos">Entre Ríos</option>
-                        <option value="Formosa">Formosa</option>
-                        <option value="Jujuy">Jujuy</option>
-                        <option value="La Pampa">La Pampa</option>
-                        <option value="La Rioja">La Rioja</option>
-                        <option value="Mendoza">Mendoza</option>
-                        <option value="Misiones">Misiones</option>
-                        <option value="Neuquén">Neuquén</option>
-                        <option value="Río Negro">Río Negro</option>
-                        <option value="Salta">Salta</option>
-                        <option value="San Juan">San Juan</option>
-                        <option value="San Luis">San Luis</option>
-                        <option value="Santa Cruz">Santa Cruz</option>
-                        <option value="Santa Fe">Santa Fe</option>
-                        <option value="Santiago del Estero">Santiago del Estero</option>
-                        <option value="Tierra del Fuego">Tierra del Fuego</option>
-                        <option value="Tucumán">Tucumán</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label for="id_city">Ciudad/Barrio:</label>
-                    <input type="text" name="city" maxlength="30" required id="id_city" class="number_adress">
-                </div>
-                <div class="col-md-2">
-                    <label for="id_postal_code">Código Postal:</label>
-                    <input type="text" name="postal_code" maxlength="20" required id="id_postal_code" class="number_adress">
-                </div>
-            </div>
-            <label for="phone">Telefono:</label>
-            <input type="text" name="phone" maxlength="25" required id="phone" class="number_adress">
-            <label for="id_is_active">Is active:</label>
-            <input type="checkbox" name="is_active" id="id_is_active" checked="">
-
-
-            <button>Crear</button>
-        </form>
-    </div>
+        {% include 'form_client.html' %}
     {% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    {% if tupla_adherentes %}
+    <div class="0" style="text-align: center; margin-top: 20px;">
+        <H2>Adherentes agregados</H2>
     </div>
-    <!--TABLA CLIENTE-->
-    
-    {% if new_client %}
-    <h1>Titular</h1>
+
     <div class="container" >
         <table class="table">
             <thead>
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Nombre y Apellido</th>
-                    <th scope="col">Documento</th>
-                    <th scope="col">CBU</th>
+                    <th scope="col">DNI</th>
                     <th scope="col">Estado</th>
                     <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
+                {% for adherente in tupla_adherentes %}
                 <tr>
-                    <th scope="row">{{new_client.titular_id}}</th>
-                    <td>{{new_client.name}} {{new_client.last_name}}</td>
-                    <td>{{new_client.document}}</td>
-                    <td>{{new_client.cbu}}</td>
+                    <td>{{adherente.adherente_id}}</td>
+                    <td>{{adherente.name}}</td>
+                    <td>{{adherente.dni}}</td>
                     <td>
-                        {% if new_client.is_active == True %}
+                        {% if adherente.is_active == True %}
                         Activo
                         {% else %}
                         Baja
                         {% endif %}
                     </td>
-                    <td style="display: flex;"><form action="{% url 'update_titular' new_client.pk %}" method="GET">
+                    <td style="display: flex;"><form action="{% url 'update_adherente' adherente.adherente_id %}" method="POST">
                         {% csrf_token %}
                         <button type="submit" style="
-                        background:#007bff;
+                        background:rgb(34, 178, 176);
                         border:none;
                         color:blue;
                         text-decoration:underline;
                         cursor:pointer;
-                        width: 50px;" class="editar">
-                            <img  id="edit" src="{% static '/img/edit_icon.png' %}" alt="img">
+                        width: 100px;">
+                            Editar
                         </button>
                     </form>
-                    <form action="{% url 'client_baja' new_client.pk %}" method="POST" >
+                    <form action="{% url 'baja_adherente' adherente.adherente_id %}" method="POST" style="background-color: aquamarine;width: 100px;;">
                         {% csrf_token %}
                         <button type="submit" style="
                         background:firebrick;
@@ -176,111 +78,30 @@ integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEw
                         color:blue;
                         text-decoration:underline;
                         cursor:pointer;
-                        width: 50px;" onclick="return confirmDelete()">
-                            <img  id="edit" src="{% static '/img/del_icon.png' %}" alt="img">
+                        width: 100px;" onclick="return confirmDeleteAd()">
+                            Baja
                         </button>
                     </form>
-                    </td>
-                    
-                </tr>
+                        
+                {% endfor %}
             </tbody>
         </table>
     </div>
+    <button id="new-adherente-btn">Nuevo ingreso Adherentes</button>
+    <div class="container" id="adherente-form" style="display: none;">
 
-{% endif %}
-
-{% if tupla_adherentes %}
-<div class="0" style="text-align: center; margin-top: 20px;">
-    <H2>Adherentes agregados</H2>
-</div>
-
-<div class="container" >
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Nombre y Apellido</th>
-                <th scope="col">DNI</th>
-                <th scope="col">Estado</th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for adherente in tupla_adherentes %}
-            <tr>
-                <td>{{adherente.adherente_id}}</td>
-                <td>{{adherente.name}}</td>
-                <td>{{adherente.dni}}</td>
-                <td>
-                    {% if adherente.is_active == True %}
-                    Activo
-                    {% else %}
-                    Baja
-                    {% endif %}
-                </td>
-                <td style="display: flex;"><form action="{% url 'update_adherente' adherente.adherente_id %}" method="POST">
-                    {% csrf_token %}
-                    <button type="submit" style="
-                    background:rgb(34, 178, 176);
-                    border:none;
-                    color:blue;
-                    text-decoration:underline;
-                    cursor:pointer;
-                    width: 100px;">
-                        Editar
-                    </button>
-                </form>
-                <form action="{% url 'baja_adherente' adherente.adherente_id %}" method="POST" style="background-color: aquamarine;width: 100px;;">
-                    {% csrf_token %}
-                    <button type="submit" style="
-                    background:firebrick;
-                    border:none;
-                    color:blue;
-                    text-decoration:underline;
-                    cursor:pointer;
-                    width: 100px;" onclick="return confirmDeleteAd()">
-                        Baja
-                    </button>
-                </form>
-                    
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-<button id="new-adherente-btn">Nuevo ingreso Adherentes</button>
-<div class="container" id="adherente-form" style="display: none;">
-
-{% else %}
-    {% if new_client %}
-        <!--FORMULARIO ADHERENTES-->
-        <div class="container" id="adherente-form" style="display: inline;">
     {% else %}
-        <div class="container" id="adherente-form" style="display: none">
+        {% if new_client %}
+            <!--FORMULARIO ADHERENTES-->
+            <div class="container" id="adherente-form" style="display: inline;">
+        {% else %}
+            <div class="container" id="adherente-form" style="display: none">
 
+        {% endif %}
     {% endif %}
-{% endif %}
-        <h1>ADHERENTES</h1>
-        <form action="/client/adherente/create/" method="POST">
-                {% csrf_token %}
-                <input type="hidden" name="titular_id" value="{{ new_client.titular_id }}">
-                <label for="id_name">Nombre y Apellido:</label>
-                <input type="text" name="name" maxlength="100" required="" id="id_name">
-                <label for="id_address">Direccion</label>
-                <input type="text" name="address" maxlength="100" required="" id="id_address">
-    
-                <label for="id_address_detail">Entre calles:</label>
-                <input type="text" name="address_detail" maxlength="100" id="id_address_detail">
-    
-                <label for="id_dni">Dni:</label>
-                <input type="text" name="dni" maxlength="100" required="" id="id_dni">
-    
-                <label for="id_is_active">Is active:</label>
-                <input type="checkbox" name="is_active" id="id_is_active" checked="">
-    
-                <button>Alta Adherente</button>
-            </form>
-    
-    </div>
+    {% include 'form_adherentes.html' %}
+        
+        </div>
 
 <script>
         document.getElementById('new-adherente-btn').addEventListener('click', function() {

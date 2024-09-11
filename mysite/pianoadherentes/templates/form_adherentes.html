@@ -1,0 +1,110 @@
+<h1>ADHERENTES</h1>
+<form action="/client/adherente/create/" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="titular_id" value="{{ new_client.titular_id }}">
+
+        <div class="row">
+            <div class="col-md-6">
+                <label for="id_name">Nombre:</label>
+                <input type="text" name="name" maxlength="100" required id="id_name" class="form-control">
+            </div>
+            <div class="col-md-6">
+                <label for="id_last_name">Apellido:</label>
+                <input type="text" name="last_name" maxlength="100" required id="id_last_name" class="form-control">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-2">
+                <label for="id_document_type">Tipo:</label>
+                <select name="document_type" id="document_type" required required id="id_document_type" class="tipodocumento">
+                    <option value="dni">Dni</option>
+                    <option value="cuil">Cuil</option>
+                    <option value="cuit">Cuit</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="id_document">Numero de documento:</label>
+                <input type="text" name="document" maxlength="100" required id="id_document" class="numerodocumento">
+            </div>
+            <div class="col-md-3">
+                <label for="id_birthdate">Fecha de Nacimiento:</label>
+                <input type="date" name="birthdate" required id="id_birthdate">
+            </div>
+            <div class="col-md-3">
+            <label for="id_sex">Sexo:</label>
+                <select name="sex" id="id_sex" required>
+                    <option value="Masculino">Masculino</option>
+                    <option value="Femenino">Femenino</option>
+                    <option value="Indefinido">Indefinido</option>
+                </select>
+            </div>
+        </div>
+
+        <label for="id_street_address">Domicilio:</label>
+
+        <div class="row">
+            <div class="col-md-7">
+                <label for="id_street_address">Calle:</label>
+                <input type="text" name="street_address" maxlength="100" required id="id_street_address" class="address" value="{{ new_client.street_address }}">
+            </div>
+            <div class="col-md-3">
+                <label for="id_number">Número:</label>
+                <input type="text" name="number" maxlength="10" required id="id_number" class="number_adress"value="{{ new_client.number }}">
+            </div>
+            <div class="col-md-2">
+                <label for="id_floor">Piso/Depto:</label>
+                <input type="text" name="floor" maxlength="10" id="id_floor" class="number_adress" value="{{ new_client.floor }}">
+            </div>
+        </div>
+        <label for="id_between_street">Entre Calles:</label>
+        <input type="text" name="between_street" maxlength="100" id="id_between_street" class="number_adress" value="{{ new_client.between_street }}">
+
+        <div class="row">
+            <div class="col-md-7">
+                <label for="id_province">Provincia:</label>
+                <select name="province" id="id_province" required class="combo">
+                    <option value="Buenos Aires" {% if new_client.province == "Buenos Aires" %}selected{% endif %}>Buenos Aires</option>
+                    <option value="Catamarca" {% if new_client.province == "Catamarca" %}selected{% endif %}>Catamarca</option>
+                    <option value="Chaco" {% if new_client.province == "Chaco" %}selected{% endif %}>Chaco</option>
+                    <option value="Chubut" {% if new_client.province == "Chubut" %}selected{% endif %}>Chubut</option>
+                    <option value="CABA" {% if new_client.province == "CABA" %}selected{% endif %}>CABA</option>
+                    <option value="Córdoba" {% if new_client.province == "Córdoba" %}selected{% endif %}>Córdoba</option>
+                    <option value="Corrientes" {% if new_client.province == "Corrientes" %}selected{% endif %}>Corrientes</option>
+                    <option value="Entre Ríos" {% if new_client.province == "Entre Ríos" %}selected{% endif %}>Entre Ríos</option>
+                    <option value="Formosa" {% if new_client.province == "Formosa" %}selected{% endif %}>Formosa</option>
+                    <option value="Jujuy" {% if new_client.province == "Jujuy" %}selected{% endif %}>Jujuy</option>
+                    <option value="La Pampa" {% if new_client.province == "La Pampa" %}selected{% endif %}>La Pampa</option>
+                    <option value="La Rioja" {% if new_client.province == "La Rioja" %}selected{% endif %}>La Rioja</option>
+                    <option value="Mendoza" {% if new_client.province == "Mendoza" %}selected{% endif %}>Mendoza</option>
+                    <option value="Misiones" {% if new_client.province == "Misiones" %}selected{% endif %}>Misiones</option>
+                    <option value="Neuquén" {% if new_client.province == "Neuquén" %}selected{% endif %}>Neuquén</option>
+                    <option value="Río Negro" {% if new_client.province == "Río Negro" %}selected{% endif %}>Río Negro</option>
+                    <option value="Salta" {% if new_client.province == "Salta" %}selected{% endif %}>Salta</option>
+                    <option value="San Juan" {% if new_client.province == "San Juan" %}selected{% endif %}>San Juan</option>
+                    <option value="San Luis" {% if new_client.province == "San Luis" %}selected{% endif %}>San Luis</option>
+                    <option value="Santa Cruz" {% if new_client.province == "Santa Cruz" %}selected{% endif %}>Santa Cruz</option>
+                    <option value="Santa Fe" {% if new_client.province == "Santa Fe" %}selected{% endif %}>Santa Fe</option>
+                    <option value="Santiago del Estero" {% if new_client.province == "Santiago del Estero" %}selected{% endif %}>Santiago del Estero</option>
+                    <option value="Tierra del Fuego" {% if new_client.province == "Tierra del Fuego" %}selected{% endif %}>Tierra del Fuego</option>
+                    <option value="Tucumán" {% if new_client.province == "Tucumán" %}selected{% endif %}>Tucumán</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="id_city">Ciudad/Barrio:</label>
+                <input type="text" name="city" maxlength="30" required id="id_city" class="number_adress" value="{{ new_client.city }}">
+            </div>
+            <div class="col-md-2">
+                <label for="id_postal_code">Código Postal:</label>
+                <input type="text" name="postal_code" maxlength="20" required id="id_postal_code" class="number_adress" value="{{ new_client.postal_code}}">
+            </div>
+        </div>
+        <label for="phone">Telefono:</label>
+        <input type="text" name="phone" maxlength="25" required id="phone" class="number_adress">
+        <label for="id_is_active">Is active:</label>
+        <input type="checkbox" name="is_active" id="id_is_active" checked="">
+
+
+        <button>Agregar Adherente</button>
+    </form>
+</div>

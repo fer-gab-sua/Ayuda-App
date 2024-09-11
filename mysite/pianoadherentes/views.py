@@ -81,7 +81,12 @@ def create_client(request):
                     'form2': AdherenteForm()
                 })
             else:
-                raise ValueError("Invalid form data")
+                # Mostrar los errores específicos del formulario
+                print(form.errors)
+                return render(request, 'create_client.html', {
+                    'form': form,
+                    'error': form.errors  # Muestra los errores del formulario
+                })
         except ValueError as e:
             print(f"ValueError: {e}")
             return render(request, 'create_client.html', {
