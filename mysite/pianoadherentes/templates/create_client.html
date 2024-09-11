@@ -16,92 +16,18 @@ integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEw
         {% include 'form_client.html' %}
     {% endif %}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    <!--TABLA ADHERENTE-->
     {% if tupla_adherentes %}
-    <div class="0" style="text-align: center; margin-top: 20px;">
-        <H2>Adherentes agregados</H2>
-    </div>
-
-    <div class="container" >
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Nombre y Apellido</th>
-                    <th scope="col">DNI</th>
-                    <th scope="col">Estado</th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for adherente in tupla_adherentes %}
-                <tr>
-                    <td>{{adherente.adherente_id}}</td>
-                    <td>{{adherente.name}}</td>
-                    <td>{{adherente.dni}}</td>
-                    <td>
-                        {% if adherente.is_active == True %}
-                        Activo
-                        {% else %}
-                        Baja
-                        {% endif %}
-                    </td>
-                    <td style="display: flex;"><form action="{% url 'update_adherente' adherente.adherente_id %}" method="POST">
-                        {% csrf_token %}
-                        <button type="submit" style="
-                        background:rgb(34, 178, 176);
-                        border:none;
-                        color:blue;
-                        text-decoration:underline;
-                        cursor:pointer;
-                        width: 100px;">
-                            Editar
-                        </button>
-                    </form>
-                    <form action="{% url 'baja_adherente' adherente.adherente_id %}" method="POST" style="background-color: aquamarine;width: 100px;;">
-                        {% csrf_token %}
-                        <button type="submit" style="
-                        background:firebrick;
-                        border:none;
-                        color:blue;
-                        text-decoration:underline;
-                        cursor:pointer;
-                        width: 100px;" onclick="return confirmDeleteAd()">
-                            Baja
-                        </button>
-                    </form>
-                        
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    <button id="new-adherente-btn">Nuevo ingreso Adherentes</button>
-    <div class="container" id="adherente-form" style="display: none;">
-
+        {% include 'table_adherentes.html' %}
     {% else %}
         {% if new_client %}
-            <!--FORMULARIO ADHERENTES-->
-            <div class="container" id="adherente-form" style="display: inline;">
-        {% else %}
-            <div class="container" id="adherente-form" style="display: none">
-
+            {% include 'form_adherentes.html' %}
         {% endif %}
     {% endif %}
-    {% include 'form_adherentes.html' %}
-        
-        </div>
+
+    <!--ALTA DE ADHERENTE-->
+
+</div>
 
 <script>
         document.getElementById('new-adherente-btn').addEventListener('click', function() {

@@ -1,0 +1,72 @@
+{% load static %}
+<div class="0" style="text-align: center; margin-top: 20px;">
+
+
+    <div class="row" style="align-items: center;">
+        <div class="col-md-7" style="text-align: end;">
+            <H2>Adherentes agregados</H2>
+        </div>
+        <div class="col-md-1">
+            <button>Agregar</button>
+        </div>
+    </div>
+
+    
+    
+
+</div>
+
+<div class="container" >
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nombre y Apellido</th>
+                <th scope="col">DNI</th>
+                <th scope="col">Estado</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for adherente in tupla_adherentes %}
+            <tr>
+                <td>{{adherente.adherente_id}}</td>
+                <td>{{adherente.name}} {{adherente.last_name}}</td>
+                <td>{{adherente.document}}</td>
+                <td>
+                    {% if adherente.is_active == True %}
+                    Activo
+                    {% else %}
+                    Baja
+                    {% endif %}
+                </td>
+                <td style="display: flex;"><form action="{% url 'update_adherente' adherente.adherente_id %}" method="GET">
+                    {% csrf_token %}
+                    <button type="submit" style="
+                    background:#007bff;
+                    border:none;
+                    color:blue;
+                    text-decoration:underline;
+                    cursor:pointer;
+                    width: 50px;" class="editar">
+                        <img  id="edit" src="{% static '/img/edit_icon.png' %}" alt="img">
+                    </button>
+                </form>
+                <form action="{% url 'baja_adherente' adherente.adherente_id %}" method="POST" >
+                    {% csrf_token %}
+                    <button type="submit" style="
+                    background:firebrick;
+                    border:none;
+                    color:blue;
+                    text-decoration:underline;
+                    cursor:pointer;
+                    width: 50px;" onclick="return confirmDelete()">
+                        <img  id="edit" src="{% static '/img/del_icon.png' %}" alt="img">
+                    </button>
+                </form>
+                    
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<!--<button id="new-adherente-btn">Nuevo ingreso Adherentes</button>-->

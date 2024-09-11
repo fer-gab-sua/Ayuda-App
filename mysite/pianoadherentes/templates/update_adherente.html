@@ -6,29 +6,121 @@
 <link rel="stylesheet" href="{% static 'css/create_client.css' %}">
 
     <!--FORMULARIO ADHERENTES-->
-    <div class="container" style="display: inline;">
-        <h1>ADHERENTES</h1>
-        <form action="" method="POST">
-                {% csrf_token %}
-                <input type="hidden" name="titular_id" value="{{ new_client.titular_id }}">
-                <label for="id_name">Nombre y Apellido:</label>
-                <input type="text" name="name" maxlength="100" required="" id="id_name" value="{{adherente.name}}">
-                <label for="id_address">Direccion</label>
-                <input type="text" name="address" maxlength="100" required="" id="id_address" value="{{adherente.address}}">
-    
-                <label for="id_address_detail">Entre calles:</label>
-                <input type="text" name="address_detail" maxlength="100" id="id_address_detail" , value="{{adherente.address_detail}}">
-    
-                <label for="id_dni">Dni:</label>
-                <input type="text" name="dni" maxlength="100" required="" id="id_dni" value="{{adherente.dni}}">
-    
-                <label for="id_is_active">Is active:</label>
-                <input type="checkbox" name="is_active" id="id_is_active" {% if is_active %}checked{% endif %}>
-    
-                <button>Grabar</button>
-            </form>
-    
-    </div>
+<div class="container" style="display: inline;">
+    <h1>Actualizar Adherente</h1>
+    <form action="" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="titular_id" value="{{ new_client.titular_id }}">
+        <div class="row">
+            <div class="col-md-6">
+                <label for="id_name">Nombre:</label>
+                <input type="text" name="name" maxlength="100" required id="id_name" class="form-control" value="{{ adherente.name }}">
+            </div>
+            <div class="col-md-6">
+                <label for="id_last_name">Apellido:</label>
+                <input type="text" name="last_name" maxlength="100" required id="id_last_name" class="form-control" value="{{ adherente.last_name}}">
+            </div>
+        </div>
 
+        <div class="row">
+            <div class="col-md-2">
+                <label for="id_document_type">Tipo:</label>
+                <select name="document_type" id="document_type" required class="tipodocumento">
+                    <option value="dni" {% if adherente.document_type == "dni" %}selected{% endif %}>Dni</option>
+                    <option value="cuil" {% if adherente.document_type == "cuil" %}selected{% endif %}>Cuil</option>
+                    <option value="cuit" {% if adherente.document_type == "cuit" %}selected{% endif %}>Cuit</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="id_document">Numero de documento:</label>
+                <input type="text" name="document" maxlength="100" required id="id_document" class="numerodocumento" value="{{ adherente.document }}">
+            </div>
+            <div class="col-md-3">
+                <label for="id_birthdate">Fecha de Nacimiento:</label>
+                <input type="date" name="birthdate" required id="id_birthdate"  value="{{ adherente.birthdate|date:"Y-m-d" }}">
+            </div>
+            <div class="col-md-3">
+            <label for="id_sex">Sexo:</label>
+            <select name="sex" id="id_sex" required>
+                <option value="Masculino" {% if adherente.sex == "Masculino" %}selected{% endif %}>Masculino</option>
+                <option value="Femenino" {% if adherente.sex == "Femenino" %}selected{% endif %}>Femenino</option>
+                <option value="Indefinido" {% if adherente.sex == "Indefinido" %}selected{% endif %}>Indefinido</option>
+            </select>
+            </div>
+        </div>
+
+        <label for="id_street_address">Domicilio:</label>
+
+        <div class="row">
+            <div class="col-md-7">
+                <label for="id_street_address">Calle:</label>
+                <input type="text" name="street_address" maxlength="100" required id="id_street_address" class="address" value="{{ adherente.street_address }}">
+            </div>
+            <div class="col-md-3">
+                <label for="id_number">Número:</label>
+                <input type="text" name="number" maxlength="10" required id="id_number" class="number_adress" value="{{ adherente.number }}">
+            </div>
+            <div class="col-md-2">
+                <label for="id_floor">Piso/Depto:</label>
+                <input type="text" name="floor" maxlength="10" id="id_floor" class="number_adress"  value="{{ adherente.floor }}">
+            </div>
+        </div>
+        <label for="id_between_street">Entre Calles:</label>
+        <input type="text" name="between_street" maxlength="100" id="id_between_street" class="number_adress" value="{{ adherente.between_street }}">
+
+        <div class="row">
+            <div class="col-md-7">
+                <label for="id_province">Provincia:</label>
+                <select name="province" id="id_province" required class="combo">
+                    <option value="Buenos Aires" {% if adherente.province == "Buenos Aires" %}selected{% endif %}>Buenos Aires</option>
+                    <option value="Catamarca" {% if adherente.province == "Catamarca" %}selected{% endif %}>Catamarca</option>
+                    <option value="Chaco" {% if adherente.province == "Chaco" %}selected{% endif %}>Chaco</option>
+                    <option value="Chubut" {% if adherente.province == "Chubut" %}selected{% endif %}>Chubut</option>
+                    <option value="CABA" {% if adherente.province == "CABA" %}selected{% endif %}>CABA</option>
+                    <option value="Córdoba" {% if adherente.province == "Córdoba" %}selected{% endif %}>Córdoba</option>
+                    <option value="Corrientes" {% if adherente.province == "Corrientes" %}selected{% endif %}>Corrientes</option>
+                    <option value="Entre Ríos" {% if adherente.province == "Entre Ríos" %}selected{% endif %}>Entre Ríos</option>
+                    <option value="Formosa" {% if adherente.province == "Formosa" %}selected{% endif %}>Formosa</option>
+                    <option value="Jujuy" {% if adherente.province == "Jujuy" %}selected{% endif %}>Jujuy</option>
+                    <option value="La Pampa" {% if adherente.province == "La Pampa" %}selected{% endif %}>La Pampa</option>
+                    <option value="La Rioja" {% if adherente.province == "La Rioja" %}selected{% endif %}>La Rioja</option>
+                    <option value="Mendoza" {% if adherente.province == "Mendoza" %}selected{% endif %}>Mendoza</option>
+                    <option value="Misiones" {% if adherente.province == "Misiones" %}selected{% endif %}>Misiones</option>
+                    <option value="Neuquén" {% if adherente.province == "Neuquén" %}selected{% endif %}>Neuquén</option>
+                    <option value="Río Negro" {% if adherente.province == "Río Negro" %}selected{% endif %}>Río Negro</option>
+                    <option value="Salta" {% if adherente.province == "Salta" %}selected{% endif %}>Salta</option>
+                    <option value="San Juan" {% if adherente.province == "San Juan" %}selected{% endif %}>San Juan</option>
+                    <option value="San Luis" {% if adherente.province == "San Luis" %}selected{% endif %}>San Luis</option>
+                    <option value="Santa Cruz" {% if adherente.province == "Santa Cruz" %}selected{% endif %}>Santa Cruz</option>
+                    <option value="Santa Fe" {% if adherente.province == "Santa Fe" %}selected{% endif %}>Santa Fe</option>
+                    <option value="Santiago del Estero" {% if adherente.province == "Santiago del Estero" %}selected{% endif %}>Santiago del Estero</option>
+                    <option value="Tierra del Fuego" {% if adherente.province == "Tierra del Fuego" %}selected{% endif %}>Tierra del Fuego</option>
+                    <option value="Tucumán" {% if adherente.province == "Tucumán" %}selected{% endif %}>Tucumán</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="id_city">Ciudad/Barrio:</label>
+                <input type="text" name="city" maxlength="30" required id="id_city" class="number_adress"  value="{{ adherente.city }}">
+            </div>
+            <div class="col-md-2">
+                <label for="id_postal_code">Código Postal:</label>
+                <input type="text" name="postal_code" maxlength="20" required id="id_postal_code" class="number_adress" value="{{ adherente.postal_code}}">
+            </div>
+        </div>
+        <label for="phone">Telefono:</label>
+        <input type="text" name="phone" maxlength="25" required id="phone" class="number_adress" value="{{ adherente.phone}}">
+
+        <label for="id_is_active">Is active:{{ is_active }}</label>
+        <input type="checkbox" name="is_active" id="id_is_active" 
+        {% if is_active == True %}
+        checked=True
+        {% else %}
+
+        {% endif %}>
+
+        <button>Actualizar</button>
+    </form>
+
+</div>
 
 {% endblock %}
