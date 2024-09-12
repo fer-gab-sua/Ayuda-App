@@ -7,7 +7,14 @@
             <H2>Adherentes agregados</H2>
         </div>
         <div class="col-md-1">
-            <button>Agregar</button>
+            <form action="{% url 'create_adherente' %}" method="GET">
+                
+                <button style="width: 45px;">
+                {% csrf_token %}
+                <input type="hidden" name="titular_id" value="{{ new_client.titular_id }}">
+                <img  id="new" src="{% static '/img/new_icon.png' %}" alt="img" style="height: 30px;">
+                </button>
+            </form>
         </div>
     </div>
 
