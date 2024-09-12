@@ -133,13 +133,12 @@ def create_adherente(request):
                 'error': 'Please provide valid data for adherente'
             })
     elif request.method == 'GET':
-        titular_id = request.POST.get('titular_id')
+        titular_id = request.GET.get('titular_id')
         print(titular_id)
         new_client = Titular.objects.get(titular_id=titular_id)
         adherentes = Adherente.objects.filter(titular=titular_id)
         return render(request, 'create_adherentes.html', {
                 'new_client': new_client,
-                'form2': form, # Redirigir a una vista de listado de clientes o a donde sea apropiado
                 'tupla_adherentes': adherentes
                 })
 
