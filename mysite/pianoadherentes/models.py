@@ -77,7 +77,7 @@ class Adherente(models.Model):
     province =  models.CharField(max_length=100)
     city =  models.CharField(max_length=30)
     postal_code =  models.CharField(max_length=20)
-    plan = models.ForeignKey(Plan,on_delete=models.PROTECT)
+    plan = models.CharField(max_length=20, blank=True, null=True)
     phone = models.CharField(max_length=20, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     deleted = models.DateTimeField(blank=True, null=True)
