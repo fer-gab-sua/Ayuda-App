@@ -3,6 +3,7 @@ from django.core.validators import RegexValidator
 from django.contrib.auth.models import User
 
 class Plan(models.Model):
+    id = models.AutoField(primary_key=True)
     descripcion = models.CharField(max_length=50)
 
     def __str__(self) -> str:
@@ -76,6 +77,7 @@ class Adherente(models.Model):
     province =  models.CharField(max_length=100)
     city =  models.CharField(max_length=30)
     postal_code =  models.CharField(max_length=20)
+    plan = models.ForeignKey(Plan,on_delete=models.PROTECT)
     phone = models.CharField(max_length=20, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     deleted = models.DateTimeField(blank=True, null=True)
