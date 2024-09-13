@@ -88,3 +88,11 @@ class Adherente(models.Model):
             ("can_view_stats", "Can view statistics"),
         ]
 
+class Log(models.Model):
+    log_id = models.AutoField(primary_key=True)
+    adherente = models.ForeignKey(Adherente,on_delete=models.PROTECT, related_name='adherentes')
+    movimiento = models.CharField(max_length=10)
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    historia = models.CharField(max_length=255)
+    created = models.DateTimeField(auto_now_add=True)
+
