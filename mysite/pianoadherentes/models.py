@@ -93,5 +93,6 @@ class Log(models.Model):
     adherente = models.ForeignKey(Adherente,on_delete=models.PROTECT, related_name='adherentes')
     movimiento = models.CharField(max_length=10)
     user = models.ForeignKey(User, on_delete=models.PROTECT)
+    
     created = models.DateTimeField(auto_now_add=True)
 

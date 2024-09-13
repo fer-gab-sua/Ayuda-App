@@ -8,7 +8,7 @@ from django.http import HttpResponse
 from django.db import IntegrityError
 from .forms import ClientForm , AdherenteForm, DateRangeForm
 from django.contrib import messages
-from .models import Titular , Adherente
+from .models import Titular , Adherente, Log
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from openpyxl import Workbook
@@ -114,6 +114,13 @@ def create_adherente(request):
                 new_adherente.user_upload = request.user
                 new_adherente.titular = titular
                 new_adherente.save()
+
+                Log.objects.create(
+                    adherente=new_adherente,
+                    movimiento='Creacion',
+                    user=request.user
+                )
+
                 titular_id = request.POST.get('titular_id')
                 new_client = Titular.objects.get(titular_id=titular_id)
                 adherentes = Adherente.objects.filter(titular=titular_id)
@@ -214,6 +221,12 @@ def bajaAdherente(request, adherente_id):
         new_client = get_object_or_404(Titular, pk=titular_id)
         adherentes = Adherente.objects.filter(titular=titular_id)
 
+        Log.objects.create(
+                    adherente=adherente,
+                    movimiento='Baja',
+                    user=request.user
+                )
+        
         return render(request, 'create_client.html', {
             'new_client': new_client,
             'tupla_adherentes': adherentes
@@ -234,6 +247,12 @@ def updateAdherente(request, adherente_id):
             titular_id = adherente.titular.titular_id
             adherentes = Adherente.objects.filter(titular=titular_id)
 
+            Log.objects.create(
+                    adherente=adherente,
+                    movimiento='Modificacion',
+                    user=request.user
+                )
+            
             new_client = Titular.objects.get(pk=titular_id)
             return render(request, 'create_client.html', {
             'new_client': new_client,
