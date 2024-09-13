@@ -42,7 +42,8 @@ class AdherenteForm(ModelForm):
                     'city',
                     'postal_code',
                     'phone',
-                    'is_active'
+                    'is_active',
+                    'plan'
                     ]
 
 class DateRangeForm(forms.Form):

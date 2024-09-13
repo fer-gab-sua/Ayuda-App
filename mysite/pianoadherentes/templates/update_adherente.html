@@ -110,6 +110,12 @@
         <label for="phone">Telefono:</label>
         <input type="text" name="phone" maxlength="25" required id="phone" class="number_adress" value="{{ adherente.phone}}">
 
+        <label for="id_plan">Plan:</label>
+        <select name="plan" id="id_plan" required>
+            <option value="Basico" {% if adherente.plan == "Basico" %}selected{% endif %}>Basico</option>
+            <option value="Completo" {% if adherente.plan == "Completo" %}selected{% endif %}>Completo</option>
+        </select>
+        
         <label for="id_is_active">Is active:{{ is_active }}</label>
         <input type="checkbox" name="is_active" id="id_is_active" 
         {% if is_active == True %}
