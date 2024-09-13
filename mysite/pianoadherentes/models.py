@@ -2,7 +2,11 @@ from django.db import models
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import User
 
+class Plan(models.Model):
+    descripcion = models.CharField(max_length=50)
 
+    def __str__(self) -> str:
+        return self.descripcion
 
 class Titular(models.Model):
     cbu_validator = RegexValidator(
