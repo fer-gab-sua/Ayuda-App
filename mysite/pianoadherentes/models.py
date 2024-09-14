@@ -2,6 +2,12 @@ from django.db import models
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import User
 
+class DatosUser(models.Model):
+    legajo = models.IntegerField(unique=True)
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+
+
+
 class Plan(models.Model):
     id = models.AutoField(primary_key=True)
     descripcion = models.CharField(max_length=50)
