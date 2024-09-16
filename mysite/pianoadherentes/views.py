@@ -12,6 +12,9 @@ from .models import Titular , Adherente, Log
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from openpyxl import Workbook
+from django.core.mail import send_mail
+from django.conf import settings
+
 
 def home(request):
     return render(request, 'signin.html')
@@ -47,6 +50,13 @@ def recovery(request):
         return render(request, 'recovery_pass.html', {'form': AuthenticationForm})
     else:
         #aca va la logica para enviar la nueva contraseña
+        subject = 'Asunto del correo'
+        message = 'Este es el cuerpo del correo.'
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = ['fer.gab.sua@gmail.com']
+
+        send_mail(subject, message, email_from, recipient_list)
+
         return render(request, 'signin.html', {'form': AuthenticationForm, 'error': 'Se envio una nueva contraseña a su correo electronico'})
 
 

@@ -173,3 +173,13 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 
+############ENVIO DE CORREOS CONFIGURACION ########################### ESTO LO TENGO QUE PROTEGER
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Servidor SMTP de tu proveedor de correo
+EMAIL_PORT = 587  # Puerto para conexión TLS
+EMAIL_USE_TLS = True  # Activa el cifrado TLS
+EMAIL_HOST_USER = 'appayudamedica@gmail.com'  # Tu correo
+EMAIL_HOST_PASSWORD = 'nxuw nagm mnwr gtwx'  # Tu contraseña de aplicación o correo
+DEFAULT_FROM_EMAIL = 'appayudamedica@gmail.com'  # Remitente por defecto
