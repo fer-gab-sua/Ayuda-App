@@ -23,7 +23,7 @@
             <div class="col bg d-none d-lg-block col-md-5 col-lg-5 col-xl-6 rounded"></div>
             <div class="col bg-white">
                 <div class="d-flex justify-content-center">
-                    <img src="{% static '/img/logo.png' %}" width="120" alt="" class="mt-5" />
+                    <img src="{% static '/img/logo.png' %}" width="80" alt="" class="mt-5" />
                 </div>
                 <h2 class="fw-bold text-center pt-5 mb-5">Bienvenido</h2>
 
@@ -31,7 +31,7 @@
 
                 <form id="loginForm" action="/signin/" method="POST">
                     {% csrf_token %}
-                    <span style="margin-bottom: 10px ;">{{error}}</span>
+                    <span style="margin-bottom: 0px ;">{{error}}</span>
                     <div id="message-container" class="error-message"></div>
                     <div id="error-container" style="color: red"></div>
                     <div class="mb-4">
@@ -50,6 +50,7 @@
                             Iniciar Sesion</button><br />
                     </div>
                 </form>
+                <a href="">Recuperar contraseña</a>
 
             </div>
         </div>
