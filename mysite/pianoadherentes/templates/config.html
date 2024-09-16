@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    body {
+        background-color: rgb(240, 238, 238);
+    }
+
+    .bg {
+        background-image: url({% static '/img/gestion.avif' %});
+        background-position: center center;
+        background-size: cover;
+    }
+
+    .error-message {
+        color: red;
+    }
+</style>
+<link rel="stylesheet" href="{% static '/css/create_client.css' %}">
+<body>
+    <div class="container" style="display:block; margin-top: 20px;">
+        <span style="margin-bottom: 0px ;">{{error}}</span>
+        <form action="/config/" method="POST">
+            {% csrf_token %}
+            <div class="col-md-6">
+                <label for="id_name">Contraseña Anterior:</label>
+                <input type="password" class="form-control" name="password_old" autocomplete="current-password" required="" id="id_password_old">
+            </div>
+
+            <div class="col-md-6">
+                <label for="id_name">Nueva Contraseña:</label>
+                <input type="password" class="form-control" name="password_new" autocomplete="current-password" required="" id="id_password_new">
+            </div>
+
+            <div class="col-md-6">
+                <label for="id_name">Repita la contraseña:</label>
+                <input type="password" class="form-control" name="password_new2" autocomplete="current-password" required="" id="id_password_new2">
+            </div>
+        
+    
+            
+            <button>Modificar contraseña</button>
+        </form>
+    </div>
+</body>
+    {% endblock %}

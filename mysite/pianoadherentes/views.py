@@ -69,7 +69,36 @@ def recovery(request):
             return render(request, 'signin.html', {'form': AuthenticationForm, 'error': 'Usuario no encontrado'})
         return render(request, 'signin.html', {'form': AuthenticationForm, 'error': 'Se envio una nueva contraseña a su correo electronico'})
 
+def config(request):
+    if request.method == 'GET':
+        return render(request, 'config.html')
+    else:
+        print(request.POST['password_old'])
+        print(request.POST['password_new'])
+        print(request.POST['password_new2'])
+        print(request.user)
 
+
+
+
+        #aca va la logica el cambio de contraseña
+        user = authenticate(
+            request, username=request.user, password=request.POST['password_old'])
+        if user is None:
+            return render(request, 'config.html', {'error': 'Usuario o pasword incorrecto'})
+        else:
+            if request.POST['password_new']== request.POST['password_new2']:
+                user_obj =  User.objects.get(username=user)
+                new_pass = request.POST['password_new']
+                user_obj.set_password(str(new_pass))
+                user_obj.save()
+            return render(request, 'signin.html', {'form': AuthenticationForm, 'error': 'Ingrese nuevamente'})
+
+
+
+
+
+        return render(request, 'signin.html', {'form': AuthenticationForm, 'error': 'Se envio una nueva contraseña a su correo electronico'})
 
 @login_required
 def client(request):
