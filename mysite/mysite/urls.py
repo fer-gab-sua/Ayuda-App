@@ -22,6 +22,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.home, name='home'),
     path('signup/',views.signup, name='signup'),
+    path('recovery_pass/',views.recovery, name='recovery_pass'),
+
+
     path('client/',views.client, name='clients'),
     path('client/find/',views.buscar, name='buscar'),
     path('client/update/<int:titular_id>/', views.update_titular, name='update_titular'),

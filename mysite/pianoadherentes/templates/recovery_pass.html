@@ -25,11 +25,11 @@
                 <div class="d-flex justify-content-center">
                     <img src="{% static '/img/logo.png' %}" width="80" alt="" class="mt-5" />
                 </div>
-                <h2 class="fw-bold text-center pt-5 mb-5">Bienvenido</h2>
+                <h2 class="fw-bold text-center pt-5 mb-5">Ingrese su usuario</h2>
 
 
 
-                <form id="loginForm" action="/signin/" method="POST">
+                <form id="recoveryForm" action="/recovery_pass/" method="POST">
                     {% csrf_token %}
                     <span style="margin-bottom: 0px ;">{{error}}</span>
                     <div id="message-container" class="error-message"></div>
@@ -40,17 +40,11 @@
                         required="" id="id_username">
                     <br />
                     </div>
-                    <div class="mb-4">
-                        <label for="password" class="form-label">Contraseña</label>
-                        <input type="password" class="form-control" name="password" autocomplete="current-password" required="" id="id_password">
-                        <br />
-                    </div>
                     <div class="d-grid">
                         <button class="btn btn-primary" style="background-color: rgb(34, 33, 48)">
-                            Iniciar Sesion</button><br />
+                            Recuperar contraseña</button><br />
                     </div>
                 </form>
-                <a href="{% url 'recovery_pass' %}">Recuperar contraseña</a>
 
             </div>
         </div>

@@ -22,6 +22,7 @@ def signup(request):
             'form': UserCreationForm
         })
     else:
+        print("este es el post del login")
         if request.POST['password1'] == request.POST['password2']:
             try:
                 user = User.objects.create_user(username=request.POST['username'],
@@ -39,6 +40,16 @@ def signup(request):
             'form': UserCreationForm,
             "error": 'Password do not match'
         })
+
+def recovery(request):
+    if request.method == 'GET':
+        
+        return render(request, 'recovery_pass.html', {'form': AuthenticationForm})
+    else:
+        #aca va la logica para enviar la nueva contraseña
+        return render(request, 'signin.html', {'form': AuthenticationForm, 'error': 'Se envio una nueva contraseña a su correo electronico'})
+
+
 
 @login_required
 def client(request):
