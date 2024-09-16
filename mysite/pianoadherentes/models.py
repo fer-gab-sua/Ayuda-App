@@ -6,6 +6,9 @@ class DatosUser(models.Model):
     legajo = models.IntegerField(unique=True)
     user = models.ForeignKey(User, on_delete=models.PROTECT)
 
+    def __str__(self) -> str:
+        return self.user.username
+
 
 
 class Plan(models.Model):
