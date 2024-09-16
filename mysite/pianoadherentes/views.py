@@ -14,6 +14,7 @@ from django.contrib.auth.decorators import login_required
 from openpyxl import Workbook
 from django.core.mail import send_mail
 from django.conf import settings
+from .utils.pass_generate import generate_random_password
 
 
 def home(request):
@@ -50,13 +51,22 @@ def recovery(request):
         return render(request, 'recovery_pass.html', {'form': AuthenticationForm})
     else:
         #aca va la logica para enviar la nueva contraseña
-        subject = 'Asunto del correo'
-        message = 'Este es el cuerpo del correo.'
-        email_from = settings.EMAIL_HOST_USER
-        recipient_list = ['fer.gab.sua@gmail.com']
+        username=request.POST['username']
+        try:
+            #instancio el objeto user
+            user_obj =  User.objects.get(username=username)
+            new_password = generate_random_password()
+            print(new_password) 
+            user_obj.set_password(str(new_password))
+            user_obj.save()
+            subject = 'Nueva contraseña'
+            message = f'Su nueva contraseña es: {new_password}'
+            email_from = settings.EMAIL_HOST_USER
+            recipient_list = [user_obj.email]
 
-        send_mail(subject, message, email_from, recipient_list)
-
+            send_mail(subject, message, email_from, recipient_list)
+        except:
+            return render(request, 'signin.html', {'form': AuthenticationForm, 'error': 'Usuario no encontrado'})
         return render(request, 'signin.html', {'form': AuthenticationForm, 'error': 'Se envio una nueva contraseña a su correo electronico'})
 
 
