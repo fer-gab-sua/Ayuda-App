@@ -6,12 +6,12 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import permission_required
 from django.http import HttpResponse
 from django.db import IntegrityError
-from .forms import ClientForm , AdherenteForm, DateRangeForm
-from django.contrib import messages
+from .forms import ClientForm , AdherenteForm
+
 from .models import Titular , Adherente, Log
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
-from openpyxl import Workbook
+
 from django.core.mail import send_mail
 from django.conf import settings
 from .utils.pass_generate import generate_random_password
@@ -385,76 +385,3 @@ def buscar(request):
 
 
 
-@permission_required('pianoadherentes.can_view_stats', raise_exception=True)
-def stadisticas(request):
-
-
-    return render(request, 'estadisticas.html') 
-
-
-@permission_required('pianoadherentes.can_view_stats', raise_exception=True)
-def generate_excel(request):
-    if request.method == 'POST':
-        form = DateRangeForm(request.POST)
-        if form.is_valid():
-            start_date_str = request.POST.get('start_date')
-            end_date_str = request.POST.get('end_date')
-
-            # Convertir las fechas de cadena a objetos datetime
-            start_date_parts = start_date_str.split('/')
-            start_date = '-'.join(reversed(start_date_parts))
-
-            end_date_parts = end_date_str.split('/')
-            end_date = '-'.join(reversed(end_date_parts))
-
-            # Filtrar adherentes dentro del rango de fechas
-            adherentes = Adherente.objects.filter(adherente_date__range=(start_date, end_date))
-
-            # Crear un archivo Excel utilizando openpyxl
-            wb = Workbook()
-            ws = wb.active
-            ws.title = 'Adherentes'
-
-            # Definir encabezados de columnas
-            headers = [
-                'Adherente ID',
-                'Titular',
-                'DNI Titular',
-                'CBU Titular',
-                'Nombre',
-                'Teléfono',
-                'Dirección',
-                'DNI',
-                'Fecha de Creación',
-                'Usuario',
-            ]
-
-            # Escribir encabezados en la primera fila
-            for col_num, header in enumerate(headers, start=1):
-                ws.cell(row=1, column=col_num, value=header)
-
-            # Escribir datos de adherentes en filas
-            for row_num, adherente in enumerate(adherentes, start=2):
-                ws.cell(row=row_num, column=1, value=adherente.adherente_id)
-                ws.cell(row=row_num, column=2, value=adherente.titular.name)
-                ws.cell(row=row_num, column=3, value=adherente.titular.dni)
-                ws.cell(row=row_num, column=4, value=adherente.titular.cbu)
-                ws.cell(row=row_num, column=5, value=adherente.name)
-                ws.cell(row=row_num, column=6, value=adherente.phone)
-                ws.cell(row=row_num, column=7, value=adherente.address)
-                ws.cell(row=row_num, column=8, value=adherente.dni)
-                ws.cell(row=row_num, column=9, value=adherente.adherente_date.strftime('%Y-%m-%d %H:%M:%S'))
-                ws.cell(row=row_num, column=10, value=adherente.user_upload.username)
-
-            # Crear el archivo Excel en memoria
-            response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-            response['Content-Disposition'] = 'attachment; filename="informe.xlsx"'
-
-            # Guardar el libro de trabajo en la respuesta HTTP
-            wb.save(response)
-
-            return response
-    else:
-        form = DateRangeForm()
-
-    return render(request, 'estadisticas.html', {'form': form})

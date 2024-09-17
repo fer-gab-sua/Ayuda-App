@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from pianoadherentes import views
+from pianoadherentes.stats.stats import mis_ventas, estadisticas
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -35,7 +36,12 @@ urlpatterns = [
     path('client/adherente/create/',views.create_adherente, name='create_adherente'),
     path('adherente/baja/<int:adherente_id>/', views.bajaAdherente, name='baja_adherente'),
     path('adherente/update/<int:adherente_id>/', views.updateAdherente, name='update_adherente'),
-    path('stats/',views.generate_excel, name='stats'),
+
+
+    path('stats/',estadisticas, name='stats'),
+    path('stats/my_sales/',mis_ventas, name='my_sales'),
+
+
     path('logout/',views.signout, name='logout'),
     path('signin/',views.login_user, name='signin'),
 ]
