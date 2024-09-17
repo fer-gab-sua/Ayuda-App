@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Titular, Adherente, Log, Plan, DatosUser
+from .models import Titular, Adherente, Log, Plan, DatosUser, Sucursales
 # Register your models here.
 
 
@@ -14,3 +14,4 @@ admin.site.register(Adherente)
 admin.site.register(Log)
 admin.site.register(Plan)
 admin.site.register(DatosUser, DatosUserAdmin)
+admin.site.register(Sucursales)
