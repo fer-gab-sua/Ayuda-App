@@ -118,3 +118,7 @@ class Log(models.Model):
     historia = models.CharField(max_length=255)
     created = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        permissions = [
+            ("can_view_stats_log", "Can view statistics log"),
+        ]

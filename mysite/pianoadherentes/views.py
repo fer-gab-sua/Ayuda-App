@@ -389,7 +389,7 @@ def buscar(request):
 def stadisticas(request):
 
 
-    return render(request, 'estadisticas.html')
+    return render(request, 'estadisticas.html') 
 
 
 @permission_required('pianoadherentes.can_view_stats', raise_exception=True)
