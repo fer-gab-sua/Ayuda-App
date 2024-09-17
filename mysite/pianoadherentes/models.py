@@ -69,6 +69,7 @@ class Titular(models.Model):
     class Meta:
         permissions = [
             ("can_view_stats", "Can view statistics"),
+            ("can_view_stats_controller", "Can view statistics controller"),
         ]
 
 
