@@ -50,7 +50,7 @@ def recovery(request):
         
         return render(request, 'recovery_pass.html', {'form': AuthenticationForm})
     else:
-        #aca va la logica para enviar la nueva contraseña
+        #logica para enviar la nueva contraseña
         username=request.POST['username']
         try:
             #instancio el objeto user
@@ -73,14 +73,6 @@ def config(request):
     if request.method == 'GET':
         return render(request, 'config.html')
     else:
-        print(request.POST['password_old'])
-        print(request.POST['password_new'])
-        print(request.POST['password_new2'])
-        print(request.user)
-
-
-
-
         #aca va la logica el cambio de contraseña
         user = authenticate(
             request, username=request.user, password=request.POST['password_old'])
@@ -94,11 +86,6 @@ def config(request):
                 user_obj.save()
             return render(request, 'signin.html', {'form': AuthenticationForm, 'error': 'Ingrese nuevamente'})
 
-
-
-
-
-        return render(request, 'signin.html', {'form': AuthenticationForm, 'error': 'Se envio una nueva contraseña a su correo electronico'})
 
 @login_required
 def client(request):
