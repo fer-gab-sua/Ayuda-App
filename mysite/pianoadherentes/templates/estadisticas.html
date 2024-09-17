@@ -6,6 +6,7 @@
 <h1 style="text-align: center; margin-bottom: 50px;">Generar Informe</h1>
 <div class="container" >
   <div class="accordion" id="accordionExample">
+
     <!--primer item de informe mis movimientos-->
     <div class="accordion-item">
       <h2 class="accordion-header">
@@ -36,6 +37,7 @@
 
 
     <!--primer item de informe mis ventas-->
+    {% if perms.pianoadherentes.can_view_stats %}
     <div class="accordion-item">
       <h2 class="accordion-header">
         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
@@ -62,8 +64,10 @@
         </div>
       </div>
     </div>
+    {% endif %}
 
 
+    {% if perms.pianoadherentes.can_view_stats_controller %}
     <!--segundo movimientos por sucursal-->
     <div class="accordion-item">
       <h2 class="accordion-header">
@@ -99,10 +103,10 @@
         </div>
       </div>
     </div>
+    {% endif %}
 
-
-
-    <!--tercer item de informe-->
+    {% if perms.pianoadherentes.can_view_stats_log %}
+    <!--tercer log por usuario-->
     <div class="accordion-item">
       <h2 class="accordion-header">
         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFor" aria-expanded="false" aria-controls="collapseFor">
@@ -138,6 +142,41 @@
         </div>
       </div>
     </div>
+    {% endif %}
+
+    {% if perms.pianoadherentes.can_view_stats_log %}
+    <!--tercer log general-->
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+          Log General
+        </button>
+      </h2>
+      <div id="collapseFive" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+          <strong>Informe de log con cada movimiento de todos los usuarios.</strong> 
+          <form method="post" action="{% url 'stats' %}" style="margin-top: 20px;"></form>
+            {% csrf_token %}
+                        
+            <div class="row" style="text-align: center;">
+              <div class="col-md-6">
+                  <label for="id_birthdate">Inicio:</label>
+                  <input type="date" name="init_date" required id="id_init_date">
+              </div>
+              <div class="col-md-6">
+                <label for="id_birthdate">Fin:</label>
+                <input type="date" name="end_date" required id="id_end_date">
+              </div>
+            </div>
+            <button type="submit">Generar Informe</button>
+          </form>
+
+
+
+        </div>
+      </div>
+    </div>
+    {% endif %}
 </div>
 
 
