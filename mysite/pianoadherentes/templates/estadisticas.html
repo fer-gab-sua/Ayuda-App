@@ -17,7 +17,7 @@
       <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
         <div class="accordion-body">
           <strong >Informe para exportar todas los movimientos que tiene mi usuario.</strong>
-          <form method="post" action="{% url 'stats' %}" style="margin-top: 20px;">
+          <form method="post" action="{% url 'my_log' %}" style="margin-top: 20px;">
             {% csrf_token %}
             <div class="row" style="text-align: center;">
               <div class="col-md-6">

@@ -88,3 +88,64 @@ def mis_ventas(request):
         wb.save(response)
         return response
     return render(request, 'estadisticas.html')
+
+
+
+
+@permission_required('pianoadherentes.can_view_stats', raise_exception=True)
+def mis_log(request):
+    if request.method == 'POST':
+        print("llego hasta aca")
+        start_date_str = request.POST.get('init_date')
+        end_date_str = request.POST.get('end_date')
+
+        # Convertir las fechas de cadena a objetos datetime
+        start_date_parts = start_date_str.split('-')
+        start_date = '-'.join(start_date_parts)
+
+        end_date_parts = end_date_str.split('-')
+        end_date = '-'.join(end_date_parts)
+
+        # Filtrar adherentes dentro del rango de fechas
+
+        log = Log.objects.filter(
+            created__range=(start_date, end_date),
+            user=request.user)
+
+        # Crear un archivo Excel utilizando openpyxl
+        wb = Workbook()
+        ws = wb.active
+        ws.title = 'My_log'
+
+        # Definir encabezados de columnas
+        headers = [
+            'Log ID',
+            'Adherente',
+            'Movimiento',
+            'Usuario',
+            'Historia',
+            'Fecha'
+        ]
+
+        # Escribir encabezados en la primera fila
+        for col_num, header in enumerate(headers, start=1):
+            ws.cell(row=1, column=col_num, value=header)
+
+        # Escribir datos de adherentes en filas
+        for row_num, log in enumerate(log, start=2):
+            ws.cell(row=row_num, column=1, value=log.log_id)
+            adherente = str(f'{log.adherente.name} {log.adherente.last_name}')
+            ws.cell(row=row_num, column=2, value=adherente)
+            ws.cell(row=row_num, column=3, value=log.movimiento)
+            ws.cell(row=row_num, column=4, value=log.user.username)
+            ws.cell(row=row_num, column=5, value=log.historia)
+            ws.cell(row=row_num, column=6, value=log.created.strftime('%Y-%m-%d %H:%M:%S'))
+            
+
+        # Crear el archivo Excel en memoria
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="informe.xlsx"'
+        # Guardar el libro de trabajo en la respuesta HTTP
+        wb.save(response)
+        return response
+    return render(request, 'estadisticas.html')

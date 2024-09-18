@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from pianoadherentes import views
-from pianoadherentes.stats.stats import mis_ventas, estadisticas
+from pianoadherentes.stats.stats import mis_ventas, estadisticas, mis_log
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -40,6 +40,10 @@ urlpatterns = [
 
     path('stats/',estadisticas, name='stats'),
     path('stats/my_sales/',mis_ventas, name='my_sales'),
+    path('stats/my_log/',mis_log, name='my_log'),
+
+
+    
 
 
     path('logout/',views.signout, name='logout'),
