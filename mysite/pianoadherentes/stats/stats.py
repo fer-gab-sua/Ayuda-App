@@ -53,10 +53,9 @@ def mis_ventas(request):
             'Dirección',
             'Tipo documento',
             'Nro documento',
-
-
             'Fecha de Creación',
             'Usuario',
+            'Sucursal'
         ]
 
         # Escribir encabezados en la primera fila
@@ -80,6 +79,7 @@ def mis_ventas(request):
             ws.cell(row=row_num, column=12, value=adherente.number)
             ws.cell(row=row_num, column=13, value=adherente.created.strftime('%Y-%m-%d %H:%M:%S'))
             ws.cell(row=row_num, column=14, value=adherente.user_upload.username)
+            ws.cell(row=row_num, column=15, value=adherente.sucursal)
 
         # Crear el archivo Excel en memoria
         response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
