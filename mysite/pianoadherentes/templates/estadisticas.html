@@ -72,19 +72,19 @@
     <div class="accordion-item">
       <h2 class="accordion-header">
         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-          Movimientos por sucursal
+          Ventas por sucursal
         </button>
       </h2>
       <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
         <div class="accordion-body">
-          <strong>Informe para traer todos los datos de una sucursal en particular</strong>
-          <form method="post" action="{% url 'stats' %}" style="margin-top: 20px;"></form>
+          <strong>Informe para traer todas las ventas de una sucursal en particular</strong>
+          <form method="post" action="{% url 'branch_office' %}" style="margin-top: 20px;">
             {% csrf_token %}
             <label for="id_sex">Sucursal:</label>
-            <select name="sex" id="id_sex" required>
-                <option value="Masculino">Sucursal1</option>
-                <option value="Femenino">Sucursal2</option>
-                <option value="Indefinido">Sucursal3</option>
+            <select name="sucursal" id="id_sucursal" required>
+              {% for sucursal in sucursales %}
+                <option value="{{sucursal.descripcion}}">{{sucursal.descripcion}}</option>
+              {% endfor %}
             </select>
             <div class="row" style="text-align: center;">
               <div class="col-md-6">
@@ -116,13 +116,16 @@
       <div id="collapseFor" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
         <div class="accordion-body">
           <strong>Informe de log con cada movimiento por usuario.</strong> 
-          <form method="post" action="{% url 'stats' %}" style="margin-top: 20px;"></form>
+          <form method="post" action="{% url 'user_log' %}" style="margin-top: 20px;">
             {% csrf_token %}
-            <label for="id_sex">Usuario:</label>
-            <select name="sex" id="id_sex" required>
-                <option value="Masculino">Sucursal1</option>
-                <option value="Femenino">Sucursal2</option>
-                <option value="Indefinido">Sucursal3</option>
+            <label for="id_user">Usuario:</label>
+            <select name="usuario" id="id_usuario" required>
+              {% for usuario in usuarios %}
+                {% if usuario.username == 'admin' %}
+                {% else %}
+                <option value="{{usuario.id}}">{{usuario.username}}</option>
+                {% endif %}
+              {% endfor %}
             </select>
             <div class="row" style="text-align: center;">
               <div class="col-md-6">
@@ -155,7 +158,7 @@
       <div id="collapseFive" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
         <div class="accordion-body">
           <strong>Informe de log con cada movimiento de todos los usuarios.</strong> 
-          <form method="post" action="{% url 'stats' %}" style="margin-top: 20px;"></form>
+          <form method="post" action="{% url 'user_log' %}" style="margin-top: 20px;">
             {% csrf_token %}
                         
             <div class="row" style="text-align: center;">
