@@ -153,7 +153,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #configuraciones del token
 
-SESSION_COOKIE_AGE = 1000 
+SESSION_COOKIE_AGE = 14400
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
