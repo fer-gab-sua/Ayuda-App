@@ -11,7 +11,7 @@ class Sucursales(models.Model):
 
 class DatosUser(models.Model):
     legajo = models.IntegerField(unique=True)
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     sucursal = models.ForeignKey(Sucursales, on_delete=models.PROTECT, blank=True, null=True)
 
     def __str__(self) -> str:
@@ -101,6 +101,8 @@ class Adherente(models.Model):
     user_upload = models.ForeignKey(User, on_delete=models.PROTECT)
     is_active = models.BooleanField(default=True)
     migrate = models.BooleanField(default=False)
+    legajo = models.IntegerField(blank=True)
+    sucursal = models.CharField(max_length=50)
 
     
     def __str__(self):

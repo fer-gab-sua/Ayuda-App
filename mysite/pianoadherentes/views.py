@@ -155,11 +155,15 @@ def create_adherente(request):
             form = AdherenteForm(request.POST)
             if form.is_valid():
                 titular_id = request.POST.get('titular_id')
+                user_obj = User.objects.get(username=request.user)
                 
+
                 titular = Titular.objects.get(pk=titular_id)
                 new_adherente = form.save(commit=False)
                 new_adherente.user_upload = request.user
                 new_adherente.titular = titular
+                new_adherente.legajo = user_obj.datosuser.legajo
+                new_adherente.sucursal  = user_obj.datosuser.sucursal.descripcion
                 new_adherente.save()
 
                 Log.objects.create(
@@ -167,6 +171,7 @@ def create_adherente(request):
                     movimiento='Creacion',
                     user=request.user
                 )
+                
 
                 titular_id = request.POST.get('titular_id')
                 new_client = Titular.objects.get(titular_id=titular_id)
