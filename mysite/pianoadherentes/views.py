@@ -346,15 +346,20 @@ def buscar(request):
     if request.method == 'GET':
         return render(request, 'buscar.html')
     elif request.method == 'POST':
-        nombre = request.POST.get('name')
-        telefono = request.POST.get('phone')
-        direccion = request.POST.get('address')
-        dni = request.POST.get('dni')
-        activo = request.POST.get('is_active')
         cbu = request.POST.get('cbu')
+        nombre = request.POST.get('name')
+        apellido = request.POST.get('last_name')
+        nro_doc = request.POST.get('document')
+        street_address = request.POST.get('street_address')
+        
+        number = request.POST.get('number')
+        floor = request.POST.get('floor')
+        city = request.POST.get('city')
+        postal_code = request.POST.get('postal_code')
+        phone = request.POST.get('phone')
+        
 
-
-        if not any([cbu, nombre, telefono, direccion, dni]):
+        if not any([cbu, nombre, apellido, nro_doc, street_address, number, floor, city, postal_code, phone]):
                     return render(request, 'buscar.html', {
                         'error': 'Debe proporcionar al menos un criterio de búsqueda.'
                     })
@@ -365,14 +370,22 @@ def buscar(request):
             filtro['cbu'] = cbu
         if nombre:
             filtro['name__icontains'] = nombre
-        if telefono:
-            filtro['phone'] = telefono
-        if direccion:
-            filtro['address__icontains'] = direccion
-        if dni:
-            filtro['dni'] = dni
-        if activo:
-            filtro['is_active'] = True
+        if apellido:
+            filtro['last_name__icontains'] = apellido
+        if nro_doc:
+            filtro['document'] = nro_doc
+        if street_address:
+            filtro['street_address__icontains'] = street_address
+        if number:
+            filtro['number'] = number
+        if floor:
+            filtro['floor'] = floor
+        if city:
+            filtro['city'] = city
+        if postal_code:
+            filtro['postal_code'] = postal_code
+        if phone:
+            filtro['phone'] = phone
 
 
         titulares = Titular.objects.filter(**filtro)

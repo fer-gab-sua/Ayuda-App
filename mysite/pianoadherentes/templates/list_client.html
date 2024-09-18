@@ -20,8 +20,8 @@
             <tr>
                 <td>{{titular.pk}}</td>
                 <td>{{titular.cbu}}</td>
-                <td>{{titular.name}}</td>
-                <td>{{titular.dni}}</td>
+                <td>{{titular.name}} {{titular.last_name}}</td>
+                <td>{{titular.document_type}} {{titular.document}}</td>
                 <td>
                     {% if titular.is_active == True %}
                     Activo
@@ -34,12 +34,13 @@
                     {% csrf_token %}
                     <input type="hidden" name="cbu" value="{{titular.cbu}}">
                     <button type="submit" style="
-                    background:rgb(34, 178, 176);
+                    background:#8ef73e;
                     border:none;
                     color:blue;
                     text-decoration:underline;
                     cursor:pointer;
-                    width: 100px;">
+                    width: 100px;
+                    border-radius: 10px;">
                         Detalle
                     </button>
                 </form>
