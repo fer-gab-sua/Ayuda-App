@@ -2,3 +2,4 @@ venv/
 entorno-ayu/
 .env
 db.sqlite3
+__pycache__/
