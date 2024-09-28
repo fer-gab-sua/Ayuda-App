@@ -12,7 +12,11 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+import environ
 
+
+env = environ.Env()
+environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,12 +26,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', default='your secret key')
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-
-ALLOWED_HOSTS = ['fsuarez.pythonanywhere.com', 'localhost', '127.0.0.1']
+SECRET_KEY = env('SECRET_KEY')
+DEBUG = env.bool('DEBUG', default=False)
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
 
 # Application definition
@@ -176,10 +177,11 @@ MEDIA_ROOT = BASE_DIR / 'media'
 ############ENVIO DE CORREOS CONFIGURACION ########################### ESTO LO TENGO QUE PROTEGER
 
 
+# Configuración del correo electrónico
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'  # Servidor SMTP de tu proveedor de correo
-EMAIL_PORT = 587  # Puerto para conexión TLS
-EMAIL_USE_TLS = True  # Activa el cifrado TLS
-EMAIL_HOST_USER = 'appayudamedica@gmail.com'  # Tu correo
-EMAIL_HOST_PASSWORD = 'nxuw nagm mnwr gtwx'  # Tu contraseña de aplicación o correo
-DEFAULT_FROM_EMAIL = 'appayudamedica@gmail.com'  # Remitente por defecto
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_PORT = env.int('EMAIL_PORT')
+EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')

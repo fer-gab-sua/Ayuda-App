@@ -1,2 +1,4 @@
 venv/
 entorno-ayu/
+.env
+db.sqlite3
