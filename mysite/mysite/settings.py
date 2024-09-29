@@ -184,6 +184,7 @@ SESSION_COOKIE_DOMAIN = '.ayudamedica.net'
 if DEBUG == False:
     SESSION_SAVE_EVERY_REQUEST = True
     CSRF_COOKIE_SECURE = True
+    CSRF_COOKIE_SAMESITE = 'Lax' 
     SESSION_COOKIE_SECURE = True
     APP_DIRS=True
 
