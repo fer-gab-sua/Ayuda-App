@@ -154,7 +154,7 @@ print(STATICFILES_DIRS)
 if DEBUG == True:
     STATIC_ROOT = BASE_DIR / "staticfiles"
 else:
-    STATIC_ROOT = '/home/fsuarez/Ayuda-App/mysite/staticfiles/'
+    STATIC_ROOT = BASE_DIR / "staticfiles"
 
 print('STATIC_ROOT')
 print(STATIC_ROOT)
