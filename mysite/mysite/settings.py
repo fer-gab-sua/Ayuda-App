@@ -99,7 +99,8 @@ else:
         'PORT': os.getenv('PORT'),
     }
 }   
-
+print('DATABASE')
+print(DATABASES)
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -146,13 +147,17 @@ else:
         '/home/fsuarez/Ayuda-App/mysite/static/'
     ]
 
+print("static dir")
+print(STATICFILES_DIRS)
+
 # Ruta donde se recopilarán los archivos estáticos al ejecutar collectstatic
 if DEBUG == True:
     STATIC_ROOT = BASE_DIR / "staticfiles"
 else:
     STATIC_ROOT = '/home/fsuarez/Ayuda-App/mysite/static/'
 
-
+print('STATIC_ROOT')
+print(STATIC_ROOT)
 
 LOGIN_URL = '/signin'
 
