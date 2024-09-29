@@ -98,7 +98,7 @@ else:
         'HOST': os.getenv('HOST'),  # Usualmente 'localhost' en PythonAnywhere
         'PORT': os.getenv('PORT'),
     }
-}   
+}
 print('DATABASE')
 print(DATABASES)
 # Password validation
@@ -125,7 +125,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Argentina/Buenos_Aires'
 
 USE_I18N = True
 
@@ -175,6 +175,8 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 
 SESSION_COOKIE_DOMAIN = '.ayudamedica.net'
+CSRF_COOKIE_DOMAIN = ".ayudamedica.net"
+
 
 #SESSION_SAVE_EVERY_REQUEST = True
 
@@ -183,8 +185,9 @@ SESSION_COOKIE_DOMAIN = '.ayudamedica.net'
 
 if DEBUG == False:
     SESSION_SAVE_EVERY_REQUEST = True
-    CSRF_COOKIE_SECURE = True
-    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = False
+    #CSRF_COOKIE_SAMESITE = 'Lax'
+    SESSION_COOKIE_SECURE = False
     APP_DIRS=True
 
 
@@ -207,6 +210,7 @@ DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 
 
 #configuracion para el subdominio
-CSRF_TRUSTED_ORIGINS = [
-    'https://appbp.ayudamedica.net',
-]
+#CSRF_TRUSTED_ORIGINS = [
+#    'https://appbp.ayudamedica.net',
+#    'http://appbp.ayudamedica.net',
+#]
