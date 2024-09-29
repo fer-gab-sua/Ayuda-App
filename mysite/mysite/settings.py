@@ -173,6 +173,9 @@ SESSION_COOKIE_AGE = 14400
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
+
+SESSION_COOKIE_DOMAIN = '.ayudamedica.net'
+
 #SESSION_SAVE_EVERY_REQUEST = True
 
 
@@ -200,3 +203,10 @@ EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
+
+
+
+#configuracion para el subdominio
+CSRF_TRUSTED_ORIGINS = [
+    'https://appbp.ayudamedica.net',
+]
