@@ -209,4 +209,5 @@ DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 #configuracion para el subdominio
 CSRF_TRUSTED_ORIGINS = [
     'https://appbp.ayudamedica.net',
+    'http://appbp.ayudamedica.net',
 ]
