@@ -144,7 +144,6 @@ if DEBUG == True:
 else:
     STATICFILES_DIRS = [
         '/home/fsuarez/Ayuda-App/mysite/pianoadherentes/static/',
-        '/home/fsuarez/Ayuda-App/mysite/staticfiles/'
     ]
 
 print("static dir")
