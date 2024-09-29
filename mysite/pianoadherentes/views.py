@@ -18,6 +18,8 @@ from .utils.pass_generate import generate_random_password
 
 
 def home(request):
+    if request.user.is_authenticated:
+        return redirect('select_cbu')
     return render(request, 'signin.html')
 
 def signup(request):
