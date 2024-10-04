@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario Ayuda Médica</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Estilos para la impresión */
+        @media print {
+            h2 {
+                font-size: 14px;
+            }
+            h3 {
+                font-size: 12px;
+            }
+            img {
+                width: 100px;
+            }
+            body {
+                font-size: 8pt; /* Ajustar el tamaño de la fuente para impresión */
+            }
+            input {
+                margin-top: 0;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container my-4" style="width: 800px;">
+        <!-- Header -->
+        
+        <div class="row mb-3">
+            <div class="col-md-9">
+                <h2>SISTEMA ADHERENTES</h2>
+                <h3>Datos del titular de la cuenta a debitar</h3>
+            </div>
+            <div class="col-md-2">
+                <img src="../static/img/logo.png" alt="">
+            </div>
+        </div>
+
+        <!-- Formulario -->
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="apellido" class="form-label">Apellido:</label>
+                <input type="text" class="form-control" id="apellido" placeholder="Apellido">
+            </div>
+            <div class="col-md-6">
+                <label for="nombre" class="form-label">Nombre:</label>
+                <input type="text" class="form-control" id="nombre" placeholder="Nombre">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <label for="calle" class="form-label">Calle:</label>
+                <input type="text" class="form-control" id="calle" placeholder="Calle">
+            </div>
+            <div class="col-md-2">
+                <label for="numero" class="form-label">Nº:</label>
+                <input type="text" class="form-control" id="numero" placeholder="Número">
+            </div>
+            <div class="col-md-2">
+                <label for="piso" class="form-label">Piso:</label>
+                <input type="text" class="form-control" id="piso" placeholder="Piso">
+            </div>
+            <div class="col-md-2">
+                <label for="dpto" class="form-label">Dto:</label>
+                <input type="text" class="form-control" id="dpto" placeholder="Dto">
+            </div>
+            <div class="col-md-3">
+                <label for="cuerpo" class="form-label">Cuerpo:</label>
+                <input type="text" class="form-control" id="cuerpo" placeholder="Cuerpo">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="localidad" class="form-label">Localidad:</label>
+                <input type="text" class="form-control" id="localidad" placeholder="Localidad">
+            </div>
+            <div class="col-md-3">
+                <label for="cp" class="form-label">C.P.:</label>
+                <input type="text" class="form-control" id="cp" placeholder="Código Postal">
+            </div>
+            <div class="col-md-5">
+                <label for="telefono" class="form-label">Teléfono:</label>
+                <input type="text" class="form-control" id="telefono" placeholder="Teléfono">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="tipoDocumento" class="form-label">Tipo y Nº de Documento:</label>
+                <input type="text" class="form-control" id="tipoDocumento" placeholder="Tipo y Número de Documento">
+            </div>
+            <div class="col-md-6">
+                <label for="banco" class="form-label">Banco:</label>
+                <input type="text" class="form-control" id="banco" placeholder="Banco">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="cuenta" class="form-label">Tipo y Nº de Cuenta (CA):</label>
+                <input type="text" class="form-control" id="cuenta" placeholder="Tipo y Número de Cuenta">
+            </div>
+            <div class="col-md-6">
+                <label for="cbu" class="form-label">C.B.U. Nº:</label>
+                <input type="text" class="form-control" id="cbu" placeholder="CBU">
+            </div>
+        </div>
+
+        <!-- Altas/Bajas/Modificaciones -->
+        <div class="row mb-3">
+            <h3>Adherentes</h3>
+        </div>
+
+        <!-- Tabla -->
+        <div class="table-responsive mb-3">
+            <table class="table table-bordered">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">Nº</th>
+                        <th scope="col">Apellido</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Fecha de Nacimiento</th>
+                        <th scope="col">Documento Tipo</th>
+                        <th scope="col">Documento Nº</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <!-- Agrega más filas según sea necesario -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Declaración y firma -->
+        <div class="mb-3">
+            <p class="text-center">
+                DECLARO CONOCER LAS CONDICIONES DE LA PRESTACIÓN DEL SERVICIO DE AYUDA MÉDICA Y AUTORIZO EL DÉBITO CORRESPONDIENTE A LA CUENTA ANTES DETALLADA.
+            </p>
+        </div>
+
+        <div class="row text-center">
+            <div class="col-md-4">
+                <label for="firma" class="form-label">Firma:</label>
+                <input type="text" class="form-control" id="firma" placeholder="Firma">
+            </div>
+            <div class="col-md-4">
+                <label for="aclaracion" class="form-label">Aclaración:</label>
+                <input type="text" class="form-control" id="aclaracion" placeholder="Aclaración">
+            </div>
+            <div class="col-md-4">
+                <label for="nroDocumento" class="form-label">Nº de Documento:</label>
+                <input type="text" class="form-control" id="nroDocumento" placeholder="Número de Documento">
+            </div>
+        </div>
+        
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
