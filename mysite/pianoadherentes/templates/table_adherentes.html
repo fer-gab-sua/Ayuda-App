@@ -75,5 +75,31 @@
             {% endfor %}
         </tbody>
     </table>
+
+    <div style="display: flex; justify-content: center; align-items: center; padding: 10px;">
+        <div style="border: 1px solid rgba(0, 0, 0, 0.282); border-radius: 20px; width: 50%; text-align: center; padding: 10px;">
+            <label for="id_is_active" style="margin-right: 10px; display:inline-flex">Incluir Bajas:</label>
+            <input type="checkbox" name="is_active" id="id_is_active_print" checked>
+            
+            <button style="padding: 5px 10px;" onclick="openForm('{{ new_client.titular_id }}')">
+                IMPRIMIR FORMULARIO
+            </button>
+        </div>
+    </div>
 </div>
+
 <!--<button id="new-adherente-btn">Nuevo ingreso Adherentes</button>-->
+
+
+<script>
+    function openForm(titularId) {
+        // Obtener el estado del checkbox
+        const isActive = document.getElementById('id_is_active_print').checked;
+        
+        // Construir la URL con los parámetros titular_id e is_active
+        const url = "{% url 'print_form' %}?titular_id=" + titularId + "&is_active=" + isActive;
+        
+        // Abrir en una nueva ventana
+        window.open(url, '_blank');
+    }
+</script>

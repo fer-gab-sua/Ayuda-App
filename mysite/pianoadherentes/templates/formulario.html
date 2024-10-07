@@ -10,35 +10,36 @@
         /* Estilos para la impresión */
         @media print {
             h2 {
-                font-size: 12px;
+                font-size: 8.6px; /* 20% más chico */
             }
             h3 {
-                font-size: 10px;
+                font-size: 7px; /* 20% más chico */
             }
             img {
-                width: 80px;
+                width: 64px; /* 20% más chico */
             }
             body {
-                font-size: 8pt; /* Ajustar el tamaño de la fuente para impresión */
+                font-size: 5.4pt; /* 20% más chico */
             }
             input {
                 margin-top: 0;
             }
             .mb-3 {
-                margin-bottom: 2px !important;
+                margin-bottom: 1.6px !important; /* 20% más chico */
             }
             .form-label {
-            margin-bottom: 0px;
+                margin-bottom: 0px;
+                font-size: 7.8px; /* 20% más chico */
             }
             .form-control {
-                font-size: 11px;
+                font-size: 7.8px; /* 20% más chico */
             }
-
         }
 
     </style>
 </head>
 <body>
+    {% load static %}
     <div class="container my-4" style="width: 800px;">
         <!-- Header -->
         
@@ -48,7 +49,7 @@
                 <h3>Datos del titular de la cuenta a debitar</h3>
             </div>
             <div class="col-md-2">
-                <img src="../static/img/logo.png" alt="">
+                <img src="{% static 'img/logo.png' %}" alt="">
             </div>
         </div>
 
@@ -56,73 +57,66 @@
         <div class="row mb-3">
             <div class="col-md-6">
                 <label for="apellido" class="form-label">Apellido:</label>
-                <input type="text" class="form-control" id="apellido" placeholder="Apellido">
+                <input type="text" class="form-control" id="apellido" placeholder="Apellido" disabled value="{{titular.last_name}}">
             </div>
             <div class="col-md-6">
                 <label for="nombre" class="form-label">Nombre:</label>
-                <input type="text" class="form-control" id="nombre" placeholder="Nombre">
+                <input type="text" class="form-control" id="nombre" placeholder="Nombre" disabled value="{{titular.name}}">
             </div>
         </div>
 
         <div class="row mb-3">
-            <div class="col-md-3">
+            <div class="col-md-6">
                 <label for="calle" class="form-label">Calle:</label>
-                <input type="text" class="form-control" id="calle" placeholder="Calle">
+                <input type="text" class="form-control" id="calle" placeholder="Calle" disabled value="{{titular.street_address}}">
             </div>
             <div class="col-md-2">
                 <label for="numero" class="form-label">Nº:</label>
-                <input type="text" class="form-control" id="numero" placeholder="Número">
+                <input type="text" class="form-control" id="numero" placeholder="Número" disabled value="{{titular.number}}">
             </div>
-            <div class="col-md-2">
-                <label for="piso" class="form-label">Piso:</label>
-                <input type="text" class="form-control" id="piso" placeholder="Piso">
-            </div>
-            <div class="col-md-2">
-                <label for="dpto" class="form-label">Dto:</label>
-                <input type="text" class="form-control" id="dpto" placeholder="Dto">
-            </div>
-            <div class="col-md-3">
-                <label for="cuerpo" class="form-label">Cuerpo:</label>
-                <input type="text" class="form-control" id="cuerpo" placeholder="Cuerpo">
-            </div>
-        </div>
-
-        <div class="row mb-3">
             <div class="col-md-4">
+                <label for="piso" class="form-label">Piso y Departamento:</label>
+                <input type="text" class="form-control" id="piso" placeholder="Piso" disabled value="{{titular.floor}}">
+            </div>
+
+
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-3">
                 <label for="localidad" class="form-label">Localidad:</label>
-                <input type="text" class="form-control" id="localidad" placeholder="Localidad">
+                <input type="text" class="form-control" id="localidad" placeholder="Localidad" disabled value="{{titular.city}}">
             </div>
             <div class="col-md-3">
+                <label for="localidad" class="form-label">Provincia:</label>
+                <input type="text" class="form-control" id="localidad" placeholder="Localidad" disabled value="{{titular.province}}">
+            </div>
+            <div class="col-md-2">
                 <label for="cp" class="form-label">C.P.:</label>
-                <input type="text" class="form-control" id="cp" placeholder="Código Postal">
+                <input type="text" class="form-control" id="cp" placeholder="Código Postal" disabled value="{{titular.postal_code}}">
             </div>
-            <div class="col-md-5">
+            <div class="col-md-4">
                 <label for="telefono" class="form-label">Teléfono:</label>
-                <input type="text" class="form-control" id="telefono" placeholder="Teléfono">
+                <input type="text" class="form-control" id="telefono" placeholder="Teléfono" disabled value="{{titular.phone}}">
             </div>
         </div>
 
         <div class="row mb-3">
-            <div class="col-md-6">
-                <label for="tipoDocumento" class="form-label">Tipo y Nº de Documento:</label>
-                <input type="text" class="form-control" id="tipoDocumento" placeholder="Tipo y Número de Documento">
+            <div class="col-md-3">
+                <label for="tipoDocumento" class="form-label">Tipo y Nº de Doc.:</label>
+                <input type="text" class="form-control" id="tipoDocumento" placeholder="Tipo y Número de Documento" disabled value="{{titular.document_type}} {{titular.document}}">
             </div>
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <label for="banco" class="form-label">Banco:</label>
-                <input type="text" class="form-control" id="banco" placeholder="Banco">
-            </div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <label for="cuenta" class="form-label">Tipo y Nº de Cuenta (CA):</label>
-                <input type="text" class="form-control" id="cuenta" placeholder="Tipo y Número de Cuenta">
+                <input type="text" class="form-control" id="banco" placeholder="Banco" disabled value="Banco Piano">
             </div>
             <div class="col-md-6">
                 <label for="cbu" class="form-label">C.B.U. Nº:</label>
-                <input type="text" class="form-control" id="cbu" placeholder="CBU">
+                <input type="text" class="form-control" id="cbu" placeholder="CBU"  disabled value="{{titular.cbu}}">
             </div>
         </div>
+
+
 
         <!-- Altas/Bajas/Modificaciones -->
         <div class="row mb-3">
@@ -140,65 +134,28 @@
                         <th scope="col">Fecha de Nacimiento</th>
                         <th scope="col">Documento Tipo</th>
                         <th scope="col">Documento Nº</th>
+                        <th scope="col">Estado</th>
                     </tr>
                 </thead>
                 <tbody>
+                    {% for adherente in adherentes %}
                     <tr>
-                        <td>1</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>{{adherente.adherente_id}}</td>
+                        <td>{{adherente.last_name}}</td>
+                        <td>{{adherente.name}}</td>
+                        <td>{{adherente.birthdate}}</td>
+                        <td>{{adherente.document_type}}</td>
+                        <td>{{adherente.document}}</td>
+                        <td>
+                        {% if adherente.is_active == True %}
+                        Activo
+                        {% else %}
+                        Baja
+                        {% endif %}
+                        </td>
                     </tr>
-                    <tr>
-                        <td>2</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
+                    {% endfor %}
+                    
                     <!-- Agrega más filas según sea necesario -->
                 </tbody>
             </table>
@@ -214,15 +171,15 @@
         <div class="row text-center">
             <div class="col-md-4">
                 <label for="firma" class="form-label">Firma:</label>
-                <input type="text" class="form-control" id="firma" placeholder="Firma">
+                <input type="text" class="form-control" id="firma" placeholder="" disabled style="height: 70px;">
             </div>
             <div class="col-md-4">
                 <label for="aclaracion" class="form-label">Aclaración:</label>
-                <input type="text" class="form-control" id="aclaracion" placeholder="Aclaración">
+                <input type="text" class="form-control" id="aclaracion" placeholder="" disabled style="height: 70px;">
             </div>
             <div class="col-md-4">
                 <label for="nroDocumento" class="form-label">Nº de Documento:</label>
-                <input type="text" class="form-control" id="nroDocumento" placeholder="Número de Documento">
+                <input type="text" class="form-control" id="nroDocumento" placeholder="Número de Documento"  disabled value="{{titular.document}}" style="height: 70px; text-align: center; display: flex; align-items: flex-end; padding-bottom: 10px;">
             </div>
         </div>
         
