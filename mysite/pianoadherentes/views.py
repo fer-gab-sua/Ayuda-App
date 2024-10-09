@@ -225,10 +225,23 @@ def client_baja(request,titular_id):
         titular.deleted = timezone.now()
         titular.save()
         adherentes = Adherente.objects.filter(titular=titular_id)
-        return render(request, 'create_client.html', {
-            'new_client': titular,
-            'tupla_adherentes': adherentes
-        })
+        if adherentes:
+                
+            for adherente in adherentes:
+                adherente.is_active = False
+                adherente.delete = timezone.now()
+                adherente.save()
+
+                Log.objects.create(
+                        adherente=adherente,
+                        movimiento='Baja',
+                        user=request.user
+                    )
+        else:
+            return render(request, 'create_client.html', {
+                'new_client': titular,
+                'tupla_adherentes': adherentes
+            })
 
 @login_required
 def consultar_cbu(request):
