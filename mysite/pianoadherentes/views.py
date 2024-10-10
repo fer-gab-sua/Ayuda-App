@@ -237,11 +237,11 @@ def client_baja(request,titular_id):
                         movimiento='Baja',
                         user=request.user
                     )
-        else:
-            return render(request, 'create_client.html', {
-                'new_client': titular,
-                'tupla_adherentes': adherentes
-            })
+
+        return render(request, 'create_client.html', {
+            'new_client': titular,
+            'tupla_adherentes': adherentes
+        })
 
 @login_required
 def consultar_cbu(request):
