@@ -174,8 +174,7 @@ SESSION_COOKIE_AGE = 14400
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 
-SESSION_COOKIE_DOMAIN = '.ayudamedica.net'
-CSRF_COOKIE_DOMAIN = ".ayudamedica.net"
+
 
 
 #SESSION_SAVE_EVERY_REQUEST = True
@@ -189,7 +188,8 @@ if DEBUG == False:
     #CSRF_COOKIE_SAMESITE = 'Lax'
     SESSION_COOKIE_SECURE = False
     APP_DIRS=True
-
+    SESSION_COOKIE_DOMAIN = '.ayudamedica.net'
+    CSRF_COOKIE_DOMAIN = ".ayudamedica.net"
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'

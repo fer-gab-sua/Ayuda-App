@@ -48,4 +48,7 @@ urlpatterns = [
 
     path('logout/',views.signout, name='logout'),
     path('signin/',views.login_user, name='signin'),
+
+    path('signin/',views.login_user, name='signin'),
+    path('print_form/',views.print_form, name='print_form'),
 ]

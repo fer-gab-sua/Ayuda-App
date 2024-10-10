@@ -88,17 +88,14 @@ def config(request):
                 user_obj.save()
             return render(request, 'signin.html', {'form': AuthenticationForm, 'error': 'Ingrese nuevamente'})
 
-
 @login_required
 def client(request):
     titulares = Titular.objects.filter(user_upload=request.user)
     return render(request, 'clients.html',{'titulares': titulares})
 
-
 def signout(request):
     logout(request)
     return redirect('home')
-
 
 def login_user(request):
     if request.method == 'GET':
@@ -149,7 +146,6 @@ def create_client(request):
                 'error': 'An unexpected error occurred'
             })
 
-
 @login_required
 def create_adherente(request):
     if request.method == 'POST':
@@ -173,7 +169,6 @@ def create_adherente(request):
                     movimiento='Creacion',
                     user=request.user
                 )
-                
 
                 titular_id = request.POST.get('titular_id')
                 new_client = Titular.objects.get(titular_id=titular_id)
@@ -203,8 +198,6 @@ def create_adherente(request):
                 'tupla_adherentes': adherentes
                 })
 
-
-
 @login_required
 def client_detail(request, titular_id):
     if request.method == 'GET':
@@ -232,6 +225,19 @@ def client_baja(request,titular_id):
         titular.deleted = timezone.now()
         titular.save()
         adherentes = Adherente.objects.filter(titular=titular_id)
+        if adherentes:
+                
+            for adherente in adherentes:
+                adherente.is_active = False
+                adherente.delete = timezone.now()
+                adherente.save()
+
+                Log.objects.create(
+                        adherente=adherente,
+                        movimiento='Baja',
+                        user=request.user
+                    )
+
         return render(request, 'create_client.html', {
             'new_client': titular,
             'tupla_adherentes': adherentes
@@ -287,7 +293,6 @@ def bajaAdherente(request, adherente_id):
         })
     else:
         return HttpResponse("none")
-
 
 @login_required
 def updateAdherente(request, adherente_id):
@@ -403,5 +408,15 @@ def buscar(request):
                 'error': 'No se encontraron titulares con los datos proporcionados.'
             })
 
+@login_required
+def print_form(request):
+    titular_id = request.GET.get('titular_id')
+    activos = request.GET.get('is_active')
+    if activos=="true":
+        client = Titular.objects.get(titular_id=titular_id)
+        adherentes = Adherente.objects.filter(titular=titular_id)
+    else:
+        client = Titular.objects.get(titular_id=titular_id)
+        adherentes = Adherente.objects.filter(titular=titular_id, is_active=1)
 
-
+    return render(request, 'formulario.html', {'titular': client, 'adherentes' : adherentes})
