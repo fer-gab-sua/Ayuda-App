@@ -59,6 +59,10 @@
                         <img  id="edit" src="{% static '/img/edit_icon.png' %}" alt="img">
                     </button>
                 </form>
+
+
+                
+                {% if adherente.is_active == True %}
                 <form action="{% url 'baja_adherente' adherente.adherente_id %}" method="POST" >
                     {% csrf_token %}
                     <button type="submit" style="
@@ -67,10 +71,24 @@
                     color:blue;
                     text-decoration:underline;
                     cursor:pointer;
-                    width: 50px;" onclick="return confirmDelete()">
+                    width: 50px;" onclick="return confirmDeleteAd()">
                         <img  id="edit" src="{% static '/img/del_icon.png' %}" alt="img">
                     </button>
                 </form>
+                {% else %}
+                <form action="{% url 'reactiv_adherente' adherente.adherente_id %}" method="POST" >
+                    {% csrf_token %}
+                    <button type="submit" style="
+                    background:green;
+                    border:none;
+                    color:blue;
+                    text-decoration:underline;
+                    cursor:pointer;
+                    width: 50px;" onclick="return confirmActivateAd()">
+                        <img  id="edit" src="{% static '/img/react_icon.png' %}" alt="img">
+                    </button>
+                </form>
+                {% endif %}
                     
             {% endfor %}
         </tbody>

@@ -349,3 +349,78 @@ def padron_activo(request):
         wb.save(response)
         return response
     return render(request, 'estadisticas.html')
+
+
+
+def bajas(request):
+    if request.method == 'POST':
+        print("llego hasta aca")
+        start_date_str = request.POST.get('init_date')
+        end_date_str = request.POST.get('end_date')
+        #sucursal = request.POST.get('sucursal')
+
+        # Convertir las fechas de cadena a objetos datetime
+        start_date_parts = start_date_str.split('-')
+        start_date = '-'.join(start_date_parts)
+
+        end_date_parts = end_date_str.split('-')
+        end_date = '-'.join(end_date_parts)
+
+        # Filtrar adherentes dentro del rango de fechas
+        adherentes = Adherente.objects.filter(
+            deleted__range=(start_date, end_date))
+
+        # Crear un archivo Excel utilizando openpyxl
+        wb = Workbook()
+        ws = wb.active
+        ws.title = 'Adherentes'
+
+        # Definir encabezados de columnas
+        headers = [
+            'Adherente ID',
+            'Titular Nombre',
+            'Titular Apellido',
+            'Tipo de documento',
+            'Documento',
+            'CBU Titular',
+            'Nombre',
+            'Apellido',
+            'Teléfono',
+            'Dirección',
+            'Tipo documento',
+            'Nro documento',
+            'Fecha de baja',
+            'Usuario',
+            'Sucursal'
+        ]
+
+        # Escribir encabezados en la primera fila
+        for col_num, header in enumerate(headers, start=1):
+            ws.cell(row=1, column=col_num, value=header)
+
+        # Escribir datos de adherentes en filas
+        for row_num, adherente in enumerate(adherentes, start=2):
+            ws.cell(row=row_num, column=1, value=adherente.adherente_id)
+            ws.cell(row=row_num, column=2, value=adherente.titular.name)
+            ws.cell(row=row_num, column=3, value=adherente.titular.last_name)
+            ws.cell(row=row_num, column=4, value=adherente.titular.document_type)
+            ws.cell(row=row_num, column=5, value=adherente.titular.document)
+            ws.cell(row=row_num, column=6, value=adherente.titular.cbu)
+            ws.cell(row=row_num, column=7, value=adherente.name)
+            ws.cell(row=row_num, column=8, value=adherente.last_name)
+            ws.cell(row=row_num, column=9, value=adherente.phone)
+            address_complete = str(f"{adherente.street_address} {adherente.number} {adherente.floor} - {adherente.city} - {adherente.province}")
+            ws.cell(row=row_num, column=10, value=address_complete)
+            ws.cell(row=row_num, column=11, value=adherente.document_type)
+            ws.cell(row=row_num, column=12, value=adherente.document)
+            ws.cell(row=row_num, column=13, value=adherente.deleted.strftime('%Y-%m-%d %H:%M:%S'))
+            ws.cell(row=row_num, column=14, value=adherente.user_upload.username)
+            ws.cell(row=row_num, column=15, value=adherente.sucursal)
+
+        # Crear el archivo Excel en memoria
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="informe.xlsx"'
+        # Guardar el libro de trabajo en la respuesta HTTP
+        wb.save(response)
+        return response
+    return render(request, 'estadisticas.html')

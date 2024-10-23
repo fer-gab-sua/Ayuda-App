@@ -162,6 +162,7 @@ def create_adherente(request):
                 new_adherente.titular = titular
                 new_adherente.legajo = user_obj.datosuser.legajo
                 new_adherente.sucursal  = user_obj.datosuser.sucursal.descripcion
+                new_adherente.is_active = True
                 new_adherente.save()
 
                 Log.objects.create(
@@ -229,7 +230,7 @@ def client_baja(request,titular_id):
                 
             for adherente in adherentes:
                 adherente.is_active = False
-                adherente.delete = timezone.now()
+                adherente.deleted = timezone.now()
                 adherente.save()
 
                 Log.objects.create(
@@ -275,6 +276,7 @@ def bajaAdherente(request, adherente_id):
     adherente = Adherente.objects.get(pk=adherente_id)
     if request.method == 'POST':
         adherente.is_active = False
+        adherente.deleted = timezone.now()
         adherente.save()
 
         titular_id = adherente.titular.pk  # Obtener el ID del titular correctamente
@@ -295,6 +297,32 @@ def bajaAdherente(request, adherente_id):
         return HttpResponse("none")
 
 @login_required
+def reactiveAdherente(request, adherente_id):
+    adherente = Adherente.objects.get(pk=adherente_id)
+    if request.method == 'POST':
+        adherente.is_active = True
+        adherente.deleted = None
+        adherente.save()
+
+        titular_id = adherente.titular.pk  # Obtener el ID del titular correctamente
+        new_client = get_object_or_404(Titular, pk=titular_id)
+        adherentes = Adherente.objects.filter(titular=titular_id)
+
+        Log.objects.create(
+                    adherente=adherente,
+                    movimiento='Reactivar',
+                    user=request.user
+                )
+        
+        return render(request, 'create_client.html', {
+            'new_client': new_client,
+            'tupla_adherentes': adherentes
+        })
+    else:
+        return HttpResponse("none")
+
+
+@login_required
 def updateAdherente(request, adherente_id):
     adherente = Adherente.objects.get(pk=adherente_id)
     checklist = adherente.is_active
@@ -305,6 +333,9 @@ def updateAdherente(request, adherente_id):
 
             titular_id = adherente.titular.titular_id
             adherentes = Adherente.objects.filter(titular=titular_id)
+            if checklist is True:
+                adherente.deleted = None
+            
 
             Log.objects.create(
                     adherente=adherente,
