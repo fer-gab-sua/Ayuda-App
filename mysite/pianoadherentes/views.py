@@ -231,6 +231,7 @@ def client_baja(request,titular_id):
             for adherente in adherentes:
                 adherente.is_active = False
                 adherente.deleted = timezone.now()
+                adherente.user_upload = request.user
                 adherente.save()
 
                 Log.objects.create(
@@ -277,6 +278,7 @@ def bajaAdherente(request, adherente_id):
     if request.method == 'POST':
         adherente.is_active = False
         adherente.deleted = timezone.now()
+        adherente.user_upload = request.user
         adherente.save()
 
         titular_id = adherente.titular.pk  # Obtener el ID del titular correctamente

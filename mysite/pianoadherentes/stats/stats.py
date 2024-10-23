@@ -351,7 +351,7 @@ def padron_activo(request):
     return render(request, 'estadisticas.html')
 
 
-
+@permission_required('pianoadherentes.can_view_stats_controllerAdmin', raise_exception=True)
 def bajas(request):
     if request.method == 'POST':
         print("llego hasta aca")
