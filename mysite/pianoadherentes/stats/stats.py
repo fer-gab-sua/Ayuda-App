@@ -271,7 +271,7 @@ def usuario_log(request):
         # Escribir datos de adherentes en filas
         for row_num, log in enumerate(log, start=2):
             ws.cell(row=row_num, column=1, value=log.log_id)
-            adherente = str(f'{log.adherente.name} {log.adherente.last_name}')
+            adherente = str(f'{log.adherente.name} {log.adherente.last_name} {log.adherente.document}')
             ws.cell(row=row_num, column=2, value=adherente)
             ws.cell(row=row_num, column=3, value=log.movimiento)
             ws.cell(row=row_num, column=4, value=log.user.username)
