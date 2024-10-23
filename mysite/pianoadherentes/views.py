@@ -232,6 +232,8 @@ def client_baja(request,titular_id):
                 adherente.is_active = False
                 adherente.deleted = timezone.now()
                 adherente.user_upload = request.user
+                user_obj = User.objects.get(username=request.user)
+                adherente.sucursal  = user_obj.datosuser.sucursal.descripcion
                 adherente.save()
 
                 Log.objects.create(
@@ -279,6 +281,8 @@ def bajaAdherente(request, adherente_id):
         adherente.is_active = False
         adherente.deleted = timezone.now()
         adherente.user_upload = request.user
+        user_obj = User.objects.get(username=request.user)
+        adherente.sucursal  = user_obj.datosuser.sucursal.descripcion
         adherente.save()
 
         titular_id = adherente.titular.pk  # Obtener el ID del titular correctamente
@@ -304,6 +308,9 @@ def reactiveAdherente(request, adherente_id):
     if request.method == 'POST':
         adherente.is_active = True
         adherente.deleted = None
+        adherente.user_upload = request.user
+        user_obj = User.objects.get(username=request.user)
+        adherente.sucursal  = user_obj.datosuser.sucursal.descripcion
         adherente.save()
 
         titular_id = adherente.titular.pk  # Obtener el ID del titular correctamente
@@ -335,6 +342,8 @@ def updateAdherente(request, adherente_id):
 
             titular_id = adherente.titular.titular_id
             adherentes = Adherente.objects.filter(titular=titular_id)
+            user_obj = User.objects.get(username=request.user)
+            adherente.sucursal  = user_obj.datosuser.sucursal.descripcion
             if checklist is True:
                 adherente.deleted = None
             
