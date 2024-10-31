@@ -177,3 +177,6 @@ class Contratos(models.Model):
     date_init = models.DateTimeField(blank=True, null=True)
     date_end = models.DateTimeField(blank=True, null=True)
     price = models.IntegerField(default=0)
+    legajo = models.IntegerField(blank=True)
+    sucursal = models.CharField(max_length=50)
+    is_active = models.BooleanField(default=True)

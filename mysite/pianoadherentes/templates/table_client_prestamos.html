@@ -1,0 +1,57 @@
+{% load static %}
+<h1>Titular de Prestamo</h1>
+    <div class="container" >
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nombre y Apellido</th>
+                    <th scope="col">Documento</th>
+                    <th scope="col">CBU</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">{{new_client.titular_id}}</th>
+                    <td>{{new_client.name}} {{new_client.last_name}}</td>
+                    <td>{{new_client.document}}</td>
+                    <td>{{new_client.cbu}}</td>
+                    <td>
+                        {% if new_client.is_active == True %}
+                        Activo
+                        {% else %}
+                        Baja
+                        {% endif %}
+                    </td>
+                    <td style="display: flex;"><form action="{% url 'update_titular' new_client.pk %}" method="GET">
+                        {% csrf_token %}
+                        <button type="submit" style="
+                        background:#007bff;
+                        border:none;
+                        color:blue;
+                        text-decoration:underline;
+                        cursor:pointer;
+                        width: 50px;" class="editar">
+                            <img  id="edit" src="{% static '/img/edit_icon.png' %}" alt="img">
+                        </button>
+                    </form>
+                    <form action="{% url 'client_baja' new_client.pk %}" method="POST" >
+                        {% csrf_token %}
+                        <button type="submit" style="
+                        background:firebrick;
+                        border:none;
+                        color:blue;
+                        text-decoration:underline;
+                        cursor:pointer;
+                        width: 50px;" onclick="return confirmDelete()">
+                            <img  id="edit" src="{% static '/img/del_icon.png' %}" alt="img">
+                        </button>
+                    </form>
+                    </td>
+                    
+                </tr>
+            </tbody>
+        </table>
+    </div>

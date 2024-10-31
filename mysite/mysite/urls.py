@@ -36,6 +36,7 @@ urlpatterns = [
     path('client/<int:titular_id>/',views.client_detail, name='client_detail'),
     path('client/<int:titular_id>/baja/',views.client_baja, name='client_baja'),
     path('client/adherente/create/',views.create_adherente, name='create_adherente'),
+    path('client/contract/create/',views.create_contract, name='create_contract'),
     path('adherente/baja/<int:adherente_id>/', views.bajaAdherente, name='baja_adherente'),
     path('adherente/update/<int:adherente_id>/', views.updateAdherente, name='update_adherente'),
     path('adherente/reactiv_adherente/<int:adherente_id>/', views.reactiveAdherente, name='reactiv_adherente'),

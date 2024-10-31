@@ -6,7 +6,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import permission_required
 from django.http import HttpResponse
 from django.db import IntegrityError
-from .forms import ClientForm , AdherenteForm, ClientFormPrestamos
+from .forms import ClientForm , AdherenteForm, ClientFormPrestamos, ContratosForm
 
 from .models import Titular , Adherente, Log, Prestamos, Contratos
 from django.utils import timezone
@@ -147,6 +147,57 @@ def create_client(request):
             })
 
 @login_required
+def create_adherente(request):
+    if request.method == 'POST':
+        try:
+            form = AdherenteForm(request.POST)
+            if form.is_valid():
+                titular_id = request.POST.get('titular_id')
+                user_obj = User.objects.get(username=request.user)
+                
+
+                titular = Titular.objects.get(pk=titular_id)
+                new_adherente = form.save(commit=False)
+                new_adherente.user_upload = request.user
+                new_adherente.titular = titular
+                new_adherente.legajo = user_obj.datosuser.legajo
+                new_adherente.sucursal  = user_obj.datosuser.sucursal.descripcion
+                new_adherente.is_active = True
+                new_adherente.save()
+
+                Log.objects.create(
+                    adherente=new_adherente,
+                    movimiento='Creacion',
+                    user=request.user
+                )
+
+                titular_id = request.POST.get('titular_id')
+                new_client = Titular.objects.get(titular_id=titular_id)
+                adherentes = Adherente.objects.filter(titular=titular_id)
+                return render(request, 'create_client.html', {
+                'new_client': new_client,
+                'form2': form, # Redirigir a una vista de listado de clientes o a donde sea apropiado
+                'tupla_adherentes': adherentes
+                })
+            else:
+                raise ValueError
+        except ValueError:
+            titular_id = request.POST.get('titular_id')
+            new_client = Titular.objects.get(titular_id=titular_id)
+            return render(request, 'create_client.html', {
+                'new_client': new_client,
+                'form2': form,
+                'error': 'Please provide valid data for adherente'
+            })
+    elif request.method == 'GET':
+        titular_id = request.GET.get('titular_id')
+        print(titular_id)
+        new_client = Titular.objects.get(titular_id=titular_id)
+        adherentes = Adherente.objects.filter(titular=titular_id)
+        return render(request, 'create_adherentes.html', {
+                'new_client': new_client,
+                'tupla_adherentes': adherentes
+                })@login_required
 def create_adherente(request):
     if request.method == 'POST':
         try:
@@ -535,3 +586,58 @@ def create_client_prestamo(request):
                 'form': ClientForm(),
                 'error': 'An unexpected error occurred'
             })
+
+
+@login_required
+def create_contract(request):
+    if request.method == 'POST':
+        try:
+            form = ContratosForm(request.POST)
+            if form.is_valid():
+                prestamo_titular_id = request.POST.get('prestamo_id')
+                user_obj = User.objects.get(username=request.user)
+                
+
+                prestamo_titular = Prestamos.objects.get(pk=prestamo_titular_id)
+                new_contract = form.save(commit=False)
+                new_contract.user_upload = request.user
+                new_contract.titular_prestamo = prestamo_titular
+                new_contract.legajo = user_obj.datosuser.legajo
+                new_contract.sucursal  = user_obj.datosuser.sucursal.descripcion
+                new_contract.is_active = True
+                new_contract.save()
+                """
+                Log.objects.create(
+                    adherente=new_adherente,
+                    movimiento='Creacion',
+                    user=request.user
+                )"""
+                ###HASTA ACA LLEGUE
+            
+                titular_id = request.POST.get('titular_id')
+                new_client = Titular.objects.get(titular_id=titular_id)
+                adherentes = Adherente.objects.filter(titular=titular_id)
+                return render(request, 'create_client.html', {
+                'new_client': new_client,
+                'form2': form, # Redirigir a una vista de listado de clientes o a donde sea apropiado
+                'tupla_adherentes': adherentes
+                })
+            else:
+                raise ValueError
+        except ValueError:
+            titular_id = request.POST.get('titular_id')
+            new_client = Titular.objects.get(titular_id=titular_id)
+            return render(request, 'create_client.html', {
+                'new_client': new_client,
+                'form2': form,
+                'error': 'Please provide valid data for adherente'
+            })
+    elif request.method == 'GET':
+        titular_id = request.GET.get('titular_id')
+        print(titular_id)
+        new_client = Titular.objects.get(titular_id=titular_id)
+        adherentes = Adherente.objects.filter(titular=titular_id)
+        return render(request, 'create_adherentes.html', {
+                'new_client': new_client,
+                'tupla_adherentes': adherentes
+                })
