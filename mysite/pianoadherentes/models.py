@@ -126,3 +126,54 @@ class Log(models.Model):
         permissions = [
             ("can_view_stats_log", "Can view statistics log"),
         ]
+
+
+class Prestamos(models.Model):
+    cbu_validator = RegexValidator(
+        regex=r'^\d{22}$',
+        message="El CBU debe tener exactamente 22 dígitos numéricos."
+    )
+    dni_validator = RegexValidator(
+        regex=r'^\d+$',
+        message="El DNI debe contener solo números."
+    )
+
+    prestamos_id = models.AutoField(primary_key=True) #
+    name = models.CharField(max_length=100) #
+    last_name = models.CharField(max_length=100) #
+    document = models.CharField(max_length=100, validators=[dni_validator]) 
+    birthdate = models.DateField(blank=True, null=True) 
+    sex = models.CharField(max_length=10)
+    street_address = models.CharField(max_length=100)
+    number = models.CharField(max_length=10)
+    floor = models.CharField(max_length=10, blank=True, null=True)
+    between_street =  models.CharField(max_length=100, blank=True, null=True)
+    province =  models.CharField(max_length=100)
+    city =  models.CharField(max_length=30)
+    postal_code =  models.CharField(max_length=20)
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    cbu = models.CharField(
+        max_length=22,
+        validators=[cbu_validator],
+        unique=False,
+        help_text="Ingrese el CBU de 22 dígitos.",
+        blank=True,
+        null=True
+    )
+    created = models.DateTimeField(auto_now_add=True)
+    deleted = models.DateTimeField(blank=True, null=True)
+    user_upload = models.ForeignKey(User, on_delete=models.PROTECT)
+    is_active = models.BooleanField(default=True)
+    migrate = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name
+    
+class Contratos(models.Model):
+    titular_prestamo = models.ForeignKey(Prestamos, on_delete=models.PROTECT, related_name='prestamos')
+    created = models.DateTimeField(auto_now_add=True)
+    deleted = models.DateTimeField(blank=True, null=True)
+    user_upload = models.ForeignKey(User, on_delete=models.PROTECT)
+    date_init = models.DateTimeField(blank=True, null=True)
+    date_end = models.DateTimeField(blank=True, null=True)
+    price = models.IntegerField(default=0)

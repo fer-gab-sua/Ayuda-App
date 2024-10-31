@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{{error}}
+
+<link rel="stylesheet" href="{% static '/css/create_client.css' %}">
+
+
+<div class="principal">
+    {% if new_client %}
+    <div class="container formulario" style="display: none">
+    {% else %}
+    <!--CONSULTA CBU-->
+    <h1>Alta de Prestamos</h1>
+    <div class="container" style="display:block">
+        <form action="/client/create/select_cuil/" method="POST" style="margin-bottom: 40px;">
+            {% csrf_token %}
+            <label for="id_cuil">Cuil:</label>
+            <span class="helptext">Ingrese el cuil sin guiones.</span>
+            <input type="text" class="cuil" name="cuil" maxlength="11" required="" id="id_cbu">
+            <button>Consultar</button>
+        </form>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

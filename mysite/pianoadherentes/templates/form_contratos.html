@@ -1,0 +1,26 @@
+<!--ALTA DE TITULAR-->
+<h1>Alta de contratos</h1>
+<div class="container" style="display:block">
+    <form action="/client/create/" method="POST">
+        {% csrf_token %}
+
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="id_birthdate">Fecha desde:</label>
+                    <input type="date" name="birthdate" required id="id_birthdate">
+                </div>
+                <div class="col-md-6">
+                    <label for="id_birthdate">Fecha hasta:</label>
+                    <input type="date" name="birthdate" required id="id_birthdate">
+                </div>
+                <div class="col-md-3">
+                    <label for="id_number">Importe:</label>
+                    <input type="text" name="number" maxlength="10" required id="id_number" class="number_adress">
+                </div>
+            </div>
+
+
+        <button>Crear</button>
+    </form>
+</div>

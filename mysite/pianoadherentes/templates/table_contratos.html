@@ -1,0 +1,123 @@
+{% load static %}
+<div class="0" style="text-align: center; margin-top: 20px;">
+
+
+    <div class="row" style="align-items: center;">
+        <div class="col-md-7" style="text-align: end;">
+            <H2>Adherentes agregados</H2>
+        </div>
+        <div class="col-md-1">
+            <form action="{% url 'create_adherente' %}" method="GET">
+                
+                <button style="width: 45px;">
+                {% csrf_token %}
+                <input type="hidden" name="titular_id" value="{{ new_client.titular_id }}">
+                <img  id="new" src="{% static '/img/new_icon.png' %}" alt="img" style="height: 30px;">
+                </button>
+            </form>
+        </div>
+    </div>
+
+    
+    
+
+</div>
+
+<div class="container" >
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nombre y Apellido</th>
+                <th scope="col">DNI</th>
+                <th scope="col">Estado</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for adherente in tupla_adherentes %}
+            <tr>
+                <td>{{adherente.adherente_id}}</td>
+                <td>{{adherente.name}} {{adherente.last_name}}</td>
+                <td>{{adherente.document}}</td>
+                <td>
+                    {% if adherente.is_active == True %}
+                    Activo
+                    {% else %}
+                    Baja
+                    {% endif %}
+                </td>
+                <td style="display: flex;"><form action="{% url 'update_adherente' adherente.adherente_id %}" method="GET">
+                    {% csrf_token %}
+                    <button type="submit" style="
+                    background:#007bff;
+                    border:none;
+                    color:blue;
+                    text-decoration:underline;
+                    cursor:pointer;
+                    width: 50px;" class="editar">
+                        <img  id="edit" src="{% static '/img/edit_icon.png' %}" alt="img">
+                    </button>
+                </form>
+
+
+                
+                {% if adherente.is_active == True %}
+                <form action="{% url 'baja_adherente' adherente.adherente_id %}" method="POST" >
+                    {% csrf_token %}
+                    <button type="submit" style="
+                    background:firebrick;
+                    border:none;
+                    color:blue;
+                    text-decoration:underline;
+                    cursor:pointer;
+                    width: 50px;" onclick="return confirmDeleteAd()">
+                        <img  id="edit" src="{% static '/img/del_icon.png' %}" alt="img">
+                    </button>
+                </form>
+                {% else %}
+                <form action="{% url 'reactiv_adherente' adherente.adherente_id %}" method="POST" >
+                    {% csrf_token %}
+                    <button type="submit" style="
+                    background:green;
+                    border:none;
+                    color:blue;
+                    text-decoration:underline;
+                    cursor:pointer;
+                    width: 50px;" onclick="return confirmActivateAd()">
+                        <img  id="edit" src="{% static '/img/react_icon.png' %}" alt="img">
+                    </button>
+                </form>
+                {% endif %}
+                    
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div style="display: flex; justify-content: center; align-items: center; padding: 10px;">
+        <div style="border: 1px solid rgba(0, 0, 0, 0.282); border-radius: 20px; width: 50%; text-align: center; padding: 10px;">
+            <label for="id_is_active" style="margin-right: 10px; display:inline-flex">Incluir Bajas:</label>
+            <input type="checkbox" name="is_active" id="id_is_active_print" checked>
+            
+            <button style="padding: 5px 10px;" onclick="openForm('{{ new_client.titular_id }}')">
+                IMPRIMIR FORMULARIO
+            </button>
+        </div>
+    </div>
+</div>
+
+<!--<button id="new-adherente-btn">Nuevo ingreso Adherentes</button>-->
+
+
+<script>
+    function openForm(titularId) {
+        // Obtener el estado del checkbox
+        const isActive = document.getElementById('id_is_active_print').checked;
+        
+        // Construir la URL con los parámetros titular_id e is_active
+        const url = "{% url 'print_form' %}?titular_id=" + titularId + "&is_active=" + isActive;
+        
+        // Abrir en una nueva ventana
+        window.open(url, '_blank');
+    }
+</script>

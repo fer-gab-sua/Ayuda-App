@@ -25,12 +25,15 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav ms-auto">
+                    {% if perms.pianoadherentes.can_view_stats %}
+                        <a class="nav-link active" aria-current="page" href="{% url 'select_cuil' %}">Prestamos</a>
+                    {% endif %}
                     {% if user.is_authenticated %}
                     <a class="nav-link active" aria-current="page" href="{% url 'select_cbu' %}">Altas/Baja/Modificacion</a>
                     <a class="nav-link active" aria-current="page" href="{% url 'buscar' %}">Busqueda</a>
                     {% if perms.pianoadherentes.can_view_stats %}
                         <a class="nav-link active" aria-current="page" href="{% url 'stats' %}">Informes</a>
-                        {% endif %}
+                    {% endif %}
                     <a class="nav-link active" aria-current="page" href="{% url 'logout' %}">Log Out</a>
                     <a class="nav-link disabled" aria-disabled="true">{{user}}</a>
                     <a class="nav-link active" aria-disabled="true" href="{% url 'config' %}"><img src="{% static '/img/gear.png' %}" style="height: 20px;"></a>

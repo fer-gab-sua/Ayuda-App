@@ -6,9 +6,9 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import permission_required
 from django.http import HttpResponse
 from django.db import IntegrityError
-from .forms import ClientForm , AdherenteForm
+from .forms import ClientForm , AdherenteForm, ClientFormPrestamos
 
-from .models import Titular , Adherente, Log
+from .models import Titular , Adherente, Log, Prestamos, Contratos
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 
@@ -462,3 +462,76 @@ def print_form(request):
         adherentes = Adherente.objects.filter(titular=titular_id, is_active=1)
 
     return render(request, 'formulario.html', {'titular': client, 'adherentes' : adherentes})
+
+
+@login_required
+def consultar_cuil(request):
+    if request.method == 'GET':
+        print("ESTOY EN CONSuLLTAR CUIL GET")
+        return render(request, 'create_client_selCuil.html', {
+        })
+    elif request.method == 'POST':
+        cuil_r = request.POST.get("cuil")
+        try:
+            new_client = Prestamos.objects.get(document=cuil_r)
+            try:
+                
+                titular_id = new_client.prestamos_id
+                contratos = Contratos.objects.filter(titular_prestamo=titular_id)
+                return render(request, 'create_client_prestamos.html', {
+                'new_client': new_client,
+                'tupla_contratos': contratos,
+                })
+            except:
+                
+                return render(request, 'create_client_prestamos.html', {
+                'new_client': new_client,
+                'cbu': cuil_r,
+                })
+        except Prestamos.DoesNotExist:
+                print(cuil_r)
+                print("ESTOY EN CONSuLLTAR CUIL POST")
+                return render(request, 'create_client_prestamos.html', {
+                'form': ClientForm(),
+                'cuil': cuil_r,
+            })
+        
+
+
+
+@login_required
+def create_client_prestamo(request):
+    if request.method == 'GET':
+        return render(request, 'create_client_prestamos.html', {
+            'form': ClientForm()
+        })
+    elif request.method == 'POST':
+        try:
+            form = ClientFormPrestamos(request.POST)
+            if form.is_valid():
+                new_client = form.save(commit=False)
+                new_client.user_upload = request.user
+                new_client.save()
+                return render(request, 'create_client_prestamos.html', {
+                    'new_client': new_client,
+                    'form2': ClientFormPrestamos()
+                })
+            else:
+                # Mostrar los errores específicos del formulario
+                print(form.errors)
+                return render(request, 'create_client_prestamos.html', {
+                    'form': form,
+                    'error': form.errors  # Muestra los errores del formulario
+                })
+        except ValueError as e:
+            print(f"ValueError: {e}")
+            return render(request, 'create_client.html', {
+                'form': ClientForm(),
+                'error': 'Please provide valid data'
+            })
+        except Exception as e:
+            print(f"Unexpected error: {e}")
+            return render(request, 'create_client.html', {
+                'form': ClientForm(),
+                'error': 'An unexpected error occurred'
+            })
