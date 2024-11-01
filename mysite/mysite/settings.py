@@ -214,3 +214,11 @@ DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 #    'https://appbp.ayudamedica.net',
 #    'http://appbp.ayudamedica.net',
 #]
+
+
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'ayuda-app.onrender.com',  # Agrega tu dominio aquí
+    # Puedes agregar otros dominios si es necesario
+]
