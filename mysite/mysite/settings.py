@@ -225,4 +225,12 @@ ALLOWED_HOSTS = [
 #esto es en la prueba
 CSRF_TRUSTED_ORIGINS = [
     'https://ayuda-app.onrender.com',
+    'http://ayuda-app.onrender.com',
 ]
+
+SESSION_COOKIE_DOMAIN = 'ayuda-app.onrender.com'
+CSRF_COOKIE_DOMAIN = "ayuda-app.onrender.com"    
+SESSION_SAVE_EVERY_REQUEST = True
+CSRF_COOKIE_SECURE = False
+#CSRF_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_SECURE = False
