@@ -179,4 +179,5 @@ class Contratos(models.Model):
     price = models.IntegerField(default=0)
     legajo = models.IntegerField(blank=True)
     sucursal = models.CharField(max_length=50)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
+    link_firma = models.CharField(max_length=255, null=True, blank=True)

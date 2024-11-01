@@ -2,9 +2,10 @@
 <h1>Alta de contratos</h1>
 <div class="container" style="display:block">
     <form action="/client/contract/create/" method="POST">
-        <input type="hidden" name="prestamo_id" value="{{ new_client.document }}">
+        <input type="hidden" name="prestamo_id" value="{{ new_client.prestamos_id }}">
         {% csrf_token %}
             <div class="row">
+
                 <div class="col-md-4">
                     <label for="date_init">Fecha desde:</label>
                     <input type="date" name="date_init" required id="date_init">

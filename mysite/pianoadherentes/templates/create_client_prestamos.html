@@ -17,14 +17,22 @@ integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEw
     {% endif %}
 
     <!--TABLA ADHERENTE-->
+
     {% if tupla_contratos %}
+
         {% include 'table_contratos.html' %}
     {% else %}
+
         {% if new_client %}
             {% include 'form_contratos.html' %}
         {% endif %}
     {% endif %}
 
+
+    {% if add %}
+        {% include 'form_contratos.html' %}
+
+    {% endif %}
     <!--ALTA DE ADHERENTE-->
 
 </div>

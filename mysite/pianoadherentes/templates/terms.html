@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Términos y Condiciones</title>
+</head>
+<body>
+    <div style="max-width: 600px; margin: auto; text-align: center;">
+        <h1>Términos y Condiciones</h1>
+        <p>Por favor, lea y acepte los términos y condiciones antes de continuar.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec venenatis, dolor in finibus malesuada...</p>
+        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Error soluta recusandae saepe delectus quos nulla ipsa! Dicta tempore suscipit velit laborum natus voluptates, possimus eos architecto? Voluptates nemo praesentium accusantium. Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus, reprehenderit rem! Suscipit tempora laboriosam sit possimus doloremque molestiae amet quibusdam ipsa quaerat? Mollitia neque error asperiores omnis eveniet excepturi nesciunt! Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vero, voluptas. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fugit possimus eveniet maiores reprehenderit perspiciatis, error commodi odio qui, nostrum modi, ea nemo. Quas, sed. Exercitationem sunt ullam repellendus possimus ab qui quam. Autem est accusantium, quo animi aspernatur sint nulla sunt dolore ipsum, facilis exercitationem illum, reprehenderit pariatur dolorum aut sequi nemo dicta nam optio debitis ullam voluptatem nesciunt suscipit? Eveniet dolores tempora alias reprehenderit quae consectetur, dignissimos iure magni, quas, dolor voluptatem distinctio nostrum quo. Tempora a odit iusto facere nemo error, dolorum pariatur itaque distinctio eaque. Quaerat impedit aut maxime repellat expedita autem dolorem maiores. Eum, facilis vel.</p>
+
+        <form method="POST" action="{% url 'sign_contract' contract.link_firma %}">
+            {% csrf_token %}
+            <label for="cuil">Ingrese su CUIL para confirmar:</label><br>
+            <input type="text" id="cuil" name="cuil" required><br><br>
+
+            {% if error %}
+                <p style="color: red;">{{ error }}</p>
+            {% endif %}
+
+            <button type="submit">Firmar</button>
+        </form>
+    </div>
+</body>
+</html>

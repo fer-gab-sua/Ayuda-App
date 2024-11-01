@@ -15,6 +15,8 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.conf import settings
 from .utils.pass_generate import generate_random_password
+import string
+import random
 
 
 def home(request):
@@ -198,6 +200,7 @@ def create_adherente(request):
                 'new_client': new_client,
                 'tupla_adherentes': adherentes
                 })@login_required
+
 def create_adherente(request):
     if request.method == 'POST':
         try:
@@ -518,27 +521,21 @@ def print_form(request):
 @login_required
 def consultar_cuil(request):
     if request.method == 'GET':
-        print("ESTOY EN CONSuLLTAR CUIL GET")
         return render(request, 'create_client_selCuil.html', {
         })
     elif request.method == 'POST':
         cuil_r = request.POST.get("cuil")
         try:
             new_client = Prestamos.objects.get(document=cuil_r)
-            try:
-                
-                titular_id = new_client.prestamos_id
-                contratos = Contratos.objects.filter(titular_prestamo=titular_id)
-                return render(request, 'create_client_prestamos.html', {
-                'new_client': new_client,
-                'tupla_contratos': contratos,
-                })
-            except:
-                
-                return render(request, 'create_client_prestamos.html', {
-                'new_client': new_client,
-                'cbu': cuil_r,
-                })
+            titular_id = new_client.prestamos_id
+            contratos = Contratos.objects.filter(titular_prestamo=titular_id)
+            print(contratos)
+            print('esrtoy contratos')
+            return render(request, 'create_client_prestamos.html', {
+            'new_client': new_client,
+            'tupla_contratos': contratos,
+            })
+
         except Prestamos.DoesNotExist:
                 print(cuil_r)
                 print("ESTOY EN CONSuLLTAR CUIL POST")
@@ -597,14 +594,17 @@ def create_contract(request):
                 prestamo_titular_id = request.POST.get('prestamo_id')
                 user_obj = User.objects.get(username=request.user)
                 
-
-                prestamo_titular = Prestamos.objects.get(pk=prestamo_titular_id)
+                print(prestamo_titular_id)
+                prestamo_titular = Prestamos.objects.get(prestamos_id=prestamo_titular_id)
                 new_contract = form.save(commit=False)
                 new_contract.user_upload = request.user
                 new_contract.titular_prestamo = prestamo_titular
                 new_contract.legajo = user_obj.datosuser.legajo
                 new_contract.sucursal  = user_obj.datosuser.sucursal.descripcion
-                new_contract.is_active = True
+                new_contract.is_active = False
+
+                new_contract.link_firma = ''.join(random.choices(string.ascii_letters + string.digits, k=15))
+
                 new_contract.save()
                 """
                 Log.objects.create(
@@ -614,30 +614,79 @@ def create_contract(request):
                 )"""
                 ###HASTA ACA LLEGUE
             
-                titular_id = request.POST.get('titular_id')
-                new_client = Titular.objects.get(titular_id=titular_id)
-                adherentes = Adherente.objects.filter(titular=titular_id)
-                return render(request, 'create_client.html', {
-                'new_client': new_client,
+                #titular_id = request.POST.get('titular_id')
+                #new_client = Prestamos.objects.get(prestamos_id=titular_id)
+                contratos = Contratos.objects.filter(titular_prestamo=prestamo_titular.prestamos_id)
+                return render(request, 'create_client_prestamos.html', {
+                'new_client': prestamo_titular,
                 'form2': form, # Redirigir a una vista de listado de clientes o a donde sea apropiado
-                'tupla_adherentes': adherentes
+                'tupla_contratos': contratos
                 })
             else:
                 raise ValueError
         except ValueError:
             titular_id = request.POST.get('titular_id')
-            new_client = Titular.objects.get(titular_id=titular_id)
-            return render(request, 'create_client.html', {
+            new_client = Prestamos.objects.get(prestamos_id=titular_id)
+            return render(request, 'create_client_prestamos.html', {
                 'new_client': new_client,
                 'form2': form,
                 'error': 'Please provide valid data for adherente'
             })
     elif request.method == 'GET':
-        titular_id = request.GET.get('titular_id')
-        print(titular_id)
-        new_client = Titular.objects.get(titular_id=titular_id)
-        adherentes = Adherente.objects.filter(titular=titular_id)
-        return render(request, 'create_adherentes.html', {
+        prestamo_titular_id = request.GET.get('titular_id')
+        print(prestamo_titular_id)
+
+        new_client =  Prestamos.objects.get(prestamos_id=prestamo_titular_id)
+        contratos = Contratos.objects.filter(titular_prestamo=new_client.prestamos_id)
+        return render(request, 'create_client_prestamos.html', {
                 'new_client': new_client,
-                'tupla_adherentes': adherentes
+                'tupla_contratos': contratos,
+                'add':True
                 })
+
+
+def update_table_contract(request):
+        prestamo_titular_id = request.GET.get('titular_id')
+        print(prestamo_titular_id)
+
+        new_client =  Prestamos.objects.get(prestamos_id=prestamo_titular_id)
+        contratos = Contratos.objects.filter(titular_prestamo=new_client.prestamos_id)
+        return render(request, 'create_client_prestamos.html', {
+                'new_client': new_client,
+                'tupla_contratos': contratos,
+                'add':False
+                })
+
+
+def view_contract_terms(request, link_firma):
+    try:
+        contrato = Contratos.objects.get(link_firma=link_firma)
+        return render(request, 'terms.html', {
+            'contract': contrato
+        })
+    except Contratos.DoesNotExist:
+        return render(request, '404.html', {
+            'error': 'Contrato no encontrado.'
+        })
+    
+
+def sign_contract(request, link_firma):
+    contract = get_object_or_404(Contratos, link_firma=link_firma)
+
+    if request.method == 'POST':
+        cuil_input = request.POST.get('cuil')
+        titular_cuil = contract.titular_prestamo.document  # Suponiendo que `document` es el CUIL en Prestamos
+
+        # Validar el CUIL
+        if cuil_input == titular_cuil:
+            contract.is_active = True
+            contract.link_firma = None
+            contract.save()
+            return render(request, 'confirmation.html', {'message': 'El contrato ha sido firmado exitosamente.'})
+        else:
+            return render(request, 'terms.html', {
+                'contract': contract,
+                'error': 'El CUIL ingresado no es válido. Inténtelo nuevamente.'
+            })
+
+    return render(request, 'terms.html', {'contract': contract})

@@ -4,14 +4,14 @@
 
     <div class="row" style="align-items: center;">
         <div class="col-md-7" style="text-align: end;">
-            <H2>Adherentes agregados</H2>
+            <H2>Contratos agregados</H2>
         </div>
         <div class="col-md-1">
-            <form action="{% url 'create_adherente' %}" method="GET">
+            <form action="{% url 'create_contract' %}" method="GET">
                 
                 <button style="width: 45px;">
                 {% csrf_token %}
-                <input type="hidden" name="titular_id" value="{{ new_client.titular_id }}">
+                <input type="hidden" name="titular_id" value="{{ new_client.prestamos_id }}">
                 <img  id="new" src="{% static '/img/new_icon.png' %}" alt="img" style="height: 30px;">
                 </button>
             </form>
@@ -27,41 +27,47 @@
     <table class="table">
         <thead>
             <tr>
-                <th scope="col">#</th>
-                <th scope="col">Nombre y Apellido</th>
-                <th scope="col">DNI</th>
+                <th scope="col">Fecha de inicio</th>
+                <th scope="col">Fecha de fin</th>
+                <th scope="col">link</th>
+                <th scope="col">Precio</th>
                 <th scope="col">Estado</th>
                 <th scope="col"></th>
             </tr>
         </thead>
         <tbody>
-            {% for adherente in tupla_adherentes %}
+            {% for contrato in tupla_contratos %}
             <tr>
-                <td>{{adherente.adherente_id}}</td>
-                <td>{{adherente.name}} {{adherente.last_name}}</td>
-                <td>{{adherente.document}}</td>
+                <td>{{ contrato.date_init|date:"d/m/Y" }}</td>
+                <td>{{ contrato.date_end|date:"d/m/Y" }}</td>
+                {% if contrato.link_firma  == None %}
+                <td>Terminos Firmados</td>
+                {% else %}
+                <td>http://127.0.0.1:8000/terminos/ver/{{ contrato.link_firma }}</td>
+                {% endif %}
+                <td>{{ contrato.price }}</td>
                 <td>
-                    {% if adherente.is_active == True %}
+                    {% if contrato.is_active == True %}
                     Activo
                     {% else %}
-                    Baja
+                    Pendiente de
                     {% endif %}
                 </td>
-                <td style="display: flex;"><form action="{% url 'update_adherente' adherente.adherente_id %}" method="GET">
-                    {% csrf_token %}
-                    <button type="submit" style="
-                    background:#007bff;
-                    border:none;
-                    color:blue;
-                    text-decoration:underline;
-                    cursor:pointer;
-                    width: 50px;" class="editar">
-                        <img  id="edit" src="{% static '/img/edit_icon.png' %}" alt="img">
+            
+                {% if contrato.is_active == False %}
+
+                <td>
+                <form action="{% url 'refresh_contract' %}" method="GET">
+                    <input type="hidden" name="titular_id" value="{{ new_client.prestamos_id }}">
+                    <button type="submit" class="editar" style="background:#007bff; border:none; color:rgb(123, 255, 0); cursor:pointer; width: 50px;">
+                        <img id="edit" src="{% static '/img/update_icon.png' %}" alt="img">
                     </button>
                 </form>
+                </td>
+                {% endif %}
 
 
-                
+                <!--
                 {% if adherente.is_active == True %}
                 <form action="{% url 'baja_adherente' adherente.adherente_id %}" method="POST" >
                     {% csrf_token %}
@@ -76,7 +82,7 @@
                     </button>
                 </form>
                 {% else %}
-                <form action="{% url 'reactiv_adherente' adherente.adherente_id %}" method="POST" >
+                <form action=" url 'reactiv_adherente' adherente.adherente_id " method="POST" >
                     {% csrf_token %}
                     <button type="submit" style="
                     background:green;
@@ -89,21 +95,12 @@
                     </button>
                 </form>
                 {% endif %}
-                    
+                    -->
             {% endfor %}
         </tbody>
     </table>
 
-    <div style="display: flex; justify-content: center; align-items: center; padding: 10px;">
-        <div style="border: 1px solid rgba(0, 0, 0, 0.282); border-radius: 20px; width: 50%; text-align: center; padding: 10px;">
-            <label for="id_is_active" style="margin-right: 10px; display:inline-flex">Incluir Bajas:</label>
-            <input type="checkbox" name="is_active" id="id_is_active_print" checked>
-            
-            <button style="padding: 5px 10px;" onclick="openForm('{{ new_client.titular_id }}')">
-                IMPRIMIR FORMULARIO
-            </button>
-        </div>
-    </div>
+
 </div>
 
 <!--<button id="new-adherente-btn">Nuevo ingreso Adherentes</button>-->

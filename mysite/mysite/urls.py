@@ -37,6 +37,7 @@ urlpatterns = [
     path('client/<int:titular_id>/baja/',views.client_baja, name='client_baja'),
     path('client/adherente/create/',views.create_adherente, name='create_adherente'),
     path('client/contract/create/',views.create_contract, name='create_contract'),
+    path('client/contract/refresh/',views.update_table_contract, name='refresh_contract'),
     path('adherente/baja/<int:adherente_id>/', views.bajaAdherente, name='baja_adherente'),
     path('adherente/update/<int:adherente_id>/', views.updateAdherente, name='update_adherente'),
     path('adherente/reactiv_adherente/<int:adherente_id>/', views.reactiveAdherente, name='reactiv_adherente'),
@@ -48,8 +49,9 @@ urlpatterns = [
     path('stats/roll/',padron_activo, name='roll_active'),
     path('stats/removal/',bajas, name='removal'),
     
+    path('terminos/<str:link_firma>/', views.sign_contract, name='sign_contract'),
 
-
+    path('terminos/ver/<str:link_firma>/', views.view_contract_terms, name='view_contract_terms'),
     path('logout/',views.signout, name='logout'),
     path('signin/',views.login_user, name='signin'),
 
