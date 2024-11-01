@@ -222,3 +222,7 @@ ALLOWED_HOSTS = [
     'ayuda-app.onrender.com',  # Agrega tu dominio aquí
     # Puedes agregar otros dominios si es necesario
 ]
+#esto es en la prueba
+CSRF_TRUSTED_ORIGINS = [
+    'https://ayuda-app.onrender.com',
+]
