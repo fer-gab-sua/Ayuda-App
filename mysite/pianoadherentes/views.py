@@ -4,10 +4,10 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import permission_required
-from django.http import HttpResponse
+from django.http import HttpResponse,  JsonResponse
 from django.db import IntegrityError
 from .forms import ClientForm , AdherenteForm
-
+from django.core.exceptions import ObjectDoesNotExist
 from .models import Titular , Adherente, Log
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
@@ -15,6 +15,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.conf import settings
 from .utils.pass_generate import generate_random_password
+from django.views.decorators.csrf import csrf_exempt
 
 
 def home(request):
@@ -462,3 +463,40 @@ def print_form(request):
         adherentes = Adherente.objects.filter(titular=titular_id, is_active=1)
 
     return render(request, 'formulario.html', {'titular': client, 'adherentes' : adherentes})
+
+
+
+import json
+from django.http import JsonResponse
+from django.core.exceptions import ObjectDoesNotExist
+
+
+@csrf_exempt
+def get_adherente_info(request):
+    if request.method == 'POST':
+        try:
+            # Intentar cargar los datos JSON del cuerpo
+            body = json.loads(request.body)
+            dni = body.get('dni')
+            if not dni:
+                return JsonResponse({"error": "DNI is required"}, status=400)
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON format"}, status=400)
+
+        try:
+            # Intentar buscar un documento que coincida exactamente con el DNI
+            adherente = Adherente.objects.get(document=dni)
+        except ObjectDoesNotExist:
+            # Si no se encuentra, buscar dentro de los CUITs que contengan el DNI
+            adherente = Adherente.objects.filter(document__icontains=dni).first()
+            if not adherente:
+                return JsonResponse({"error": "No adherente found with the given DNI"}, status=404)
+
+        data = {
+            "first_name": adherente.name,
+            "last_name": adherente.last_name,
+            "is_active": adherente.is_active,
+        }
+        return JsonResponse(data, status=200)
+    else:
+        return JsonResponse({"error": "Invalid HTTP method"}, status=405)
