@@ -52,4 +52,5 @@ urlpatterns = [
 
     path('signin/',views.login_user, name='signin'),
     path('print_form/',views.print_form, name='print_form'),
+    path('adherente-info/', views.get_adherente_info, name='get_user_info'),
 ]
