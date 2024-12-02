@@ -226,6 +226,8 @@ ALLOWED_HOSTS = [
 CSRF_TRUSTED_ORIGINS = [
     'https://ayuda-app.onrender.com',
     'http://ayuda-app.onrender.com',
+    'http://paciente.doctorencasa.com.ar:5001',
+    'https://paciente.doctorencasa.com.ar:5001',
 ]
 
 SESSION_COOKIE_DOMAIN = 'ayuda-app.onrender.com'
