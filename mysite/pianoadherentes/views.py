@@ -480,12 +480,16 @@ def get_adherente_info(request):
             dni = body.get('dni')
             if not dni:
                 return JsonResponse({"error": "DNI is required"}, status=400)
+
+            if dni > 999999:
+                return JsonResponse({"error": "DNI must have at least 7 characters"}, status=400)
+
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON format"}, status=400)
 
         try:
             # Intentar buscar un documento que coincida exactamente con el DNI
-            adherente = Adherente.objects.get(document=dni)
+            adherente = Adherente.objects.get(document=dni, plan='COMPLETO')
         except ObjectDoesNotExist:
             # Si no se encuentra, buscar dentro de los CUITs que contengan el DNI
             adherente = Adherente.objects.filter(document__icontains=dni).first()
