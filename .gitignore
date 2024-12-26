@@ -1,3 +1,7 @@
 venv/
 entorno-ayu/
-mysite/.env
+.env
+/env
+mysite/db.sqlite3
+*.pyc
+/mysite/mysite/__pycache__
