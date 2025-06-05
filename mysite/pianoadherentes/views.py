@@ -396,6 +396,7 @@ def buscar(request):
         return render(request, 'buscar.html')
     elif request.method == 'POST':
         cbu = request.POST.get('cbu')
+        nro_cuenta = request.POST.get('nro_cuenta')
         nombre = request.POST.get('name')
         apellido = request.POST.get('last_name')
         nro_doc = request.POST.get('document')
@@ -408,7 +409,7 @@ def buscar(request):
         phone = request.POST.get('phone')
 
 
-        if not any([cbu, nombre, apellido, nro_doc, street_address, number, floor, city, postal_code, phone]):
+        if not any([cbu, nombre, nro_cuenta, apellido, nro_doc, street_address, number, floor, city, postal_code, phone]):
                     return render(request, 'buscar.html', {
                         'error': 'Debe proporcionar al menos un criterio de búsqueda.'
                     })
@@ -417,6 +418,8 @@ def buscar(request):
 
         if cbu:
             filtro['cbu'] = cbu
+        if nro_cuenta:
+            filtro['nro_cuenta'] = nro_cuenta
         if nombre:
             filtro['name__icontains'] = nombre
         if apellido:

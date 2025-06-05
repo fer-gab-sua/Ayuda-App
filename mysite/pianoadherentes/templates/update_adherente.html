@@ -26,9 +26,7 @@
             <div class="col-md-2">
                 <label for="id_document_type">Tipo:</label>
                 <select name="document_type" id="document_type" required class="tipodocumento">
-                    <option value="dni" {% if adherente.document_type == "dni" %}selected{% endif %}>Dni</option>
                     <option value="cuil" {% if adherente.document_type == "cuil" %}selected{% endif %}>Cuil</option>
-                    <option value="cuit" {% if adherente.document_type == "cuit" %}selected{% endif %}>Cuit</option>
                 </select>
             </div>
             <div class="col-md-4">

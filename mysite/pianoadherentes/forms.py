@@ -21,6 +21,7 @@ class ClientForm(ModelForm):
                   'postal_code',
                   'phone',
                   'cbu',
+                  'nro_cuenta',
                   'is_active'
                   ]
 

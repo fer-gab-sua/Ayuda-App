@@ -56,6 +56,7 @@ class Titular(models.Model):
         unique=True,
         help_text="Ingrese el CBU de 22 dígitos."
     )
+    nro_cuenta = models.CharField(max_length=8, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     deleted = models.DateTimeField(blank=True, null=True)
     user_upload = models.ForeignKey(User, on_delete=models.PROTECT)

@@ -7,6 +7,10 @@
         <span class="helptext">Ingrese el CBU de 22 dígitos.</span>
         <input type="text" class="cbu" name="cbu" maxlength="22" required id="id_cbu" value="{{ cbu }}">
 
+        <label for="id_cbu">Cuenta:</label>
+        <span class="helptext">Ingrese el numero de cuenta de 8 dígitos.</span>
+        <input type="text" class="cbu" name="nro_cuenta" maxlength="8" required id="nro_cuenta" value="{{ nro_cuenta }}">
+
         <div class="row">
             <div class="col-md-6">
                 <label for="id_name">Nombre:</label>
@@ -22,9 +26,7 @@
             <div class="col-md-2">
                 <label for="id_document_type">Tipo:</label>
                 <select name="document_type" id="document_type" required required id="id_document_type" class="tipodocumento">
-                    <option value="dni">Dni</option>
                     <option value="cuil">Cuil</option>
-                    <option value="cuit">Cuit</option>
                 </select>
             </div>
             <div class="col-md-4">
