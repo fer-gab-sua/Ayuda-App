@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from pianoadherentes import views
-from pianoadherentes.stats.stats import mis_ventas, estadisticas, mis_log, sucursal_ventas, usuario_log
+from pianoadherentes.stats.stats import mis_ventas, estadisticas, mis_log, sucursal_ventas, usuario_log , padron_activo, bajas
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -36,16 +36,22 @@ urlpatterns = [
     path('client/adherente/create/',views.create_adherente, name='create_adherente'),
     path('adherente/baja/<int:adherente_id>/', views.bajaAdherente, name='baja_adherente'),
     path('adherente/update/<int:adherente_id>/', views.updateAdherente, name='update_adherente'),
-
-
+    path('adherente/reactiv_adherente/<int:adherente_id>/', views.reactiveAdherente, name='reactiv_adherente'),
     path('stats/',estadisticas, name='stats'),
     path('stats/my_sales/',mis_ventas, name='my_sales'),
     path('stats/my_log/',mis_log, name='my_log'),
     path('stats/branch_office/',sucursal_ventas, name='branch_office'),
     path('stats/user_log/',usuario_log, name='user_log'),
-    
+    path('stats/roll/',padron_activo, name='roll_active'),
+    path('stats/removal/',bajas, name='removal'),
+
 
 
     path('logout/',views.signout, name='logout'),
     path('signin/',views.login_user, name='signin'),
+
+    path('signin/',views.login_user, name='signin'),
+    path('print_form/',views.print_form, name='print_form'),
+
+    path('adherente-info/', views.get_adherente_info, name='get_user_info'),
 ]

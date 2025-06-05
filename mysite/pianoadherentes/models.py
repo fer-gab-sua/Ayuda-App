@@ -70,6 +70,7 @@ class Titular(models.Model):
         permissions = [
             ("can_view_stats", "Can view statistics"),
             ("can_view_stats_controller", "Can view statistics controller"),
+            ("can_view_stats_controllerAdmin", "Can view statistics controller Admin"),
         ]
 
 

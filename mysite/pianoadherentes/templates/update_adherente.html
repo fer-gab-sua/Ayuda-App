@@ -115,14 +115,7 @@
             <option value="Basico" {% if adherente.plan == "Basico" %}selected{% endif %}>Basico</option>
             <option value="Completo" {% if adherente.plan == "Completo" %}selected{% endif %}>Completo</option>
         </select>
-        
-        <label for="id_is_active">Is active:{{ is_active }}</label>
-        <input type="checkbox" name="is_active" id="id_is_active" 
-        {% if is_active == True %}
-        checked=True
-        {% else %}
 
-        {% endif %}>
 
         <button>Actualizar</button>
     </form>
