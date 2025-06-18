@@ -5,3 +5,4 @@ entorno-ayu/
 mysite/db.sqlite3
 *.pyc
 /mysite/mysite/__pycache__
+*.pyc
