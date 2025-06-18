@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -22,14 +26,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', default='your secret key')
+SECRET_KEY = os.getenv('SECRET_KEY')
+DEBUG = os.getenv('DEBUG', 'False').strip().lower() == 'true'
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')  # Convertir a lista
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['fsuarez.pythonanywhere.com', 'localhost', '127.0.0.1']
-
-
+print(DEBUG)
 # Application definition
 
 INSTALLED_APPS = [
@@ -80,14 +81,26 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
+if DEBUG == True:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+else:
+    DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': os.getenv('ENGINE'),
+        'NAME': os.getenv('NAME'),
+        'USER': os.getenv('USER'),
+        'PASSWORD': os.getenv('PASSWORD'),
+        'HOST': os.getenv('HOST'),  # Usualmente 'localhost' en PythonAnywhere
+        'PORT': os.getenv('PORT'),
     }
 }
-
-
+print('DATABASE')
+print(DATABASES)
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -112,7 +125,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Argentina/Buenos_Aires'
 
 USE_I18N = True
 
@@ -131,16 +144,19 @@ if DEBUG == True:
 else:
     STATICFILES_DIRS = [
         '/home/fsuarez/Ayuda-App/mysite/pianoadherentes/static/',
-        '/home/fsuarez/Ayuda-App/mysite/static/'
     ]
+
+print("static dir")
+print(STATICFILES_DIRS)
 
 # Ruta donde se recopilarán los archivos estáticos al ejecutar collectstatic
 if DEBUG == True:
     STATIC_ROOT = BASE_DIR / "staticfiles"
 else:
-    STATIC_ROOT = '/home/fsuarez/Ayuda-App/mysite/static/'
+    STATIC_ROOT = BASE_DIR / "staticfiles"
 
-
+print('STATIC_ROOT')
+print(STATIC_ROOT)
 
 LOGIN_URL = '/signin'
 
@@ -157,6 +173,10 @@ SESSION_COOKIE_AGE = 14400
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
+
+
+
+
 #SESSION_SAVE_EVERY_REQUEST = True
 
 
@@ -164,10 +184,12 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 if DEBUG == False:
     SESSION_SAVE_EVERY_REQUEST = True
-    CSRF_COOKIE_SECURE = True
-    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = False
+    #CSRF_COOKIE_SAMESITE = 'Lax'
+    SESSION_COOKIE_SECURE = False
     APP_DIRS=True
-
+    SESSION_COOKIE_DOMAIN = '.ayudamedica.net'
+    CSRF_COOKIE_DOMAIN = ".ayudamedica.net"
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -176,10 +198,19 @@ MEDIA_ROOT = BASE_DIR / 'media'
 ############ENVIO DE CORREOS CONFIGURACION ########################### ESTO LO TENGO QUE PROTEGER
 
 
+# Configuración del correo electrónico
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'  # Servidor SMTP de tu proveedor de correo
-EMAIL_PORT = 587  # Puerto para conexión TLS
-EMAIL_USE_TLS = True  # Activa el cifrado TLS
-EMAIL_HOST_USER = 'appayudamedica@gmail.com'  # Tu correo
-EMAIL_HOST_PASSWORD = 'nxuw nagm mnwr gtwx'  # Tu contraseña de aplicación o correo
-DEFAULT_FROM_EMAIL = 'appayudamedica@gmail.com'  # Remitente por defecto
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
+
+
+
+#configuracion para el subdominio
+#CSRF_TRUSTED_ORIGINS = [
+#    'https://appbp.ayudamedica.net',
+#    'http://appbp.ayudamedica.net',
+#]

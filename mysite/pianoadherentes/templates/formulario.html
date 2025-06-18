@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario Ayuda Médica</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+
+        /* Estilos para la impresión */
+        @media print {
+            h2 {
+                font-size: 8.6px; /* 20% más chico */
+            }
+            h3 {
+                font-size: 7px; /* 20% más chico */
+            }
+            img {
+                width: 64px; /* 20% más chico */
+            }
+            body {
+                font-size: 5.4pt; /* 20% más chico */
+            }
+            input {
+                margin-top: 0;
+            }
+            .mb-3 {
+                margin-bottom: 1.6px !important; /* 20% más chico */
+            }
+            .form-label {
+                margin-bottom: 0px;
+                font-size: 7.8px; /* 20% más chico */
+            }
+            .form-control {
+                font-size: 7.8px; /* 20% más chico */
+            }
+        }
+
+    </style>
+</head>
+<body>
+    {% load static %}
+    <div class="container my-4" style="width: 800px;">
+        <!-- Header -->
+        
+        <div class="row mb-3">
+            <div class="col-md-9">
+                <h2>SISTEMA ADHERENTES</h2>
+                <h3>Datos del titular de la cuenta a debitar</h3>
+            </div>
+            <div class="col-md-2">
+                <img src="{% static 'img/logo.png' %}" alt="">
+            </div>
+        </div>
+
+        <!-- Formulario -->
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="apellido" class="form-label">Apellido:</label>
+                <input type="text" class="form-control" id="apellido" placeholder="Apellido" disabled value="{{titular.last_name}}">
+            </div>
+            <div class="col-md-6">
+                <label for="nombre" class="form-label">Nombre:</label>
+                <input type="text" class="form-control" id="nombre" placeholder="Nombre" disabled value="{{titular.name}}">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="calle" class="form-label">Calle:</label>
+                <input type="text" class="form-control" id="calle" placeholder="Calle" disabled value="{{titular.street_address}}">
+            </div>
+            <div class="col-md-2">
+                <label for="numero" class="form-label">Nº:</label>
+                <input type="text" class="form-control" id="numero" placeholder="Número" disabled value="{{titular.number}}">
+            </div>
+            <div class="col-md-4">
+                <label for="piso" class="form-label">Piso y Departamento:</label>
+                <input type="text" class="form-control" id="piso" placeholder="Piso" disabled value="{{titular.floor}}">
+            </div>
+
+
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <label for="localidad" class="form-label">Localidad:</label>
+                <input type="text" class="form-control" id="localidad" placeholder="Localidad" disabled value="{{titular.city}}">
+            </div>
+            <div class="col-md-3">
+                <label for="localidad" class="form-label">Provincia:</label>
+                <input type="text" class="form-control" id="localidad" placeholder="Localidad" disabled value="{{titular.province}}">
+            </div>
+            <div class="col-md-2">
+                <label for="cp" class="form-label">C.P.:</label>
+                <input type="text" class="form-control" id="cp" placeholder="Código Postal" disabled value="{{titular.postal_code}}">
+            </div>
+            <div class="col-md-4">
+                <label for="telefono" class="form-label">Teléfono:</label>
+                <input type="text" class="form-control" id="telefono" placeholder="Teléfono" disabled value="{{titular.phone}}">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <label for="tipoDocumento" class="form-label">Tipo y Nº de Doc.:</label>
+                <input type="text" class="form-control" id="tipoDocumento" placeholder="Tipo y Número de Documento" disabled value="{{titular.document_type}} {{titular.document}}">
+            </div>
+            <div class="col-md-3">
+                <label for="banco" class="form-label">Banco:</label>
+                <input type="text" class="form-control" id="banco" placeholder="Banco" disabled value="Banco Piano">
+            </div>
+            <div class="col-md-6">
+                <label for="cbu" class="form-label">C.B.U. Nº:</label>
+                <input type="text" class="form-control" id="cbu" placeholder="CBU"  disabled value="{{titular.cbu}}">
+            </div>
+        </div>
+
+
+
+        <!-- Altas/Bajas/Modificaciones -->
+        <div class="row mb-3">
+            <h3>Adherentes</h3>
+        </div>
+
+        <!-- Tabla -->
+        <div class="table-responsive mb-3">
+            <table class="table table-bordered">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">Nº</th>
+                        <th scope="col">Apellido</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Fecha de Nacimiento</th>
+                        <th scope="col">Documento Tipo</th>
+                        <th scope="col">Documento Nº</th>
+                        <th scope="col">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for adherente in adherentes %}
+                    <tr>
+                        <td>{{adherente.adherente_id}}</td>
+                        <td>{{adherente.last_name}}</td>
+                        <td>{{adherente.name}}</td>
+                        <td>{{adherente.birthdate}}</td>
+                        <td>{{adherente.document_type}}</td>
+                        <td>{{adherente.document}}</td>
+                        <td>
+                        {% if adherente.is_active == True %}
+                        Activo
+                        {% else %}
+                        Baja
+                        {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    
+                    <!-- Agrega más filas según sea necesario -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Declaración y firma -->
+        <div class="mb-3">
+            <p class="text-center">
+                DECLARO CONOCER LAS CONDICIONES DE LA PRESTACIÓN DEL SERVICIO DE AYUDA MÉDICA Y AUTORIZO EL DÉBITO CORRESPONDIENTE A LA CUENTA ANTES DETALLADA.
+            </p>
+        </div>
+
+        <div class="row text-center">
+            <div class="col-md-4">
+                <label for="firma" class="form-label">Firma:</label>
+                <input type="text" class="form-control" id="firma" placeholder="" disabled style="height: 70px;">
+            </div>
+            <div class="col-md-4">
+                <label for="aclaracion" class="form-label">Aclaración:</label>
+                <input type="text" class="form-control" id="aclaracion" placeholder="" disabled style="height: 70px;">
+            </div>
+            <div class="col-md-4">
+                <label for="nroDocumento" class="form-label">Nº de Documento:</label>
+                <input type="text" class="form-control" id="nroDocumento" placeholder="Número de Documento"  disabled value="{{titular.document}}" style="height: 70px; text-align: center; display: flex; align-items: flex-end; padding-bottom: 10px;">
+            </div>
+        </div>
+        
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
