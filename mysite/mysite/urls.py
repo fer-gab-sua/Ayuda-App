@@ -55,4 +55,6 @@ urlpatterns = [
     path('print_form/',views.print_form, name='print_form'),
 
     path('adherente-info/', views.get_adherente_info, name='get_user_info'),
+
+    path('padron/', views.padron_consulta, name='padron'),
 ]

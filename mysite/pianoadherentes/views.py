@@ -497,3 +497,46 @@ def get_adherente_info(request):
         return JsonResponse(data, status=200)
     else:
         return JsonResponse({"error": "Invalid HTTP method"}, status=405)
+    
+@csrf_exempt
+def padron_consulta(request):
+    """Vista para consultar el padrón por DNI"""
+    if request.method == 'GET':
+        return render(request, 'padron.html')
+    elif request.method == 'POST':
+        document = request.POST.get('document', '').strip()
+        
+        if not document:
+            return render(request, 'padron.html', {
+                'error': 'Debe ingresar un número de DNI.'
+            })
+        
+        if len(document) < 6:
+            return render(request, 'padron.html', {
+                'error': 'El DNI debe tener al menos 6 caracteres.'
+            })
+        
+        # Buscar en titulares - usar filter para manejar múltiples registros
+        # Primero buscar coincidencia exacta, luego parcial si no encuentra nada
+        titulares_found = Titular.objects.filter(document=document)
+        if not titulares_found.exists():
+            titulares_found = Titular.objects.filter(document__icontains=document)
+        
+        # Buscar en adherentes - mismo enfoque
+        adherentes_found = Adherente.objects.filter(document=document)
+        if not adherentes_found.exists():
+            adherentes_found = Adherente.objects.filter(document__icontains=document)
+        
+        if titulares_found.exists() or adherentes_found.exists():
+            return render(request, 'padron.html', {
+                'document': document,
+                'results': True,
+                'titulares_found': titulares_found,
+                'adherentes_found': adherentes_found
+            })
+        else:
+            return render(request, 'padron.html', {
+                'document': document,
+                'results': True,
+                'error': 'No se encontraron registros con el DNI proporcionado.'
+            })
