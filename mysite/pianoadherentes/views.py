@@ -4,18 +4,18 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import permission_required
-from django.http import HttpResponse
+from django.http import HttpResponse,  JsonResponse
 from django.db import IntegrityError
 from .forms import ClientForm , AdherenteForm
-
+from django.core.exceptions import ObjectDoesNotExist
 from .models import Titular , Adherente, Log
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
-
+import json
 from django.core.mail import send_mail
 from django.conf import settings
 from .utils.pass_generate import generate_random_password
-
+from django.views.decorators.csrf import csrf_exempt
 
 def home(request):
     if request.user.is_authenticated:
@@ -49,7 +49,7 @@ def signup(request):
 
 def recovery(request):
     if request.method == 'GET':
-        
+
         return render(request, 'recovery_pass.html', {'form': AuthenticationForm})
     else:
         #logica para enviar la nueva contraseña
@@ -58,7 +58,7 @@ def recovery(request):
             #instancio el objeto user
             user_obj =  User.objects.get(username=username)
             new_password = generate_random_password()
-            print(new_password) 
+            print(new_password)
             user_obj.set_password(str(new_password))
             user_obj.save()
             subject = 'Nueva contraseña'
@@ -154,7 +154,7 @@ def create_adherente(request):
             if form.is_valid():
                 titular_id = request.POST.get('titular_id')
                 user_obj = User.objects.get(username=request.user)
-                
+
 
                 titular = Titular.objects.get(pk=titular_id)
                 new_adherente = form.save(commit=False)
@@ -227,7 +227,7 @@ def client_baja(request,titular_id):
         titular.save()
         adherentes = Adherente.objects.filter(titular=titular_id)
         if adherentes:
-                
+
             for adherente in adherentes:
                 adherente.is_active = False
                 adherente.deleted = timezone.now()
@@ -294,7 +294,7 @@ def bajaAdherente(request, adherente_id):
                     movimiento='Baja',
                     user=request.user
                 )
-        
+
         return render(request, 'create_client.html', {
             'new_client': new_client,
             'tupla_adherentes': adherentes
@@ -322,7 +322,7 @@ def reactiveAdherente(request, adherente_id):
                     movimiento='Reactivar',
                     user=request.user
                 )
-        
+
         return render(request, 'create_client.html', {
             'new_client': new_client,
             'tupla_adherentes': adherentes
@@ -346,14 +346,14 @@ def updateAdherente(request, adherente_id):
             adherente.sucursal  = user_obj.datosuser.sucursal.descripcion
             if checklist is True:
                 adherente.deleted = None
-            
+
 
             Log.objects.create(
                     adherente=adherente,
                     movimiento='Modificacion',
                     user=request.user
                 )
-            
+
             new_client = Titular.objects.get(pk=titular_id)
             return render(request, 'create_client.html', {
             'new_client': new_client,
@@ -368,13 +368,13 @@ def updateAdherente(request, adherente_id):
 def update_titular(request, titular_id):
     titular = get_object_or_404(Titular, pk=titular_id)
     checklist = titular.is_active
-    print(titular.__dict__) 
+    print(titular.__dict__)
     form = ClientForm(request.POST, instance=titular)
 
     if request.method == 'POST':
 
         if form.is_valid():
-            
+
             form.save()
             adherentes = Adherente.objects.filter(titular=titular)
             return render(request, 'create_client.html', {
@@ -400,13 +400,13 @@ def buscar(request):
         apellido = request.POST.get('last_name')
         nro_doc = request.POST.get('document')
         street_address = request.POST.get('street_address')
-        
+
         number = request.POST.get('number')
         floor = request.POST.get('floor')
         city = request.POST.get('city')
         postal_code = request.POST.get('postal_code')
         phone = request.POST.get('phone')
-        
+
 
         if not any([cbu, nombre, apellido, nro_doc, street_address, number, floor, city, postal_code, phone]):
                     return render(request, 'buscar.html', {
@@ -462,3 +462,84 @@ def print_form(request):
         adherentes = Adherente.objects.filter(titular=titular_id, is_active=1)
 
     return render(request, 'formulario.html', {'titular': client, 'adherentes' : adherentes})
+
+
+@csrf_exempt
+def get_adherente_info(request):
+    if request.method == 'POST':
+        try:
+            # Intentar cargar los datos JSON del cuerpo
+            body = json.loads(request.body)
+            dni = body.get('dni')
+            if not dni:
+                return JsonResponse({"error": "DNI is required"}, status=400)
+
+            if dni < 999999:
+                return JsonResponse({"error": "DNI must have at least 7 characters"}, status=400)
+
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON format"}, status=400)
+
+        try:
+            # Intentar buscar un documento que coincida exactamente con el DNI
+            adherente = Adherente.objects.get(document=dni, plan='COMPLETO')
+        except ObjectDoesNotExist:
+            # Si no se encuentra, buscar dentro de los CUITs que contengan el DNI
+            adherente = Adherente.objects.filter(document__icontains=dni, plan='COMPLETO').first()
+            if not adherente:
+                return JsonResponse({"error": "No adherente found with the given DNI"}, status=404)
+
+        data = {
+            "first_name": adherente.name,
+            "last_name": adherente.last_name,
+            "is_active": adherente.is_active,
+        }
+        return JsonResponse(data, status=200)
+    else:
+        return JsonResponse({"error": "Invalid HTTP method"}, status=405)
+
+@csrf_exempt
+def padron_consulta(request):
+    """Vista para consultar el padrón por DNI"""
+    if request.method == 'GET':
+        return render(request, 'padron.html')
+    elif request.method == 'POST':
+        document = request.POST.get('document', '').strip()
+
+        if not document:
+            return render(request, 'padron.html', {
+                'error': 'Debe ingresar un número de DNI.'
+            })
+
+        if len(document) < 6:
+            return render(request, 'padron.html', {
+                'error': 'El DNI debe tener al menos 6 caracteres.'
+            })
+
+        # Buscar en titulares - usar filter para manejar múltiples registros
+        # Primero buscar coincidencia exacta, luego parcial si no encuentra nada
+        titulares_found = Titular.objects.filter(document=document)
+        if not titulares_found.exists():
+            titulares_found = Titular.objects.filter(document__icontains=document)
+
+        # Buscar en adherentes - mismo enfoque
+        adherentes_found = Adherente.objects.filter(document=document)
+        if not adherentes_found.exists():
+            adherentes_found = Adherente.objects.filter(document__icontains=document)
+
+        if titulares_found.exists() or adherentes_found.exists():
+            return render(request, 'padron.html', {
+                'document': document,
+                'results': True,
+                'titulares_found': titulares_found,
+                'adherentes_found': adherentes_found
+            })
+        else:
+            return render(request, 'padron.html', {
+                'document': document,
+                'results': True,
+                'error': 'No se encontraron registros con el DNI proporcionado.'
+            })
+
+
+

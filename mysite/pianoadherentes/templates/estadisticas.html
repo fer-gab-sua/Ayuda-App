@@ -103,17 +103,46 @@
         </div>
       </div>
     </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFor" aria-expanded="false" aria-controls="collapseThree">
+          Ventas Generales
+        </button>
+      </h2>
+      <div id="collapseFor" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+          <strong>Informe para traer todas las ventas generales</strong>
+          <form method="post" action="{% url 'branch_general' %}" style="margin-top: 20px;">
+            {% csrf_token %}
+            <div class="row" style="text-align: center;">
+              <div class="col-md-6">
+                  <label for="id_birthdate">Inicio:</label>
+                  <input type="date" name="init_date" required id="id_init_date">
+              </div>
+              <div class="col-md-6">
+                <label for="id_birthdate">Fin:</label>
+                <input type="date" name="end_date" required id="id_end_date">
+              </div>
+            </div>
+            <button type="submit">Generar Informe</button>
+          </form>
+
+
+        </div>
+      </div>
+    </div>
     {% endif %}
 
     {% if perms.pianoadherentes.can_view_stats_log %}
     <!--tercer log por usuario-->
     <div class="accordion-item">
       <h2 class="accordion-header">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFor" aria-expanded="false" aria-controls="collapseFor">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFor">
           Log por usuario
         </button>
       </h2>
-      <div id="collapseFor" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+      <div id="collapseFive" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
         <div class="accordion-body">
           <strong>Informe de log con cada movimiento por usuario.</strong> 
           <form method="post" action="{% url 'user_log' %}" style="margin-top: 20px;">
@@ -151,11 +180,11 @@
     <!--tercer log general-->
     <div class="accordion-item">
       <h2 class="accordion-header">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseFive">
           Log General
         </button>
       </h2>
-      <div id="collapseFive" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+      <div id="collapseSix" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
         <div class="accordion-body">
           <strong>Informe de log con cada movimiento de todos los usuarios.</strong> 
           <form method="post" action="{% url 'user_log' %}" style="margin-top: 20px;">
@@ -185,11 +214,11 @@
     <!--tercer log general-->
     <div class="accordion-item">
       <h2 class="accordion-header">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSix">
           Padron Completo
         </button>
       </h2>
-      <div id="collapseSix" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+      <div id="collapseSeven" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
         <div class="accordion-body">
           <strong>Padron completo de adherentes activos.</strong> 
           <form method="post" action="{% url 'roll_active' %}" style="margin-top: 20px;">
@@ -208,11 +237,11 @@
     <!--segundo movimientos por sucursal-->
     <div class="accordion-item">
       <h2 class="accordion-header">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight" aria-expanded="false" aria-controls="collapseSeven">
           Bajas
         </button>
       </h2>
-      <div id="collapseSeven" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+      <div id="collapseEight" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
         <div class="accordion-body">
           <strong>Informe para traer todas las bajas</strong>
           <form method="post" action="{% url 'removal' %}" style="margin-top: 20px;">

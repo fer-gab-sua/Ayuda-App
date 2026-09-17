@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/create_client.css' %}">
+
+<div class="principal">
+    <h1>Consulta de Padrón</h1>
+    <div class="container" style="display:block">
+        <form action="" method="POST">
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="id_document">Número de DNI:</label>
+                    <input type="text" name="document" maxlength="100" id="id_document" 
+                           class="form-control" value="{{ document }}" 
+                           placeholder="Ingrese el número de DNI">
+                </div>
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </form>
+
+        {% if error %}
+            <div class="alert alert-danger mt-3">
+                {{ error }}
+            </div>
+        {% endif %}
+
+        {% if results %}
+            <hr>
+            <h3>Resultados de la búsqueda</h3>
+            
+            {% if titulares_found %}
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h4>Titular(es) - "Este cliente debería figurar en el padrón de clientes. En caso contrario, por favor envíe un correo a sistemas@ayudamedica.net."</h4>
+                    </div>
+                    <div class="card-body">
+                        {% for titular in titulares_found %}
+                            <div class="titular-item mb-3 p-3" style="border: 1px solid #ddd; border-radius: 5px;">
+                                <p><strong>Nombre:</strong> {{ titular.name }}</p>
+                                <p><strong>Apellido:</strong> {{ titular.last_name }}</p>
+                                <p><strong>DNI:</strong> {{ titular.document }}</p>
+                                <p><strong>Fecha de creación:</strong> {{ titular.created|date:"d/m/Y H:i" }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </span>
+                </div>
+            {% endif %}
+
+            {% if adherentes_found %}
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h4>Adherente(s)</h4>
+                    </div>
+                    <div class="card-body">
+                        {% for adherente in adherentes_found %}
+                            <div class="adherente-item mb-3 p-3" style="border: 1px solid #ddd; border-radius: 5px;">
+                                <p><strong>Nombre:</strong> {{ adherente.name }}</p>
+                                <p><strong>Apellido:</strong> {{ adherente.last_name }}</p>
+                                <p><strong>DNI:</strong> {{ adherente.document }}</p>
+                                <p><strong>Estado:</strong> 
+                                    {% if adherente.is_active %}
+                                        <span class="badge badge-success">Activo</span>
+                                        <span class="badge badge-success"> Dar servicio</span>
+                                    {% else %}
+                                        <span class="badge badge-danger">Inactivo</span>
+                                        <span class="badge badge-danger"> No dar servicio</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if not titulares_found and not adherentes_found %}
+                <div class="alert alert-warning mt-3">
+                    No se encontraron registros con el DNI proporcionado.
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.badge-success {
+    background-color: #28a745;
+    color: white;
+    padding: 0.25em 0.6em;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+}
+
+.badge-danger {
+    background-color: #dc3545;
+    color: white;
+    padding: 0.25em 0.6em;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+}
+
+.card {
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    margin-bottom: 1rem;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 0;
+}
+
+.card-body {
+    padding: 1.25rem;
+}
+
+.alert {
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: 0.375rem;
+}
+
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.alert-warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeaa7;
+}
+
+.adherente-item {
+    background-color: #f8f9fa;
+}
+
+.titular-item {
+    background-color: #e3f2fd;
+}
+</style>
+
+{% endblock %}
