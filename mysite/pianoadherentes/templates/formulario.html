@@ -64,6 +64,7 @@
                 <input type="text" class="form-control" id="nombre" placeholder="Nombre" disabled value="{{titular.name}}">
             </div>
         </div>
+        
 
         <div class="row mb-3">
             <div class="col-md-6">
@@ -114,6 +115,10 @@
                 <label for="cbu" class="form-label">C.B.U. Nº:</label>
                 <input type="text" class="form-control" id="cbu" placeholder="CBU"  disabled value="{{titular.cbu}}">
             </div>
+            <div class="col-md-3">
+                <label for="plan" class="form-label">Plan:</label>
+                <input type="text" class="form-control" id="plan" placeholder="Plan" disabled value="{{titular.plan}}">
+            </div>
         </div>
 
 
@@ -131,6 +136,7 @@
                         <th scope="col">Nº</th>
                         <th scope="col">Apellido</th>
                         <th scope="col">Nombre</th>
+                        <th scope="col">Plan</th>
                         <th scope="col">Fecha de Nacimiento</th>
                         <th scope="col">Documento Tipo</th>
                         <th scope="col">Documento Nº</th>
@@ -143,6 +149,7 @@
                         <td>{{adherente.adherente_id}}</td>
                         <td>{{adherente.last_name}}</td>
                         <td>{{adherente.name}}</td>
+                        <td>{{adherente.plan}}</td>
                         <td>{{adherente.birthdate}}</td>
                         <td>{{adherente.document_type}}</td>
                         <td>{{adherente.document}}</td>

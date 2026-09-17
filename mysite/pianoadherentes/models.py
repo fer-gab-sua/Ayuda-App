@@ -36,6 +36,7 @@ class Titular(models.Model):
     )
 
     titular_id = models.AutoField(primary_key=True) #
+    plan = models.CharField(max_length=20, blank=True, null=True, default="Basico")
     name = models.CharField(max_length=100) #
     last_name = models.CharField(max_length=100) #
     document_type = models.CharField(max_length=10) #

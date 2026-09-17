@@ -6,6 +6,11 @@
         <label for="id_cbu">CBU:</label>
         <span class="helptext">Ingrese el CBU de 22 dígitos.</span>
         <input type="text" class="cbu" name="cbu" maxlength="22" required id="id_cbu" value="{{ cbu }}">
+        <label for="id_plan">Plan:</label>
+        <select name="plan" id="id_plan" required>
+            <option value="Basico">Basico</option>
+            <option value="Plus">Plus</option>
+        </select>
 
         <div class="row">
             <div class="col-md-6">

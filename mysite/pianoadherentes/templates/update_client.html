@@ -13,7 +13,11 @@
                 <label for="id_cbu">CBU:</label>
                 <span class="helptext">Ingrese el CBU de 22 dígitos.</span>
                 <input type="text" class="cbu" name="cbu" maxlength="22" required id="id_cbu" value="{{ client.cbu }}">
-
+                        <label for="id_plan">Plan:</label>
+                <select name="plan" id="id_plan" required>
+                    <option value="Basico" {% if client.plan == "Basico" %}selected{% endif %}>Basico</option>
+                    <option value="Plus" {% if client.plan == "Plus" %}selected{% endif %}>Plus</option>
+                </select>
                 <div class="row">
                     <div class="col-md-6">
                         <label for="id_name">Nombre:</label>

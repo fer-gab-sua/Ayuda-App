@@ -466,7 +466,7 @@ def print_form(request):
 
 @csrf_exempt
 def get_adherente_info(request):
-    if request.method == 'POST':
+    if request.method == 'GET':
         try:
             # Intentar cargar los datos JSON del cuerpo
             body = json.loads(request.body)
@@ -474,25 +474,30 @@ def get_adherente_info(request):
             if not dni:
                 return JsonResponse({"error": "DNI is required"}, status=400)
 
-            if dni < 999999:
+            dni = str(dni)
+            if len(dni) < 7:
                 return JsonResponse({"error": "DNI must have at least 7 characters"}, status=400)
 
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON format"}, status=400)
 
+        # Buscar primero por adherente (exacto y luego parcial), plan Plus
         try:
-            # Intentar buscar un documento que coincida exactamente con el DNI
-            adherente = Adherente.objects.get(document=dni, plan='COMPLETO')
+            persona = Adherente.objects.get(document=dni, plan='Plus')
         except ObjectDoesNotExist:
-            # Si no se encuentra, buscar dentro de los CUITs que contengan el DNI
-            adherente = Adherente.objects.filter(document__icontains=dni, plan='COMPLETO').first()
-            if not adherente:
-                return JsonResponse({"error": "No adherente found with the given DNI"}, status=404)
+            persona = Adherente.objects.filter(document__icontains=dni, plan='Plus').first()
+
+        # Si no se encuentra ningún adherente, buscar por titular
+        if not persona:
+            persona = Titular.objects.filter(document__icontains=dni, plan='Plus').first()
+
+        if not persona:
+            return JsonResponse({"error": "No se encontró un adherente o titular activo de plan Plus con el DNI proporcionado"}, status=404)
 
         data = {
-            "first_name": adherente.name,
-            "last_name": adherente.last_name,
-            "is_active": adherente.is_active,
+            "first_name": persona.name,
+            "last_name": persona.last_name,
+            "is_active": persona.is_active,
         }
         return JsonResponse(data, status=200)
     else:

@@ -10,6 +10,7 @@ class ClientForm(ModelForm):
                   'last_name',
                   'document_type',
                   'document',
+                  'plan',
                   'birthdate',
                   'sex',
                   'street_address',
