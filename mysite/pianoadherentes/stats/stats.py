@@ -49,6 +49,7 @@ def mis_ventas(request):
             'Tipo de documento',
             'Documento',
             'CBU Titular',
+            'Cuenta Numero',
             'Nombre',
             'Apellido',
             'Teléfono',
@@ -72,16 +73,17 @@ def mis_ventas(request):
             ws.cell(row=row_num, column=4, value=adherente.titular.document_type)
             ws.cell(row=row_num, column=5, value=adherente.titular.document)
             ws.cell(row=row_num, column=6, value=adherente.titular.cbu)
-            ws.cell(row=row_num, column=7, value=adherente.name)
-            ws.cell(row=row_num, column=8, value=adherente.last_name)
-            ws.cell(row=row_num, column=9, value=adherente.phone)
+            ws.cell(row=row_num, column=7, value=adherente.titular.nro_cuenta)
+            ws.cell(row=row_num, column=8, value=adherente.name)
+            ws.cell(row=row_num, column=9, value=adherente.last_name)
+            ws.cell(row=row_num, column=10, value=adherente.phone)
             address_complete = str(f"{adherente.street_address} {adherente.number} {adherente.floor} - {adherente.city} - {adherente.province}")
-            ws.cell(row=row_num, column=10, value=address_complete)
-            ws.cell(row=row_num, column=11, value=adherente.document_type)
-            ws.cell(row=row_num, column=12, value=adherente.document)
-            ws.cell(row=row_num, column=13, value=adherente.created.strftime('%Y-%m-%d %H:%M:%S'))
-            ws.cell(row=row_num, column=14, value=adherente.user_upload.username)
-            ws.cell(row=row_num, column=15, value=adherente.sucursal)
+            ws.cell(row=row_num, column=11, value=address_complete)
+            ws.cell(row=row_num, column=12, value=adherente.document_type)
+            ws.cell(row=row_num, column=13, value=adherente.document)
+            ws.cell(row=row_num, column=14, value=adherente.created.strftime('%Y-%m-%d %H:%M:%S'))
+            ws.cell(row=row_num, column=15, value=adherente.user_upload.username)
+            ws.cell(row=row_num, column=16, value=adherente.sucursal)
 
         # Crear el archivo Excel en memoria
         response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
@@ -183,6 +185,7 @@ def sucursal_ventas(request):
             'Tipo de documento',
             'Documento',
             'CBU Titular',
+            'Cuenta Numero',
             'Nombre',
             'Apellido',
             'Teléfono',
@@ -206,16 +209,17 @@ def sucursal_ventas(request):
             ws.cell(row=row_num, column=4, value=adherente.titular.document_type)
             ws.cell(row=row_num, column=5, value=adherente.titular.document)
             ws.cell(row=row_num, column=6, value=adherente.titular.cbu)
-            ws.cell(row=row_num, column=7, value=adherente.name)
-            ws.cell(row=row_num, column=8, value=adherente.last_name)
-            ws.cell(row=row_num, column=9, value=adherente.phone)
+            ws.cell(row=row_num, column=7, value=adherente.titular.nro_cuenta)
+            ws.cell(row=row_num, column=8, value=adherente.name)
+            ws.cell(row=row_num, column=9, value=adherente.last_name)
+            ws.cell(row=row_num, column=10, value=adherente.phone)
             address_complete = str(f"{adherente.street_address} {adherente.number} {adherente.floor} - {adherente.city} - {adherente.province}")
-            ws.cell(row=row_num, column=10, value=address_complete)
-            ws.cell(row=row_num, column=11, value=adherente.document_type)
-            ws.cell(row=row_num, column=12, value=adherente.document)
-            ws.cell(row=row_num, column=13, value=adherente.created.strftime('%Y-%m-%d %H:%M:%S'))
-            ws.cell(row=row_num, column=14, value=adherente.user_upload.username)
-            ws.cell(row=row_num, column=15, value=adherente.sucursal)
+            ws.cell(row=row_num, column=11, value=address_complete)
+            ws.cell(row=row_num, column=12, value=adherente.document_type)
+            ws.cell(row=row_num, column=13, value=adherente.document)
+            ws.cell(row=row_num, column=14, value=adherente.created.strftime('%Y-%m-%d %H:%M:%S'))
+            ws.cell(row=row_num, column=15, value=adherente.user_upload.username)
+            ws.cell(row=row_num, column=16, value=adherente.sucursal)
 
         # Crear el archivo Excel en memoria
         response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
@@ -305,6 +309,7 @@ def padron_activo(request):
             'Tipo de documento',
             'Documento',
             'CBU Titular',
+            'Cuenta Numero',
             'Nombre',
             'Apellido',
             'Teléfono',
@@ -328,19 +333,20 @@ def padron_activo(request):
             ws.cell(row=row_num, column=4, value=adherente.titular.document_type)
             ws.cell(row=row_num, column=5, value=adherente.titular.document)
             ws.cell(row=row_num, column=6, value=adherente.titular.cbu)
-            ws.cell(row=row_num, column=7, value=adherente.name)
-            ws.cell(row=row_num, column=8, value=adherente.last_name)
-            ws.cell(row=row_num, column=9, value=adherente.phone)
+            ws.cell(row=row_num, column=7, value=adherente.titular.nro_cuenta)
+            ws.cell(row=row_num, column=8, value=adherente.name)
+            ws.cell(row=row_num, column=9, value=adherente.last_name)
+            ws.cell(row=row_num, column=10, value=adherente.phone)
             address_complete = str(f"{adherente.street_address} {adherente.number} {adherente.floor} - {adherente.city} - {adherente.province}")
-            ws.cell(row=row_num, column=10, value=address_complete)
-            ws.cell(row=row_num, column=11, value=adherente.document_type)
-            ws.cell(row=row_num, column=12, value=adherente.document)
+            ws.cell(row=row_num, column=11, value=address_complete)
+            ws.cell(row=row_num, column=12, value=adherente.document_type)
+            ws.cell(row=row_num, column=13, value=adherente.document)
             if adherente.created:
-                ws.cell(row=row_num, column=13, value=adherente.created.strftime('%Y-%m-%d %H:%M:%S'))
+                ws.cell(row=row_num, column=14, value=adherente.created.strftime('%Y-%m-%d %H:%M:%S'))
             else:
-                ws.cell(row=row_num, column=13, value='N/A') 
-            ws.cell(row=row_num, column=14, value=adherente.user_upload.username)
-            ws.cell(row=row_num, column=15, value=adherente.sucursal)
+                ws.cell(row=row_num, column=15, value='N/A') 
+            ws.cell(row=row_num, column=16, value=adherente.user_upload.username)
+            ws.cell(row=row_num, column=17, value=adherente.sucursal)
 
         # Crear el archivo Excel en memoria
         response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
@@ -383,6 +389,7 @@ def bajas(request):
             'Tipo de documento',
             'Documento',
             'CBU Titular',
+            'Cuenta Numero',
             'Nombre',
             'Apellido',
             'Teléfono',
@@ -406,16 +413,17 @@ def bajas(request):
             ws.cell(row=row_num, column=4, value=adherente.titular.document_type)
             ws.cell(row=row_num, column=5, value=adherente.titular.document)
             ws.cell(row=row_num, column=6, value=adherente.titular.cbu)
-            ws.cell(row=row_num, column=7, value=adherente.name)
-            ws.cell(row=row_num, column=8, value=adherente.last_name)
-            ws.cell(row=row_num, column=9, value=adherente.phone)
+            ws.cell(row=row_num, column=7, value=adherente.titular.nro_cuenta)
+            ws.cell(row=row_num, column=8, value=adherente.name)
+            ws.cell(row=row_num, column=9, value=adherente.last_name)
+            ws.cell(row=row_num, column=10, value=adherente.phone)
             address_complete = str(f"{adherente.street_address} {adherente.number} {adherente.floor} - {adherente.city} - {adherente.province}")
-            ws.cell(row=row_num, column=10, value=address_complete)
-            ws.cell(row=row_num, column=11, value=adherente.document_type)
-            ws.cell(row=row_num, column=12, value=adherente.document)
-            ws.cell(row=row_num, column=13, value=adherente.deleted.strftime('%Y-%m-%d %H:%M:%S'))
-            ws.cell(row=row_num, column=14, value=adherente.user_upload.username)
-            ws.cell(row=row_num, column=15, value=adherente.sucursal)
+            ws.cell(row=row_num, column=11, value=address_complete)
+            ws.cell(row=row_num, column=12, value=adherente.document_type)
+            ws.cell(row=row_num, column=13, value=adherente.document)
+            ws.cell(row=row_num, column=14, value=adherente.deleted.strftime('%Y-%m-%d %H:%M:%S'))
+            ws.cell(row=row_num, column=15, value=adherente.user_upload.username)
+            ws.cell(row=row_num, column=16, value=adherente.sucursal)
 
         # Crear el archivo Excel en memoria
         response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')

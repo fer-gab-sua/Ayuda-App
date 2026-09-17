@@ -5,9 +5,10 @@ from django.contrib.auth.models import User
 class Sucursales(models.Model):
     id_sucursal = models.AutoField(primary_key=True)
     descripcion = models.CharField(max_length=50)
+    nro_sucursal = models.IntegerField(blank=True, null=True)
 
     def __str__(self) -> str:
-        return self.descripcion
+        return self.nro_sucursal
 
 class DatosUser(models.Model):
     legajo = models.IntegerField(unique=True)
