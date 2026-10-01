@@ -1,15 +1,109 @@
 from django.contrib.auth.decorators import permission_required
 from ..models import Titular , Adherente, Log, Sucursales
 from django.contrib.auth.models import User
-from openpyxl import Workbook
-from django.http import HttpResponse
+from django.db import DatabaseError, transaction
+from django.utils import timezone
+from openpyxl import Workbook, load_workbook
+from openpyxl.utils.exceptions import InvalidFileException
+from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import render
+from zipfile import BadZipFile
 
 @permission_required('pianoadherentes.can_view_stats', raise_exception=True)
 def estadisticas(request):
     sucursales = Sucursales.objects.all()
     usuarios = User.objects.all()
     return render(request, 'estadisticas.html',{"sucursales":sucursales, "usuarios":usuarios})
+
+
+@permission_required('pianoadherentes.can_view_stats_controllerAdmin', raise_exception=True)
+def bajas_masivas(request):
+    if request.method != 'POST':
+        return HttpResponseBadRequest('Debe subir una planilla Excel.')
+
+    archivo = request.FILES.get('archivo')
+    if not archivo or not archivo.name.lower().endswith('.xlsx'):
+        return HttpResponseBadRequest('Seleccione un archivo .xlsx con un CBU por fila.')
+
+    try:
+        origen = load_workbook(archivo, read_only=True, data_only=False)
+        filas = list(origen.active.iter_rows(values_only=True))
+        origen.close()
+    except (InvalidFileException, BadZipFile, ValueError, OSError, KeyError, IndexError):
+        return HttpResponseBadRequest('El archivo Excel no es valido.')
+
+    if request.POST.get('vista_previa') == '1':
+        filas_cargadas = sum(any(valor is not None and str(valor).strip() for valor in valores) for valores in filas)
+        if not filas_cargadas:
+            return HttpResponseBadRequest('El archivo Excel no contiene CBU.')
+        cbus = {
+            valores[0].strip() for valores in filas
+            if valores and isinstance(valores[0], str)
+            and len(valores[0].strip()) == 22 and valores[0].strip().isascii()
+            and valores[0].strip().isdigit()
+            and not any(valor is not None and str(valor).strip() for valor in valores[1:])
+        }
+        titulares = Titular.objects.filter(cbu__in=cbus)
+        cantidad = titulares.filter(is_active=True).count() + Adherente.objects.filter(titular__in=titulares, is_active=True).count()
+        return JsonResponse({'cantidad': cantidad, 'filas': filas_cargadas})
+
+    resultado = Workbook()
+    hoja = resultado.active
+    hoja.title = 'Resultados'
+    hoja.append(['Fila', 'CBU', 'Estado', 'Titular', 'Adherentes dados de baja',
+                 'Adherentes ya inactivos', 'Detalle', 'Usuario', 'Fecha'])
+    for numero, valores in enumerate(filas, start=1):
+        cbu = str(valores[0]).strip() if valores and valores[0] is not None else ''
+        if not any(valor is not None and str(valor).strip() for valor in valores):
+            continue
+        estado = 'CBU invalido'
+        titular_estado = ''
+        bajas = []
+        inactivos = []
+        detalle = 'Ingrese solamente un CBU de 22 digitos por fila, en celdas de texto.'
+        fecha = timezone.now().strftime('%Y-%m-%d %H:%M:%S')
+        if len(valores) == 1 or not any(valor is not None and str(valor).strip() for valor in valores[1:]):
+            if isinstance(valores[0], str) and len(cbu) == 22 and cbu.isascii() and cbu.isdigit():
+                try:
+                    with transaction.atomic():
+                        titular = Titular.objects.select_for_update().filter(cbu=cbu).first()
+                        if titular is None:
+                            estado = 'No encontrado'
+                            detalle = 'No se encontro un titular con este CBU.'
+                        else:
+                            adherentes = list(Adherente.objects.select_for_update().filter(titular=titular))
+                            titular_estado = 'Ya inactivo' if not titular.is_active else 'Dado de baja'
+                            if titular.is_active:
+                                titular.is_active = False
+                                titular.deleted = timezone.now()
+                                titular.user_upload = request.user
+                                titular.save(update_fields=['is_active', 'deleted', 'user_upload'])
+                            for adherente in adherentes:
+                                if not adherente.is_active:
+                                    inactivos.append(f'{adherente.name} {adherente.last_name}')
+                                    continue
+                                adherente.is_active = False
+                                adherente.deleted = timezone.now()
+                                adherente.user_upload = request.user
+                                adherente.save(update_fields=['is_active', 'deleted', 'user_upload'])
+                                Log.objects.create(adherente=adherente, movimiento='Baja', user=request.user)
+                                bajas.append(f'{adherente.name} {adherente.last_name}')
+                            estado = 'Ya estaban dados de baja' if titular_estado == 'Ya inactivo' and not bajas else 'Baja realizada'
+                            detalle = f'Titular ID {titular.pk}; {len(adherentes)} adherentes encontrados.'
+                except DatabaseError:
+                    estado = 'Error'
+                    titular_estado = ''
+                    bajas = []
+                    inactivos = []
+                    detalle = 'No se realizaron cambios para este CBU por un error de base de datos.'
+        hoja.append([numero, cbu, estado, titular_estado, ', '.join(bajas),
+                     ', '.join(inactivos), detalle, request.user.username, fecha])
+        hoja.cell(row=hoja.max_row, column=2).data_type = 's'
+
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename="resultado_bajas_masivas.xlsx"'
+    resultado.save(response)
+    return response
 
 
 

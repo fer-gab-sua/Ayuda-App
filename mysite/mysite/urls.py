@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from pianoadherentes import views
-from pianoadherentes.stats.stats import mis_ventas, estadisticas, mis_log, sucursal_ventas, usuario_log , padron_activo, bajas, general_ventas
+from pianoadherentes.stats.stats import mis_ventas, estadisticas, mis_log, sucursal_ventas, usuario_log , padron_activo, bajas, general_ventas, bajas_masivas
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -45,6 +45,7 @@ urlpatterns = [
     path('stats/user_log/',usuario_log, name='user_log'),
     path('stats/roll/',padron_activo, name='roll_active'),
     path('stats/removal/',bajas, name='removal'),
+    path('stats/bajas-masivas/', bajas_masivas, name='bajas_masivas'),
 
 
 

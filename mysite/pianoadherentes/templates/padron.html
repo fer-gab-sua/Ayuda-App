@@ -42,6 +42,17 @@
                                 <p><strong>Apellido:</strong> {{ titular.last_name }}</p>
                                 <p><strong>DNI:</strong> {{ titular.document }}</p>
                                 <p><strong>Fecha de creación:</strong> {{ titular.created|date:"d/m/Y H:i" }}</p>
+                                <p><strong>Estado:</strong> 
+                                    {% if titular.is_active %}
+                                        <span class="badge badge-success">Activo</span>
+                                        <span class="badge badge-success"> Dar servicio</span>
+                                    {% else %}
+                                        <span class="badge badge-danger">Inactivo</span>
+                                        <span class="badge badge-danger"> No dar servicio - Consultar en padron del cliente banco piano</span>
+                                    {% endif %}
+                                </p>
+                                <p><strong>Plan:</strong> {{ titular.plan }}</p>
+
                             </div>
                         {% endfor %}
                     </div>
@@ -68,6 +79,7 @@
                                         <span class="badge badge-danger">Inactivo</span>
                                         <span class="badge badge-danger"> No dar servicio</span>
                                     {% endif %}
+                                <p><strong>Plan:</strong> {{ adherente.plan }}</p>
                                 </p>
                             </div>
                         {% endfor %}
