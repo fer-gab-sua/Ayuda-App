@@ -483,13 +483,13 @@ def get_adherente_info(request):
 
         # Buscar primero por adherente (exacto y luego parcial), plan Plus
         try:
-            persona = Adherente.objects.get(document=dni, plan='Plus')
+            persona = Adherente.objects.get(document=dni, plan='Plus', active=True)
         except ObjectDoesNotExist:
-            persona = Adherente.objects.filter(document__icontains=dni, plan='Plus').first()
+            persona = Adherente.objects.filter(document__icontains=dni, plan='Plus', active=True).first()
 
         # Si no se encuentra ningún adherente, buscar por titular
         if not persona:
-            persona = Titular.objects.filter(document__icontains=dni, plan='Plus').first()
+            persona = Titular.objects.filter(document__icontains=dni, plan='Plus', is_active=True).first()
 
         if not persona:
             return JsonResponse({"error": "No se encontró un adherente o titular activo de plan Plus con el DNI proporcionado"}, status=404)
