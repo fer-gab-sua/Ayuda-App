@@ -483,9 +483,9 @@ def get_adherente_info(request):
 
         # Buscar primero por adherente (exacto y luego parcial), plan Plus
         try:
-            persona = Adherente.objects.get(document=dni, plan='Plus', active=True)
+            persona = Adherente.objects.filter(document=dni, plan='Plus', is_active=True).first()
         except ObjectDoesNotExist:
-            persona = Adherente.objects.filter(document__icontains=dni, plan='Plus', active=True).first()
+            persona = Adherente.objects.filter(document__icontains=dni, plan='Plus', is_active=True).first()
 
         # Si no se encuentra ningún adherente, buscar por titular
         if not persona:
