@@ -43,7 +43,6 @@ class AdherenteForm(ModelForm):
                     'city',
                     'postal_code',
                     'phone',
-                    'is_active',
                     'plan'
                     ]
 

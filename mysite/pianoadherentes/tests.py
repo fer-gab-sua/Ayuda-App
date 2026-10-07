@@ -8,7 +8,60 @@ from django.test import TestCase
 from django.urls import reverse
 from openpyxl import Workbook, load_workbook
 
+from .forms import AdherenteForm
 from .models import Adherente, Log, Titular
+
+
+class AdherenteFormTests(TestCase):
+	def setUp(self):
+		self.usuario = User.objects.create_user(username='operador', password='clave')
+		self.titular = Titular.objects.create(
+			cbu='0012345678901234567890', name='Ana', last_name='Perez',
+			document_type='dni', document='12345678', sex='Femenino',
+			street_address='Calle', number='1', province='Buenos Aires',
+			city='Ciudad', postal_code='1000', user_upload=self.usuario,
+		)
+		self.adherente = Adherente.objects.create(
+			titular=self.titular, name='Ana', last_name='Perez',
+			document_type='dni', document='12345678', sex='Femenino',
+			street_address='Calle', number='1', province='Buenos Aires',
+			city='Ciudad', postal_code='1000', user_upload=self.usuario,
+			sucursal='Centro', legajo=1, plan='Basico',
+		)
+		self.datos = {
+			'name': 'Nombre actualizado', 'last_name': 'Perez',
+			'document_type': 'dni', 'document': '12345678',
+			'birthdate': '1990-01-01', 'sex': 'Femenino',
+			'street_address': 'Calle', 'number': '1', 'floor': '',
+			'between_street': '', 'province': 'Buenos Aires',
+			'city': 'Ciudad', 'postal_code': '1000', 'phone': '123456',
+			'plan': 'Plus',
+		}
+
+	def test_actualizar_sin_is_active_conserva_estado(self):
+		for estado in (True, False):
+			with self.subTest(is_active=estado):
+				self.adherente.is_active = estado
+				self.adherente.save()
+				form = AdherenteForm(self.datos, instance=self.adherente)
+				self.assertTrue(form.is_valid(), form.errors)
+				form.save()
+				self.adherente.refresh_from_db()
+				self.assertEqual(self.adherente.is_active, estado)
+				self.assertEqual(self.adherente.name, 'Nombre actualizado')
+				self.assertEqual(self.adherente.plan, 'Plus')
+
+	def test_actualizar_ignora_cambios_de_estado_en_post(self):
+		for estado, valor_enviado in ((True, ''), (False, 'on')):
+			with self.subTest(is_active=estado):
+				self.adherente.is_active = estado
+				self.adherente.save()
+				datos = {**self.datos, 'is_active': valor_enviado}
+				form = AdherenteForm(datos, instance=self.adherente)
+				self.assertTrue(form.is_valid(), form.errors)
+				form.save()
+				self.adherente.refresh_from_db()
+				self.assertEqual(self.adherente.is_active, estado)
 
 
 class BajasMasivasTests(TestCase):
