@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from pianoadherentes import views
 from pianoadherentes.stats.stats import mis_ventas, estadisticas, mis_log, sucursal_ventas, usuario_log , padron_activo, bajas, general_ventas, bajas_masivas
+from pianoadherentes.stats.movimientos import movimientos
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -38,6 +39,7 @@ urlpatterns = [
     path('adherente/update/<int:adherente_id>/', views.updateAdherente, name='update_adherente'),
     path('adherente/reactiv_adherente/<int:adherente_id>/', views.reactiveAdherente, name='reactiv_adherente'),
     path('stats/',estadisticas, name='stats'),
+    path('stats/movimientos/', movimientos, name='movimientos'),
     path('stats/my_sales/',mis_ventas, name='my_sales'),
     path('stats/my_log/',mis_log, name='my_log'),
     path('stats/branch_office/',sucursal_ventas, name='branch_office'),

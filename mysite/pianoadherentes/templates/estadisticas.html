@@ -6,6 +6,19 @@
 <h1 style="text-align: center; margin-bottom: 50px;">Generar Informe</h1>
 <div class="container" >
   <div class="accordion" id="accordionExample">
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMovimientosPlus" aria-expanded="false" aria-controls="collapseMovimientosPlus">
+          Movimientos / Ventas Plus
+        </button>
+      </h2>
+      <div id="collapseMovimientosPlus" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+          <p>Altas, modificaciones, bajas y reactivaciones de titulares y adherentes, con planes anteriores y nuevos. Incluye reingresos a Plus para revisar antes de liquidar.</p>
+          <a class="btn btn-primary" href="{% url 'movimientos' %}">Consultar y exportar movimientos</a>
+        </div>
+      </div>
+    </div>
 
     <!--primer item de informe mis movimientos-->
     <div class="accordion-item">

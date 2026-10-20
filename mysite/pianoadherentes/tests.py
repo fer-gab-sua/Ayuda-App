@@ -9,7 +9,7 @@ from django.urls import reverse
 from openpyxl import Workbook, load_workbook
 
 from .forms import AdherenteForm
-from .models import Adherente, Log, Titular
+from .models import Adherente, Log, Titular, Movimiento
 
 
 class AdherenteFormTests(TestCase):
@@ -111,6 +111,7 @@ class BajasMasivasTests(TestCase):
 		self.assertTrue(self.titular.is_active)
 		self.assertTrue(self.activo.is_active)
 		self.assertEqual(Log.objects.count(), 0)
+		self.assertEqual(Movimiento.objects.count(), 0)
 
 	def test_vista_previa_vacia_no_procesa(self):
 		respuesta = self.subir([[]], vista_previa=True)
@@ -145,6 +146,8 @@ class BajasMasivasTests(TestCase):
 		self.assertEqual(self.inactivo.user_upload, self.creador)
 		self.assertEqual(Log.objects.filter(adherente=self.activo, movimiento='Baja', user=self.usuario).count(), 1)
 		self.assertEqual(Log.objects.filter(adherente=self.inactivo).count(), 0)
+		self.assertEqual(Movimiento.objects.filter(movimiento='Baja').count(), 3)
+		self.assertEqual(Movimiento.objects.filter(adherente=self.inactivo).count(), 0)
 
 	def test_sin_permiso_no_procesa(self):
 		self.client.force_login(self.creador)
@@ -187,5 +190,6 @@ class BajasMasivasTests(TestCase):
 		filas = list(load_workbook(BytesIO(respuesta.content)).active.values)
 		self.assertEqual([fila[2] for fila in filas[1:]], ['Error', 'Baja realizada'])
 		self.assertEqual(Log.objects.filter(adherente=self.activo, movimiento='Baja').count(), 1)
+		self.assertEqual(Movimiento.objects.filter(movimiento='Baja').count(), 3)
 		self.titular.refresh_from_db()
 		self.assertFalse(self.titular.is_active)

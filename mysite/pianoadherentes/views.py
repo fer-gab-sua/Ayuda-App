@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import permission_required
 from django.http import HttpResponse,  JsonResponse
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from .forms import ClientForm , AdherenteForm
 from django.core.exceptions import ObjectDoesNotExist
 from .models import Titular , Adherente, Log
@@ -15,6 +15,7 @@ import json
 from django.core.mail import send_mail
 from django.conf import settings
 from .utils.pass_generate import generate_random_password
+from .movimientos import guardar_con_movimiento
 from django.views.decorators.csrf import csrf_exempt
 
 def home(request):
@@ -121,7 +122,7 @@ def create_client(request):
             if form.is_valid():
                 new_client = form.save(commit=False)
                 new_client.user_upload = request.user
-                new_client.save()
+                guardar_con_movimiento(new_client, request.user)
                 return render(request, 'create_client.html', {
                     'new_client': new_client,
                     'form2': AdherenteForm()
@@ -147,6 +148,7 @@ def create_client(request):
             })
 
 @login_required
+@transaction.atomic
 def create_adherente(request):
     if request.method == 'POST':
         try:
@@ -163,7 +165,7 @@ def create_adherente(request):
                 new_adherente.legajo = user_obj.datosuser.legajo
                 new_adherente.sucursal  = user_obj.datosuser.sucursal.descripcion
                 new_adherente.is_active = True
-                new_adherente.save()
+                guardar_con_movimiento(new_adherente, request.user)
 
                 Log.objects.create(
                     adherente=new_adherente,
@@ -200,32 +202,34 @@ def create_adherente(request):
                 })
 
 @login_required
+@transaction.atomic
 def client_detail(request, titular_id):
     if request.method == 'GET':
         #cliente = Titular.objects.filter(titular_id=titular_id)
         #titular = Titular.objects.get(pk=titular_id) esto puede tumbar el servidor
-        titular = get_object_or_404(Titular,pk=titular_id)
+        titular = get_object_or_404(Titular, pk=titular_id)
         form = ClientForm(instance=titular)
         return render(request, 'client_detail.html',{'titular': titular, 'form': form})
     elif request.method == 'POST':
         try:
-            titular = get_object_or_404(Titular,pk=titular_id)
+            titular = get_object_or_404(Titular.objects.select_for_update(), pk=titular_id)
             #titular = get_object_or_404(Titular,pk=titular_id,user_upload=request.user )
             form = ClientForm(request.POST, instance=titular)
-            form.save()
+            guardar_con_movimiento(form.save(commit=False), request.user)
             return redirect('clients')
         except ValueError:
             return render(request, 'client_detail.html',{'titular': titular, 'form': form, 'error': 'error actualizando cliente'})
 
 
 @login_required
+@transaction.atomic
 def client_baja(request,titular_id):
-    titular = get_object_or_404(Titular, pk=titular_id)
+    titular = get_object_or_404(Titular.objects.select_for_update(), pk=titular_id)
     if request.method == 'POST':
         titular.is_active = False
         titular.deleted = timezone.now()
-        titular.save()
-        adherentes = Adherente.objects.filter(titular=titular_id)
+        guardar_con_movimiento(titular, request.user)
+        adherentes = Adherente.objects.select_for_update().filter(titular=titular_id)
         if adherentes:
 
             for adherente in adherentes:
@@ -234,7 +238,7 @@ def client_baja(request,titular_id):
                 adherente.user_upload = request.user
                 user_obj = User.objects.get(username=request.user)
                 adherente.sucursal  = user_obj.datosuser.sucursal.descripcion
-                adherente.save()
+                guardar_con_movimiento(adherente, request.user)
 
                 Log.objects.create(
                         adherente=adherente,
@@ -275,15 +279,16 @@ def consultar_cbu(request):
             })
 
 @login_required
+@transaction.atomic
 def bajaAdherente(request, adherente_id):
-    adherente = Adherente.objects.get(pk=adherente_id)
+    adherente = Adherente.objects.select_for_update().get(pk=adherente_id)
     if request.method == 'POST':
         adherente.is_active = False
         adherente.deleted = timezone.now()
         adherente.user_upload = request.user
         user_obj = User.objects.get(username=request.user)
         adherente.sucursal  = user_obj.datosuser.sucursal.descripcion
-        adherente.save()
+        guardar_con_movimiento(adherente, request.user)
 
         titular_id = adherente.titular.pk  # Obtener el ID del titular correctamente
         new_client = get_object_or_404(Titular, pk=titular_id)
@@ -303,15 +308,16 @@ def bajaAdherente(request, adherente_id):
         return HttpResponse("none")
 
 @login_required
+@transaction.atomic
 def reactiveAdherente(request, adherente_id):
-    adherente = Adherente.objects.get(pk=adherente_id)
+    adherente = Adherente.objects.select_for_update().get(pk=adherente_id)
     if request.method == 'POST':
         adherente.is_active = True
         adherente.deleted = None
         adherente.user_upload = request.user
         user_obj = User.objects.get(username=request.user)
         adherente.sucursal  = user_obj.datosuser.sucursal.descripcion
-        adherente.save()
+        guardar_con_movimiento(adherente, request.user)
 
         titular_id = adherente.titular.pk  # Obtener el ID del titular correctamente
         new_client = get_object_or_404(Titular, pk=titular_id)
@@ -332,13 +338,14 @@ def reactiveAdherente(request, adherente_id):
 
 
 @login_required
+@transaction.atomic
 def updateAdherente(request, adherente_id):
-    adherente = Adherente.objects.get(pk=adherente_id)
+    adherente = Adherente.objects.select_for_update().get(pk=adherente_id)
     checklist = adherente.is_active
     if request.method == 'POST':
         form = AdherenteForm(request.POST, instance=adherente)
         if form.is_valid():
-            form.save()
+            form.save(commit=False)
 
             titular_id = adherente.titular.titular_id
             adherentes = Adherente.objects.filter(titular=titular_id)
@@ -346,6 +353,7 @@ def updateAdherente(request, adherente_id):
             adherente.sucursal  = user_obj.datosuser.sucursal.descripcion
             if checklist is True:
                 adherente.deleted = None
+            guardar_con_movimiento(adherente, request.user)
 
 
             Log.objects.create(
@@ -365,8 +373,9 @@ def updateAdherente(request, adherente_id):
     return render(request, 'update_adherente.html', {'adherente': adherente, 'form': form, 'is_active': checklist})
 
 @login_required
+@transaction.atomic
 def update_titular(request, titular_id):
-    titular = get_object_or_404(Titular, pk=titular_id)
+    titular = get_object_or_404(Titular.objects.select_for_update(), pk=titular_id)
     checklist = titular.is_active
     print(titular.__dict__)
     form = ClientForm(request.POST, instance=titular)
@@ -375,19 +384,19 @@ def update_titular(request, titular_id):
 
         if form.is_valid():
 
-            form.save()
+            guardar_con_movimiento(form.save(commit=False), request.user)
             adherentes = Adherente.objects.filter(titular=titular)
             return render(request, 'create_client.html', {
             'new_client': titular,
             'tupla_adherentes': adherentes
             }) # Redirigir después de guardar
         else:
-            form = ClientForm(instance=titular)
-            print(titular.between_street)
-            print("Formulario inválido", form.errors)
+            return render(request, 'update_client.html', {
+                'client': titular, 'form': form, 'is_active': checklist, 'error': form.errors,
+            })
 
     elif request.method == 'GET':
-        pass
+        form = ClientForm(instance=titular)
     return render(request, 'update_client.html', {'client': titular, 'form': form, 'is_active' : checklist})
 
 @login_required
@@ -545,6 +554,3 @@ def padron_consulta(request):
                 'results': True,
                 'error': 'No se encontraron registros con el DNI proporcionado.'
             })
-
-
-

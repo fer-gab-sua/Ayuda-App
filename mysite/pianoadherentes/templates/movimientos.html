@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container-fluid p-4">
+  <h1>Movimientos / Ventas Plus</h1>
+  <p>Historial desde la implementacion de este registro. No reconstruye ventas anteriores.</p>
+  {% if not todos %}<p class="alert alert-info">Solo se muestran los movimientos realizados por tu usuario.</p>{% endif %}
+  <p class="alert alert-warning">Los reingresos cuentan como ventas y estan identificados para revision antes de liquidar. El tiempo fuera de Plus no demuestra por si solo un fraude.</p>
+  <form method="get">
+    <div class="row">
+      {% for field in form %}
+      <div class="col-md-3 mb-3">
+        {{ field.label_tag }} {{ field }}
+        {% for error in field.errors %}<div class="text-danger" role="alert">{{ error }}</div>{% endfor %}
+      </div>
+      {% endfor %}
+    </div>
+    {{ form.non_field_errors }}
+    <button class="btn btn-primary" type="submit">Consultar</button>
+    <button class="btn btn-success" type="submit" name="exportar" value="1">Exportar Excel</button>
+    <a class="btn btn-secondary" href="{% url 'stats' %}">Volver a informes</a>
+  </form>
+  {% if consultado %}
+  <hr>
+  <p>{{ pagina.paginator.count }} movimientos. <strong>{{ ventas }} ventas Plus</strong>, de las cuales <strong>{{ reingresos }} son reingresos a revisar</strong>.</p>
+  <h2>Resumen por vendedor</h2>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead><tr><th>Usuario</th><th>Legajo</th><th>Sucursal historica</th><th>Ventas Plus</th><th>Reingresos incluidos</th></tr></thead>
+      <tbody>
+        {% for fila in resumen %}
+        <tr><td>{{ fila.usuario }}</td><td>{{ fila.legajo|default_if_none:"Sin configurar" }}</td><td>{{ fila.sucursal|default:"Sin configurar" }}</td><td>{{ fila.ventas }}</td><td>{{ fila.reingresos }}</td></tr>
+        {% empty %}<tr><td colspan="5">No hay ventas Plus en los resultados.</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <h2>Detalle de movimientos</h2>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead><tr><th>ID</th><th>Fecha y hora</th><th>Persona</th><th>Nombre / DNI</th><th>Titular ID</th><th>Operacion</th><th>Plan anterior</th><th>Plan nuevo</th><th>Activo antes / despues</th><th>Usuario / Legajo / Sucursal</th><th>Venta Plus</th><th>Reingreso</th><th>Ingreso anterior a Plus</th><th>Baja o salida anterior / Usuario</th><th>Dias fuera de Plus</th><th>Observaciones</th></tr></thead>
+      <tbody>
+        {% for registro in pagina %}
+        <tr{% if registro.reingreso_plus %} class="table-warning"{% endif %}>
+          <td>{{ registro.pk }}</td><td>{{ registro.created|date:"d/m/Y H:i:s" }}</td>
+          <td>{{ registro.tipo_persona }}</td><td>{{ registro.nombre }} / {{ registro.documento }}</td>
+          <td>{{ registro.titular_id }}</td><td>{{ registro.movimiento }}</td>
+          <td>{{ registro.plan_anterior|default:"Sin plan / Alta" }}</td><td>{{ registro.plan_nuevo|default:"Sin plan" }}</td>
+          <td>{{ registro.activo_anterior|yesno:"Si,No,-" }} / {{ registro.activo_nuevo|yesno:"Si,No" }}</td>
+          <td>{{ registro.usuario }} / {{ registro.legajo|default_if_none:"Sin configurar" }} / {{ registro.sucursal|default:"Sin configurar" }}</td>
+          <td>{{ registro.venta_plus|yesno:"Si,No" }}</td><td>{{ registro.reingreso_plus|yesno:"Si,No" }}</td>
+          <td>{{ registro.ingreso_plus_anterior|date:"d/m/Y H:i:s"|default:"-" }}</td>
+          <td>{{ registro.salida_plus_anterior|date:"d/m/Y H:i:s"|default:"-" }} / {{ registro.usuario_salida_plus|default:"-" }}</td>
+          <td>{% if registro.dias_fuera_plus != None %}{{ registro.dias_fuera_plus|floatformat:"-6" }}{% else %}-{% endif %}</td><td>{{ registro.observaciones }}</td>
+        </tr>
+        {% empty %}<tr><td colspan="16">No hay movimientos para los filtros seleccionados.</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <nav aria-label="Paginas de movimientos">
+    {% if pagina.has_previous %}<a href="?{{ consulta }}&amp;page={{ pagina.previous_page_number }}">Anterior</a>{% endif %}
+    <span>Pagina {{ pagina.number }} de {{ pagina.paginator.num_pages }}</span>
+    {% if pagina.has_next %}<a href="?{{ consulta }}&amp;page={{ pagina.next_page_number }}">Siguiente</a>{% endif %}
+  </nav>
+  {% endif %}
+</div>
+{% endblock %}

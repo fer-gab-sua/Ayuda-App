@@ -8,6 +8,7 @@ from openpyxl.utils.exceptions import InvalidFileException
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import render
 from zipfile import BadZipFile
+from ..movimientos import guardar_con_movimiento
 
 @permission_required('pianoadherentes.can_view_stats', raise_exception=True)
 def estadisticas(request):
@@ -77,7 +78,7 @@ def bajas_masivas(request):
                                 titular.is_active = False
                                 titular.deleted = timezone.now()
                                 titular.user_upload = request.user
-                                titular.save(update_fields=['is_active', 'deleted', 'user_upload'])
+                                guardar_con_movimiento(titular, request.user)
                             for adherente in adherentes:
                                 if not adherente.is_active:
                                     inactivos.append(f'{adherente.name} {adherente.last_name}')
@@ -85,7 +86,7 @@ def bajas_masivas(request):
                                 adherente.is_active = False
                                 adherente.deleted = timezone.now()
                                 adherente.user_upload = request.user
-                                adherente.save(update_fields=['is_active', 'deleted', 'user_upload'])
+                                guardar_con_movimiento(adherente, request.user)
                                 Log.objects.create(adherente=adherente, movimiento='Baja', user=request.user)
                                 bajas.append(f'{adherente.name} {adherente.last_name}')
                             estado = 'Ya estaban dados de baja' if titular_estado == 'Ya inactivo' and not bajas else 'Baja realizada'

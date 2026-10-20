@@ -1,0 +1,50 @@
+MOVIMIENTOS / VENTAS PLUS
+
+Preparacion:
+Ejecutar desde mysite: python manage.py migrate
+El registro comienza al desplegar esta version. La migracion no inventa ventas
+ni fechas de cambios anteriores. El padrón y los informes anteriores se conservan.
+
+Acceso:
+En Informes, abrir "Movimientos / Ventas Plus".
+El permiso pianoadherentes.can_view_stats permite ver el informe propio.
+Asignar tambien pianoadherentes.can_view_movimientos a los responsables que
+necesiten consultar y exportar movimientos de todos los usuarios.
+El historial se puede consultar, pero no agregar, editar ni borrar, en el admin.
+
+Registro:
+Cada alta o guardado desde la aplicacion o el administrador genera un movimiento
+con usuario, fecha/hora, persona, planes y estados anterior/nuevo.
+Se incluyen las bajas individuales, las bajas del grupo de un titular y las
+bajas masivas. Persona e historial se guardan en una misma transaccion.
+El usuario que realiza la operacion recibe la venta; legajo, sucursal, nombre
+de usuario, datos de persona y planes se conservan como datos historicos.
+Si el usuario no tiene legajo o sucursal configurados, queda una aclaracion.
+Cambios externos mediante SQL, scripts o QuerySet.update no pasan por este
+registro: deben usar guardar_con_movimiento y proporcionar el usuario real.
+
+Ventas:
+Cuenta el alta activa con Plus, el cambio de un plan distinto a Plus estando
+activo, y la reactivacion con Plus. No cuenta la edicion que conserva Plus
+activo, una reactivacion repetida ni el cambio a Plus de una persona inactiva
+hasta que se active. Una baja posterior no borra la venta original.
+Un reingreso cuenta como nueva venta y se marca para revision antes de liquidar.
+Se muestran ingreso previo, ultima baja/salida, usuario de esa salida, nueva
+activacion y dias transcurridos, aunque los eventos previos queden fuera
+del periodo filtrado. Salir de Plus cambiando de plan tambien se registra.
+Un dia equivale a 24 horas; se muestran hasta seis decimales para identificar
+reingresos el mismo dia (por ejemplo, 12 horas son 0,5 dias).
+Las fechas anteriores desconocidas se identifican, nunca se estiman usando
+la fecha de alta de la persona. Para un Plus inactivo anterior al historial,
+se puede informar la fecha de baja existente, sin atribuirle un usuario supuesto.
+El tiempo fuera del plan sirve para revisar operaciones consecutivas, no es
+una conclusion automatica de fraude ni un bloqueo de la venta.
+
+Informe:
+Filtrar por fechas (incluye todo el ultimo dia), persona, operacion, sucursal
+historica y, con permiso global, usuario.
+Listados: todos los movimientos, ventas Plus o solo reingresos.
+El Excel contiene todo el resultado filtrado, no solamente la pagina visible,
+y una hoja de resumen por vendedor/legajo/sucursal. Los reingresos estan
+incluidos en ventas y separados en otra columna para revision.
+No calcula importes ni marca pagos realizados; es el respaldo de liquidacion.
