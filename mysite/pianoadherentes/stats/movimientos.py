@@ -14,9 +14,7 @@ from ..models import Movimiento
 @permission_required('pianoadherentes.can_view_stats', raise_exception=True)
 def movimientos(request):
     todos = request.user.has_perm('pianoadherentes.can_view_movimientos')
-    registros = Movimiento.objects.all()
-    if not todos:
-        registros = registros.filter(user=request.user)
+    registros = Movimiento.objects.all() if todos else Movimiento.objects.filter(user=request.user)
     sucursales = registros.order_by('sucursal').values_list('sucursal', flat=True).distinct()
     fecha = timezone.now().date()
     form = MovimientosForm(
