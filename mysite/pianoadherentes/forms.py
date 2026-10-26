@@ -69,12 +69,9 @@ class MovimientosForm(forms.Form):
         ('reingresos', 'Solo reingresos a Plus para revisar'),
     ])
 
-    def __init__(self, *args, usuarios, sucursales, todos, **kwargs):
+    def __init__(self, *args, usuarios, sucursales, **kwargs):
         super().__init__(*args, **kwargs)
-        if todos:
-            self.fields['usuario'].queryset = usuarios
-        else:
-            del self.fields['usuario']
+        self.fields['usuario'].queryset = usuarios
         self.fields['sucursal'].choices = [('', 'Todas'), *[(s, s or 'Sin sucursal') for s in sucursales if s]]
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'

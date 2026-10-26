@@ -13,16 +13,15 @@ from ..models import Movimiento
 
 @permission_required('pianoadherentes.can_view_stats', raise_exception=True)
 def movimientos(request):
-    todos = request.user.has_perm('pianoadherentes.can_view_movimientos')
-    registros = Movimiento.objects.all() if todos else Movimiento.objects.filter(user=request.user)
+    registros = Movimiento.objects.all()
     sucursales = registros.order_by('sucursal').values_list('sucursal', flat=True).distinct()
     fecha = timezone.now().date()
     form = MovimientosForm(
         request.GET if request.GET else None,
         initial={'init_date': fecha.replace(day=1), 'end_date': fecha, 'listado': 'todos'},
-        usuarios=User.objects.order_by('username'), sucursales=sucursales, todos=todos,
+        usuarios=User.objects.order_by('username'), sucursales=sucursales,
     )
-    contexto = {'form': form, 'todos': todos}
+    contexto = {'form': form}
     if not form.is_bound:
         return render(request, 'movimientos.html', contexto)
     if not form.is_valid():

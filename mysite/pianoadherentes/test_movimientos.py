@@ -334,19 +334,18 @@ class MovimientosTests(TestCase):
         respuesta = self.client.get(reverse('movimientos'), self.filtros(listado='reingresos'))
         self.assertContains(respuesta, '<td>0</td>', html=True)
 
-    def test_permisos_no_permiten_ver_ventas_ajenas_manipulando_filtros(self):
+    def test_estadisticas_muestran_movimientos_de_todos_los_usuarios(self):
         self.adherente.plan = 'Plus'
         propio = self.guardar(self.adherente)
         self.titular.plan = 'Plus'
         ajeno = self.guardar(self.titular, self.otro)
-        respuesta = self.client.get(reverse('movimientos'), self.filtros(usuario=self.otro.pk))
-        self.assertEqual(respuesta.context['pagina'].paginator.count, 1)
-        self.assertEqual([registro.pk for registro in respuesta.context['pagina']], [propio.pk])
-        excel = self.client.get(reverse('movimientos'), self.filtros(usuario=self.otro.pk, exportar='1'))
+        respuesta = self.client.get(reverse('movimientos'), self.filtros())
+        self.assertEqual(respuesta.context['pagina'].paginator.count, 2)
+        self.assertNotContains(respuesta, 'Solo se muestran los movimientos realizados por tu usuario.')
+        excel = self.client.get(reverse('movimientos'), self.filtros(exportar='1'))
         hoja = load_workbook(BytesIO(excel.content))['Movimientos']
-        self.assertEqual(hoja.max_row, 2)
-        self.assertEqual(hoja['A2'].value, propio.pk)
-        self.usuario.user_permissions.add(Permission.objects.get(codename='can_view_movimientos'))
+        self.assertEqual(hoja.max_row, 3)
+        self.assertEqual({hoja['A2'].value, hoja['A3'].value}, {propio.pk, ajeno.pk})
         respuesta = self.client.get(reverse('movimientos'), self.filtros(usuario=self.otro.pk))
         self.assertEqual(respuesta.context['pagina'].paginator.count, 1)
         self.assertEqual([registro.pk for registro in respuesta.context['pagina']], [ajeno.pk])
@@ -354,7 +353,6 @@ class MovimientosTests(TestCase):
         self.assertEqual(self.client.get(reverse('movimientos')).status_code, 403)
 
     def test_filtros_de_persona_operacion_usuario_y_sucursal(self):
-        self.usuario.user_permissions.add(Permission.objects.get(codename='can_view_movimientos'))
         self.titular.plan = 'Plus'
         self.guardar(self.titular)
         self.adherente.plan = 'Plus'
